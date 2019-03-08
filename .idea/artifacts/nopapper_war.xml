@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="nopapper:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="nopapper.war">
+      <element id="artifact" artifact-name="nopapper:war exploded" />
+    </root>
+  </artifact>
+</component>

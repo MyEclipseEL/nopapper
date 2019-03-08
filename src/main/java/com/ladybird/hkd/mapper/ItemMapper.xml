@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ladybird.hkd.mapper.ItemMapper" >
+    <update id="createItemBank" parameterType="String" statementType="STATEMENT">
+        CREATE TABLE item_${tableName} (id INT AUTO_INCREMENT NOT NULL,
+        title VARCHAR(30) ,
+        itme_decs VARCHAR(250) NOT NULL ,
+        valid VARCHAR(250),
+        wrong  VARCHAR(20),
+        PRIMARY KEY (id))
+    </update>
+
+    <insert id="addItemType" parameterType="String">
+        INSERT INTO item_type VALUES (${itemId},${itemName})
+    </insert>
+</mapper>
