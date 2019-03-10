@@ -21,6 +21,9 @@ public class RedisTokenManager implements TokenManager {
     @Autowired
     private RedisOperator redis;
 
+    @Autowired
+    private DesUtils desUtils;
+
     /**
      *@Description: 创建token
      *@Param: String uid
@@ -29,14 +32,14 @@ public class RedisTokenManager implements TokenManager {
      *Date: 2019/3/7
      */
     @Override
-    public String createToken(String uid) throws TokenException {
+    public String createToken(Object data) throws TokenException {
         //使用uuid作为源token一部分
         String preToken = UUID.randomUUID().toString().replace("-", "");
 
         String key = preToken + "." + DesUtils.md5("access_token");
 
         //存储到redis并设置过期时间
-        redis.set(key, uid, ConstConfig.TOKEN_EXPIRES_HOUR*3600);
+        redis.set(key, data, ConstConfig.TOKEN_EXPIRES_HOUR*3600);
         return key;
     }
 

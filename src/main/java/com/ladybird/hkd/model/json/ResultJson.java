@@ -1,4 +1,4 @@
-package com.ladybird.hkd.util;
+package com.ladybird.hkd.model.json;
 
 /**
  * @author Shen
@@ -49,12 +49,20 @@ public class ResultJson {
 
     public static ResultJson ParameterError(){return new ResultJson(1000,"请求参数错误",null);}
 
-    public static ResultJson BusinessErroException(String msg,Object data){
+    public static ResultJson ParameterException(String msg, Object data) {
+        return new ResultJson(1000, msg, data);
+    }
+
+    public static ResultJson BusinessErrorException(String msg,Object data){
         return new ResultJson(1001, msg, data);
     }
 
     public static ResultJson TokenRedisException() {
         return new ResultJson(1005, "token存储redis时出错", null);
+    }
+
+    public static ResultJson Forbidden(String msg) {
+        return new ResultJson(1003, msg, null);
     }
 
     public static ResultJson ServerException(){return new ResultJson(9999,"系统错误，请联系开发人员!",null);}

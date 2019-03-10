@@ -1,6 +1,7 @@
 package com.ladybird.hkd.mapper;
 
-import com.ladybird.hkd.pojo.Student;
+import com.ladybird.hkd.model.json.StudentJsonIn;
+import com.ladybird.hkd.model.pojo.Student;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface StudentMapper {
-    Student findByNumAndPwd(Student student);
+    Student findByNumAndPwd(StudentJsonIn student);
 
     Student findByNum(@Param("stu_num") String stuNum);
 }

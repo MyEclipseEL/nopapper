@@ -76,8 +76,8 @@ public class RedisOperator {
      *
      *Date: 2019/3/7
      */
-    public void set(String key,String value,long timeout){
-        redisTemplate.opsForValue().set(key,value,timeout, TimeUnit.SECONDS);
+    public void set(String key,Object value,long timeout){
+        redisTemplate.opsForValue().set(key,JsonUtil.objectToJson(value),timeout, TimeUnit.SECONDS);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.ladybird.hkd.util;
+package com.ladybird.hkd.model.json;
 
 /**
  * @author Shen

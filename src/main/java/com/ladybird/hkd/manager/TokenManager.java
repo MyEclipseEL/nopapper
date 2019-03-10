@@ -14,7 +14,7 @@ public interface TokenManager {
      *@return: String
      *Date: 2019/3/7
      */
-    public String createToken(String uid) throws TokenException;
+    public String createToken(Object data) throws TokenException;
 
     /**
      *@Description: 创建一个RefreshToken

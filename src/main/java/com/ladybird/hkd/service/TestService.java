@@ -2,7 +2,8 @@ package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.mapper.StudentMapper;
-import com.ladybird.hkd.pojo.Student;
+import com.ladybird.hkd.model.json.StudentJsonIn;
+import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class TestService {
     @Autowired
     private StudentMapper studentMapper;
 
-    public String login1(Student student) throws Exception{
+    public String login1(StudentJsonIn student) throws Exception{
         Student result = studentMapper.findByNumAndPwd(student);
         if(result == null){
             throw new BusinessException("用户名密码错误！");
@@ -34,13 +35,13 @@ public class TestService {
         }
     }
 
-    public Student login(Student student) throws BusinessException,Exception {
+    public Student login(StudentJsonIn student) throws BusinessException,Exception {
         Student result = studentMapper.findByNumAndPwd(student);
 
         if (result == null) {
             throw new BusinessException("用户名密码错误");
         }
-        return student;
+        return result;
     }
 
     public Student checkNum(String stuNum) {

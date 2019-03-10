@@ -1,5 +1,7 @@
 package com.ladybird.hkd.util;
 
+import org.springframework.stereotype.Component;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
@@ -15,6 +17,7 @@ import java.util.Base64;
  * @description: 3des加密解密（base64）
  * @create: 2019-03-20
  */
+@Component
 public class DesUtils {
     //向量
     private final static String iv = "01234567";
