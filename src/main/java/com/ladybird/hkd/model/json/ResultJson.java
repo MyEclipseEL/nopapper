@@ -1,19 +1,24 @@
 package com.ladybird.hkd.model.json;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author Shen
  * @Description: 用于整理返回前端数据的类
  * @create: 2019-03-18
  */
+@ApiModel("Json数据返回类")
 public class ResultJson {
 
+    @ApiModelProperty
     private String message;
     private Integer code;
     private Object data;
 
 
 
-    public ResultJson(Integer code,String message,  Object data) {
+    public ResultJson(Integer code,String message, Object  data) {
         this.message = message;
         this.code = code;
         this.data = data;

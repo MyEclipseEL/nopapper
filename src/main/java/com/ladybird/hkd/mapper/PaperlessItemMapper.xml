@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ladybird.hkd.mapper.PaperlessItemMapper" >
+    <update id="createItemBank" parameterType="String" statementType="STATEMENT">
+        CREATE TABLE item_${tableName} (id INT AUTO_INCREMENT NOT NULL,
+        title VARCHAR(30) ,
+        itme_decs VARCHAR(250) NOT NULL ,
+        valid VARCHAR(250),
+        wrong  VARCHAR(20),
+        PRIMARY KEY (id))
+    </update>
+
+    <insert id="addItemType" parameterType="String">
+        INSERT INTO item_type VALUES (${itemId},${itemName})
+    </insert>
+
+    <select id="checkOutItemsByCourse" parameterType="java.lang.Integer" resultType="com.ladybird.hkd.model.pojo.Item">
+        SELECT * from items WHERE course=${course}
+    </select>
+
+    <select id="checkOutItemsByCourseSet" parameterType="Integer" resultType="com.ladybird.hkd.model.pojo.Item">
+        SELECT * from items WHERE course=${course}
+    </select>
+
+    <select id="checkOutItemTypes" resultType="com.ladybird.hkd.model.pojo.ItemType">
+        SELECT * from item_type
+    </select>
+
+    <select id="checkOutPaperEdit" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
+        SELECT * FROM paper_edit
+    </select>
+
+    <update id="changePaperEdit" parameterType="com.ladybird.hkd.model.pojo.PaperEdit">
+        UPDATE paper_edit SET single_choice=${single_choice},multiple_choice=${multiple_choice},checking=${checking}
+        WHERE id=1
+    </update>
+</mapper>

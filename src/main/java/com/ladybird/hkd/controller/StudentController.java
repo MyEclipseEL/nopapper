@@ -28,7 +28,7 @@ import org.springframework.web.context.request.RequestAttributes;
  * @description: 学生控制层
  * @create: 2019-03-20
  */
-@Api(tags = "学生管理类")
+@Api(value = "学生controller",tags = "学生管理类")
 @Controller
 @RequestMapping("/student")
 public class StudentController {
@@ -76,29 +76,5 @@ public class StudentController {
             String refreshToken = tokenManager.createReToken(accessToken);
             return new TokenJsonOut(accessToken, refreshToken);
     }
-
-    @CheckToken
-    public Object getItems() {
-
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public Object handleException(Exception e) {
-
-        if (e.getClass() == ParamException.class) {
-            //TODO 日志记录
-            return ResultJson.ParameterException(e.getLocalizedMessage(), null);
-        }
-        if (e.getClass() == TokenException.class) {
-            return ResultJson.TokenRedisException();
-        }
-        if (e.getClass() == BusinessException.class) {
-            return ResultJson.BusinessErrorException(e.getLocalizedMessage(),null);
-        }
-        return ResultJson.ServerException();
-    }
-
 
 }

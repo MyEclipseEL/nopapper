@@ -33,11 +33,12 @@ DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
   `dept_num` varchar(30) NOT NULL COMMENT '专业代码',
   `dept_name` varchar(30) NOT NULL COMMENT '专业名称',
-  `faculty` varchar(30) NOT NULL COMMENT '开设学院',
   PRIMARY KEY (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `department` */
+
+insert  into `department`(`dept_num`,`dept_name`) values ('10001','软件工程');
 
 /*Table structure for table `faculty` */
 
@@ -50,6 +51,8 @@ CREATE TABLE `faculty` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `faculty` */
+
+insert  into `faculty`(`fac_num`,`fac_name`) values ('10001','计算机与信息工程');
 
 /*Table structure for table `grade` */
 
@@ -65,6 +68,18 @@ CREATE TABLE `grade` (
 /*Data for the table `grade` */
 
 insert  into `grade`(`g_id`,`g_year`,`g_class`) values (1,2015,1),(2,2015,2);
+
+/*Table structure for table `group` */
+
+DROP TABLE IF EXISTS `group`;
+
+CREATE TABLE `group` (
+  `group_id` tinyint(2) NOT NULL,
+  `group_type` varchar(15) NOT NULL,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `group` */
 
 /*Table structure for table `item_type` */
 
@@ -91,7 +106,11 @@ CREATE TABLE `items` (
   `item_wrong` varchar(250) NOT NULL COMMENT '题目错误答案',
   `item_type` char(2) NOT NULL COMMENT '题目类型',
   `course` int(15) NOT NULL COMMENT '附属课程',
-  PRIMARY KEY (`item_id`)
+  PRIMARY KEY (`item_id`),
+  KEY `item_type` (`item_type`),
+  KEY `course` (`course`),
+  CONSTRAINT `items_ibfk_1` FOREIGN KEY (`item_type`) REFERENCES `item_type` (`type_id`),
+  CONSTRAINT `items_ibfk_2` FOREIGN KEY (`course`) REFERENCES `course` (`c_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `items` */
@@ -104,7 +123,9 @@ CREATE TABLE `office` (
   `office_id` varchar(30) NOT NULL COMMENT '教研室号',
   `office_name` varchar(30) NOT NULL COMMENT '教研室名称',
   `dept` varchar(30) NOT NULL COMMENT '所属系别',
-  PRIMARY KEY (`office_id`)
+  PRIMARY KEY (`office_id`),
+  KEY `dept` (`dept`),
+  CONSTRAINT `office_ibfk_1` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `office` */
@@ -117,7 +138,10 @@ CREATE TABLE `score` (
   `student` varchar(10) NOT NULL COMMENT '学号',
   `course` int(15) NOT NULL COMMENT '课程号',
   `s_score` decimal(10,0) NOT NULL COMMENT '成绩',
-  PRIMARY KEY (`student`,`course`)
+  PRIMARY KEY (`student`,`course`),
+  KEY `course` (`course`),
+  CONSTRAINT `score_ibfk_1` FOREIGN KEY (`course`) REFERENCES `course` (`c_id`),
+  CONSTRAINT `score_ibfk_2` FOREIGN KEY (`student`) REFERENCES `students` (`stu_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `score` */
@@ -134,12 +158,18 @@ CREATE TABLE `students` (
   `stu_dept` varchar(30) NOT NULL COMMENT '专业',
   `grade` int(15) NOT NULL COMMENT '班级',
   `stu_pwd` varchar(18) NOT NULL COMMENT '登陆密码',
-  PRIMARY KEY (`stu_num`)
+  PRIMARY KEY (`stu_num`),
+  KEY `grade` (`grade`),
+  KEY `stu_dept` (`stu_dept`),
+  KEY `stu_faculty` (`stu_faculty`),
+  CONSTRAINT `students_ibfk_1` FOREIGN KEY (`grade`) REFERENCES `grade` (`g_id`),
+  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`stu_dept`) REFERENCES `department` (`dept_num`),
+  CONSTRAINT `students_ibfk_3` FOREIGN KEY (`stu_faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `students` */
 
-insert  into `students`(`stu_num`,`stu_ID`,`stu_name`,`stu_faculty`,`stu_dept`,`grade`,`stu_pwd`) values ('2016034400','555555555555555555','','计算机与信息工程','软件',2,'123456');
+insert  into `students`(`stu_num`,`stu_ID`,`stu_name`,`stu_faculty`,`stu_dept`,`grade`,`stu_pwd`) values ('2016034400','555555555555555555','','10001','10001',2,'123456');
 
 /*Table structure for table `teachers` */
 
@@ -152,7 +182,12 @@ CREATE TABLE `teachers` (
   `t_dept` varchar(30) NOT NULL COMMENT '专业',
   `t_office` varchar(30) NOT NULL COMMENT '教研室',
   `t_pwd` varchar(15) NOT NULL COMMENT '密码',
-  PRIMARY KEY (`t_num`)
+  `group_id` tinyint(2) NOT NULL COMMENT '权限',
+  PRIMARY KEY (`t_num`),
+  KEY `group_id` (`group_id`),
+  KEY `t_office` (`t_office`),
+  CONSTRAINT `teachers_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
+  CONSTRAINT `teachers_ibfk_2` FOREIGN KEY (`t_office`) REFERENCES `office` (`office_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `teachers` */
