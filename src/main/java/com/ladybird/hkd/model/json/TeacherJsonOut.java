@@ -1,18 +1,23 @@
-package com.ladybird.hkd.model.pojo;
+package com.ladybird.hkd.model.json;
+
+import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.pojo.Faculty;
+import com.ladybird.hkd.model.pojo.Group;
+import com.ladybird.hkd.model.pojo.Office;
 
 /**
- * Created by 和泉纱雾 on 2019/3/4.
+ * @author Shen
+ * @description:
+ * @create: 2019-03-13
  */
-public class Teacher {
+public class TeacherJsonOut {
     private String t_num;        //教师工号
     private String t_name;       //教师姓名
-    private String t_faculty;    //所属学院
-    private String t_dept;       //所属专业
-    private String t_office;     //所属教研室
+    private Faculty t_faculty;    //所属学院
+    private Department t_dept;       //所属专业
+    private Office t_office;     //所属教研室
     private String t_pwd;        //登陆密码
-    private String group_id;     //权限组
-
-
+    private Group group_id;     //权限组
 
     public String getT_num() {
         return t_num;
@@ -30,27 +35,27 @@ public class Teacher {
         this.t_name = t_name;
     }
 
-    public String getT_faculty() {
+    public Faculty getT_faculty() {
         return t_faculty;
     }
 
-    public void setT_faculty(String t_faculty) {
+    public void setT_faculty(Faculty t_faculty) {
         this.t_faculty = t_faculty;
     }
 
-    public String getT_dept() {
+    public Department getT_dept() {
         return t_dept;
     }
 
-    public void setT_dept(String t_dept) {
+    public void setT_dept(Department t_dept) {
         this.t_dept = t_dept;
     }
 
-    public String getT_office() {
+    public Office getT_office() {
         return t_office;
     }
 
-    public void setT_office(String t_office) {
+    public void setT_office(Office t_office) {
         this.t_office = t_office;
     }
 
@@ -62,11 +67,11 @@ public class Teacher {
         this.t_pwd = t_pwd;
     }
 
-    public String getGroup_id() {
+    public Group getGroup_id() {
         return group_id;
     }
 
-    public void setGroup_id(String group_id) {
+    public void setGroup_id(Group group_id) {
         this.group_id = group_id;
     }
 }

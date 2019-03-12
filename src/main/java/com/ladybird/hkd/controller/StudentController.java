@@ -7,10 +7,13 @@ import com.ladybird.hkd.exception.TokenException;
 import com.ladybird.hkd.manager.TokenManager;
 import com.ladybird.hkd.model.json.StudentJsonIn;
 import com.ladybird.hkd.model.json.TokenJsonOut;
+import com.ladybird.hkd.model.pojo.Score;
 import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.service.StudentService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.model.json.ResultJson;
+import com.ladybird.hkd.util.JsonUtil;
+import com.ladybird.hkd.util.ParamUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,6 +25,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
+
+import java.math.BigDecimal;
 
 /**
  * @author Shen
@@ -39,14 +44,30 @@ public class StudentController {
     @Autowired
     private TokenManager tokenManager;
 
-    public Object commit(String score, NativeWebRequest request) {
-        if (score == null){
+    @ApiOperation("提交试卷成绩")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "score",value = "分数",required = true),
+            @ApiImplicitParam(name = "course",value = "课程号",required = true)
+    })
+    @CheckToken
+    @RequestMapping(value = "/commitPaper",method = RequestMethod.GET)
+    @ResponseBody
+    public Object commitPaper(String score,String course,NativeWebRequest request) {
+        if (ParamUtils.stringIsNull(score) || ParamUtils.stringIsNull(course)){
             return ResultJson.ParameterError();
         }
         try {
-            String uid = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT_ID, RequestAttributes.SCOPE_REQUEST);
-            if (uid == null)
+            String studentJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
+            if (ParamUtils.stringIsNull(studentJson)) {
                 return ResultJson.ServerException();
+            }
+            Student student = JsonUtil.jsonToPojo(studentJson, Student.class);
+            if (student == null) {
+                return ResultJson.ServerException();
+            }
+            Score param = new Score(student.getStu_num(), Integer.parseInt(course), new BigDecimal(score));
+            studentService.checkInScore(param);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,5 +97,13 @@ public class StudentController {
             String refreshToken = tokenManager.createReToken(accessToken);
             return new TokenJsonOut(accessToken, refreshToken);
     }
+
+//    @CheckToken
+//    @RequestMapping("/exam")
+//    @ResponseBody
+//    public Object exam(String stu_num) {
+//
+//
+//    }
 
 }

@@ -30,7 +30,7 @@ public interface TokenManager {
      *@return: Integer
      *Date: 2019/3/7
      */
-    public Integer checkToken(String tokenKey) throws TokenException;
+    public String checkToken(String tokenKey) throws TokenException;
 
     /**
      *@Description: 更新Token

@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import org.apache.commons.codec.binary.Base64;
 
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * Created by 和泉纱雾 on 2019/3/4.
  */
+@Component
 public class JWTUtils {
     public String createJWT(String id, String subject, long ttlMillis, Map<String,Object> claims) throws Exception {
         //指定签名

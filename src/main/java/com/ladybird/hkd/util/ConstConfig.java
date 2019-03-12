@@ -13,17 +13,17 @@ public class ConstConfig {
     /**
      * 存储当前登陆的对象的id字段
      */
-    public static final String CURRENT_OBJECT_ID = "CURRENT_OBJECT_ID";
+    public static final String CURRENT_OBJECT= "CURRENT_OBJECT";
 
     /**
      * token有效期
      * */
-    public static final int TOKEN_EXPIRES_HOUR = 28;
+    public static final int TOKEN_EXPIRES_HOUR = 20;
 
     /**
      * refresh_token有效期
      * */
-    public static final int RETOKEN_EXPIRES_HOUR = 72;
+    public static final int RETOKEN_EXPIRES_HOUR = 20;
 
     /**
      * 存放Authorization的字段

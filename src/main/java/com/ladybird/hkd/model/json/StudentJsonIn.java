@@ -26,6 +26,7 @@ public class StudentJsonIn {
 
     }
 
+
     public String getStu_num() {
         return stu_num;
     }

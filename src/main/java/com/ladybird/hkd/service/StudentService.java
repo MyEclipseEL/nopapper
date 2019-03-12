@@ -2,6 +2,7 @@ package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.model.json.StudentJsonIn;
+import com.ladybird.hkd.model.pojo.Score;
 import com.ladybird.hkd.model.pojo.Student;
 
 /**
@@ -10,4 +11,6 @@ import com.ladybird.hkd.model.pojo.Student;
 
 public interface StudentService {
     Student login(StudentJsonIn studentJsonIn) throws BusinessException,Exception;
+
+    void checkInScore(Score param) throws Exception;
 }

@@ -4,6 +4,7 @@ import com.ladybird.hkd.exception.TokenException;
 import com.ladybird.hkd.manager.TokenManager;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.DesUtils;
+import com.ladybird.hkd.util.JWTUtils;
 import com.ladybird.hkd.util.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,9 @@ public class RedisTokenManager implements TokenManager {
     @Autowired
     private DesUtils desUtils;
 
+    @Autowired
+    private JWTUtils jwtUtils;
+
     /**
      *@Description: 创建token
      *@Param: String uid
@@ -37,7 +41,7 @@ public class RedisTokenManager implements TokenManager {
         String preToken = UUID.randomUUID().toString().replace("-", "");
 
         String key = preToken + "." + DesUtils.md5("access_token");
-
+//        String key = jwtUtils.createJWT()
         //存储到redis并设置过期时间
         redis.set(key, data, ConstConfig.TOKEN_EXPIRES_HOUR*3600);
         return key;
@@ -70,7 +74,7 @@ public class RedisTokenManager implements TokenManager {
      *Date: 2019/3/7
      */
     @Override
-    public Integer checkToken(String tokenKey) throws TokenException {
+    public String checkToken(String tokenKey) throws TokenException {
         if (tokenKey == null || "".equals(tokenKey.trim())) {
             return null;
         }
@@ -78,7 +82,7 @@ public class RedisTokenManager implements TokenManager {
         if (tokenValue == null || "".equals(tokenValue.trim())) {
             return null;
         }else {
-            return Integer.parseInt(tokenValue);
+            return tokenValue;
         }
     }
 

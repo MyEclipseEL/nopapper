@@ -36,4 +36,8 @@
         UPDATE paper_edit SET single_choice=${single_choice},multiple_choice=${multiple_choice},checking=${checking}
         WHERE id=1
     </update>
+    
+    <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score">
+        insert into score  values (${student},${course},${s_score});
+    </insert>
 </mapper>

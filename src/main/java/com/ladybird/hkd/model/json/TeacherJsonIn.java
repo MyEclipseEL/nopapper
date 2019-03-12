@@ -1,9 +1,15 @@
-package com.ladybird.hkd.model.pojo;
+package com.ladybird.hkd.model.json;
+
+import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.pojo.Teacher;
+import com.ladybird.hkd.util.ParamUtils;
 
 /**
- * Created by 和泉纱雾 on 2019/3/4.
+ * @author Shen
+ * @description: 教师入参
+ * @create: 2019-03-13
  */
-public class Teacher {
+public class TeacherJsonIn {
     private String t_num;        //教师工号
     private String t_name;       //教师姓名
     private String t_faculty;    //所属学院
@@ -12,7 +18,14 @@ public class Teacher {
     private String t_pwd;        //登陆密码
     private String group_id;     //权限组
 
-
+    public static void ValidNumPwd(Teacher temp) throws ParamException,Exception{
+        if (ParamUtils.stringIsNull(temp.getT_num())) {
+            throw new ParamException("请填写工号！");
+        }
+        if (ParamUtils.stringIsNull(temp.getT_pwd())) {
+            throw new ParamException("请填写密码！");
+        }
+    }
 
     public String getT_num() {
         return t_num;

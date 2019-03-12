@@ -12,6 +12,15 @@ public class Score {
     private Integer course;
     private BigDecimal s_score;
 
+    public Score() {
+    }
+
+    public Score(String student, Integer course, BigDecimal s_score) {
+        this.course = course;
+        this.s_score = s_score;
+        this.student = student;
+    }
+
     public String getStudent() {
         return student;
     }

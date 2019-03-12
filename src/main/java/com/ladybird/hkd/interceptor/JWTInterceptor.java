@@ -33,6 +33,7 @@ public class JWTInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        httpServletResponse.setCharacterEncoding("UTF-8");
         //如果不是映射到方法直接通过
         if (!(o instanceof HandlerMethod))
             return true;
@@ -44,6 +45,7 @@ public class JWTInterceptor implements HandlerInterceptor {
                 //从header中得到token
                 String tokenKey = getBearerToken(httpServletRequest);
                 if (tokenKey == null || "".equals(tokenKey.trim())) {
+
                     return returnResponseMsg(httpServletResponse, HttpServletResponse.SC_FORBIDDEN, "无法正常获取token");
                 }
 
@@ -119,12 +121,12 @@ public class JWTInterceptor implements HandlerInterceptor {
     private String lognRequired(String keyToken, HttpServletRequest request) {
         try {
             //验证token，只验证存在redis中
-            String uid = manager.createToken(keyToken);
-            if (uid == null || "".equals(uid.trim())) {
+            String tokenValue = manager.checkToken(keyToken);
+            if (tokenValue == null || "".equals(tokenValue.trim())) {
                 return "权限过期请重新登陆";
             }
             //如果token验证成功，将token对应的用户uid存在request中，便于之后注入
-            request.setAttribute(ConstConfig.CURRENT_OBJECT_ID, uid);
+            request.setAttribute(ConstConfig.CURRENT_OBJECT, tokenValue);
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
