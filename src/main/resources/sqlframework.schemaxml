@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="utf8" collation="utf8_general_ci">nopaper</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="score" view="colnames">
+<left>609</left>
+<top>200</top>
+<width>90</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `score` (
+  `student` varchar(10) NOT NULL COMMENT '学号',
+  `course` int(15) NOT NULL COMMENT '课程号',
+  `s_score` decimal(10,0) NOT NULL COMMENT '成绩',
+  PRIMARY KEY (`student`,`course`),
+  KEY `course` (`course`),
+  CONSTRAINT `score_ibfk_1` FOREIGN KEY (`course`) REFERENCES `course` (`c_id`),
+  CONSTRAINT `score_ibfk_2` FOREIGN KEY (`student`) REFERENCES `students` (`stu_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="course" view="colnames">
+<left>475</left>
+<top>39</top>
+<width>91</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `course` (
+  `c_id` int(15) NOT NULL AUTO_INCREMENT COMMENT '课程id',
+  `c_name` varchar(30) NOT NULL COMMENT '课程名字',
+  PRIMARY KEY (`c_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="students" view="colnames">
+<left>761</left>
+<top>219</top>
+<width>108</width>
+<height>197</height>
+<sql_create_table>CREATE TABLE `students` (
+  `stu_num` varchar(10) NOT NULL,
+  `stu_ID` varchar(18) NOT NULL COMMENT '身份证号',
+  `stu_name` varchar(15) NOT NULL COMMENT '学生姓名',
+  `stu_faculty` varchar(30) NOT NULL COMMENT '学院',
+  `stu_dept` varchar(30) NOT NULL COMMENT '专业',
+  `grade` int(15) NOT NULL COMMENT '班级',
+  `stu_pwd` varchar(18) NOT NULL COMMENT '登陆密码',
+  PRIMARY KEY (`stu_num`),
+  KEY `grade` (`grade`),
+  KEY `stu_dept` (`stu_dept`),
+  KEY `stu_faculty` (`stu_faculty`),
+  CONSTRAINT `students_ibfk_1` FOREIGN KEY (`grade`) REFERENCES `grade` (`g_id`),
+  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`stu_dept`) REFERENCES `department` (`dept_num`),
+  CONSTRAINT `students_ibfk_3` FOREIGN KEY (`stu_faculty`) REFERENCES `faculty` (`fac_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="grade" view="colnames">
+<left>924</left>
+<top>218</top>
+<width>88</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `grade` (
+  `g_id` int(15) NOT NULL AUTO_INCREMENT COMMENT '年级id',
+  `g_year` year(4) NOT NULL,
+  `g_class` int(3) NOT NULL,
+  PRIMARY KEY (`g_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="faculty" view="colnames">
+<left>430</left>
+<top>316</top>
+<width>102</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `faculty` (
+  `fac_num` varchar(30) NOT NULL COMMENT '学院代码',
+  `fac_name` varchar(30) NOT NULL COMMENT '学院名称',
+  PRIMARY KEY (`fac_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="teachers" view="colnames">
+<left>202</left>
+<top>82</top>
+<width>96</width>
+<height>197</height>
+<sql_create_table>CREATE TABLE `teachers` (
+  `t_num` varchar(15) NOT NULL COMMENT '教师工号',
+  `t_name` varchar(15) NOT NULL COMMENT '老师姓名',
+  `t_faculty` varchar(30) NOT NULL COMMENT '学院',
+  `t_dept` varchar(30) NOT NULL COMMENT '专业',
+  `t_office` varchar(30) NOT NULL COMMENT '教研室',
+  `t_pwd` varchar(15) NOT NULL COMMENT '密码',
+  `group_id` tinyint(2) NOT NULL COMMENT '权限',
+  PRIMARY KEY (`t_num`),
+  KEY `group_id` (`group_id`),
+  KEY `t_office` (`t_office`),
+  CONSTRAINT `teachers_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
+  CONSTRAINT `teachers_ibfk_2` FOREIGN KEY (`t_office`) REFERENCES `office` (`office_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="group" view="colnames">
+<left>42</left>
+<top>241</top>
+<width>111</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `group` (
+  `group_id` tinyint(2) NOT NULL,
+  `group_type` varchar(15) NOT NULL,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="office" view="colnames">
+<left>54</left>
+<top>414</top>
+<width>116</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `office` (
+  `office_id` varchar(30) NOT NULL COMMENT '教研室号',
+  `office_name` varchar(30) NOT NULL COMMENT '教研室名称',
+  `dept` varchar(30) NOT NULL COMMENT '所属系别',
+  PRIMARY KEY (`office_id`),
+  KEY `dept` (`dept`),
+  CONSTRAINT `office_ibfk_1` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="department" view="colnames">
+<left>438</left>
+<top>447</top>
+<width>110</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `department` (
+  `dept_num` varchar(30) NOT NULL COMMENT '专业代码',
+  `dept_name` varchar(30) NOT NULL COMMENT '专业名称',
+  PRIMARY KEY (`dept_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
