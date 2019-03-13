@@ -99,6 +99,8 @@ public class StudentController extends BaseController{
         return new TokenJsonOut(accessToken, refreshToken);
     }
 
+    @ApiOperation("请求考试安排")
+    @ApiImplicitParam(name = ConstConfig.AUTHORIZATION,value = "token:xxx accessToken")
     @CheckToken
     @RequestMapping("/exam")
     @ResponseBody

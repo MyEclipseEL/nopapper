@@ -3,6 +3,7 @@ package com.ladybird.hkd.service.impl;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.mapper.TeacherMapper;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
+import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
 import com.ladybird.hkd.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,10 @@ public class TeacherServiceImpl implements TeacherService{
         if (teacherJsonOut == null)
             throw new ParamException("用户名密码错误！");
         return teacherJsonOut;
+    }
+
+    @Override
+    public Teach checkOutCourse(String t_num) throws Exception {
+        return teacherMapper.checkOutCourse(t_num);
     }
 }

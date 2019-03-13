@@ -1,7 +1,9 @@
 package com.ladybird.hkd.mapper;
 
 import com.ladybird.hkd.model.json.TeacherJsonOut;
+import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,4 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface TeacherMapper {
     TeacherJsonOut validNumPwd(Teacher teacher) throws Exception;
+
+    Teach checkOutCourse(@Param("teacher") String t_num) throws Exception;
 }

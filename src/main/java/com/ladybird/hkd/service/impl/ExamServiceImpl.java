@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Shen
@@ -27,7 +27,7 @@ public class ExamServiceImpl implements ExamService {
     public ExamJsonOut selectExamByStuNum(String stu_num) throws Exception {
         ExamJsonOut examJsonOut = examMapper.selectExamByStuNum(stu_num);
         examJsonOut.setPre_time(new Date(examJsonOut.getPre_time().getTime()/1000));
-        System.out.println(examJsonOut.getPre_time());
+        examJsonOut.setBegin_time(new Date(examJsonOut.getBegin_time().getTime()/1000));
         return examJsonOut;
     }
 
@@ -43,5 +43,25 @@ public class ExamServiceImpl implements ExamService {
             throw new Exception();
         }
         return examJsonOut;
+    }
+
+    @Override
+    public List<ExamJsonOut> checkOutByCourseGrades(Integer course, String[] gradesString) throws Exception {
+        int[] grades = new int[gradesString.length];
+        for (int i=0;i<gradesString.length;i++) {
+            grades[i] = Integer.parseInt(gradesString[i]);
+        }
+        List<ExamJsonOut> examJsonOuts = examMapper.checkOutByCourseGrades(course, grades);
+        for (ExamJsonOut e : examJsonOuts) {
+            e.setPre_time(new Date(e.getPre_time().getTime()/1000));
+            e.setBegin_time(new Date(e.getBegin_time().getTime()/1000));
+        }
+        return examJsonOuts;
+    }
+
+    @Override
+    public void changeStateAndBegin(String exam,Integer state) throws Exception {
+        java.sql.Date date = new java.sql.Date(new Date().getTime());
+        examMapper.changeStateAndBegin(exam,date,state);
     }
 }
