@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ladybird.hkd.mapper.ExamMapper" >
+
+    <resultMap id="examOut" type="com.ladybird.hkd.model.json.ExamJsonOut">
+        <id column="exam_id" property="exam_id" jdbcType="VARCHAR"/>
+        <result column="pre_time" property="pre_time"  />
+        <result column="begin_time" property="begin_time" />
+        <result column="duration" property="duration" />
+        <association property="course" javaType="com.ladybird.hkd.model.pojo.Course">
+            <id column="c_id" property="c_id" />
+            <result column="c_name" property="c_name" jdbcType="VARCHAR"/>
+        </association>
+        <association property="grade" javaType="com.ladybird.hkd.model.pojo.Grade">
+            <id column="g_id" property="g_id" />
+            <result column="g_year" property="g_year" />
+            <result column="g_class" property="g_class" />
+        </association>
+    </resultMap>
+
+   <!-- <select id="selectExamByCourseStuNum" resultMap="examOut">
+        SELECT * FROM exam e
+         LEFT JOIN course c ON e.course=c.c_id
+        LEFT JOIN grade g ON e.grade=g.g_id
+        WHERE grade=(SELECT grade FROM students WHERE stu_num=${stu_num} )
+              AND course=${course}
+    </select>-->
+
+    <select id="selectExamByStuNum" resultMap="examOut">
+        SELECT * FROM exam e
+        LEFT JOIN course c ON e.course=c.c_id
+        LEFT JOIN grade g ON e.grade=g.g_id
+        WHERE grade=(SELECT grade FROM students WHERE stu_num=${stu_num} )
+
+    </select>
+
+    <select id="checkOutExamById" resultMap="examOut">
+        SELECT * FROM exam e
+            LEFT JOIN course c ON e.course=c.c_id
+            LEFT JOIN grade g ON e.grade=g.g_id
+        WHERE exam_id=${exam_id}
+    </select>
+
+    <select id="checkExamState" resultType="Integer" parameterType="String">
+        SELECT state from exam WHERE exam_id=${exam_id}
+    </select>
+</mapper>

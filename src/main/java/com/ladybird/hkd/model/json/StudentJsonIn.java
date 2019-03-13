@@ -13,6 +13,7 @@ public class StudentJsonIn {
     private String stu_pwd;
     private String score;
 
+
     public static void ValidRequiredPwd(StudentJsonIn temp) throws ParamException {
         if (temp.getStu_num() == null || "".equals(temp.getStu_num())) {
             throw new ParamException("学号必须填！");

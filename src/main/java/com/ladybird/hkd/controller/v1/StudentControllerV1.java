@@ -1,11 +1,11 @@
-package com.ladybird.hkd.controller;
+package com.ladybird.hkd.controller.v1;
 
 import com.ladybird.hkd.annotation.CheckToken;
-import com.ladybird.hkd.exception.BusinessException;
+import com.ladybird.hkd.controller.BaseController;
 import com.ladybird.hkd.exception.ParamException;
-import com.ladybird.hkd.exception.TokenException;
 import com.ladybird.hkd.manager.TokenManager;
 import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.StudentJsonIn;
 import com.ladybird.hkd.model.json.TokenJsonOut;
 import com.ladybird.hkd.model.pojo.Score;
@@ -13,7 +13,6 @@ import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.StudentService;
 import com.ladybird.hkd.util.ConstConfig;
-import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.util.JsonUtil;
 import com.ladybird.hkd.util.ParamUtils;
 import io.swagger.annotations.Api;
@@ -21,10 +20,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
@@ -32,13 +32,13 @@ import java.math.BigDecimal;
 
 /**
  * @author Shen
- * @description: 学生控制层
- * @create: 2019-03-20
+ * @description: v1版本
+ * @create: 2019-03-14
  */
 @Api(value = "学生controller",tags = "学生管理类")
 @Controller
-@RequestMapping("/student")
-public class StudentController extends BaseController{
+@RequestMapping("/v1/student")
+public class StudentControllerV1 extends BaseController {
 
     @Autowired
     private StudentService studentService;
@@ -60,16 +60,16 @@ public class StudentController extends BaseController{
         if (ParamUtils.stringIsNull(score) || ParamUtils.stringIsNull(course)){
             return ResultJson.ParameterError();
         }
-            String studentJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-            if (ParamUtils.stringIsNull(studentJson)) {
-                return ResultJson.ServerException();
-            }
-            Student student = JsonUtil.jsonToPojo(studentJson, Student.class);
-            if (student == null) {
-                return ResultJson.ServerException();
-            }
-            Score param = new Score(student.getStu_num(), Integer.parseInt(course), new BigDecimal(score));
-            studentService.checkInScore(param);
+        String studentJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
+        if (ParamUtils.stringIsNull(studentJson)) {
+            return ResultJson.ServerException();
+        }
+        Student student = JsonUtil.jsonToPojo(studentJson, Student.class);
+        if (student == null) {
+            return ResultJson.ServerException();
+        }
+        Score param = new Score(student.getStu_num(), Integer.parseInt(course), new BigDecimal(score));
+        studentService.checkInScore(param);
 
         return ResultJson.Success();
     }
@@ -120,3 +120,4 @@ public class StudentController extends BaseController{
     }
 
 }
+

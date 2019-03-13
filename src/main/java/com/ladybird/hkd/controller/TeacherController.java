@@ -9,6 +9,8 @@ import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.json.TokenJsonOut;
 import com.ladybird.hkd.model.pojo.Teacher;
 import com.ladybird.hkd.service.TeacherService;
+import com.ladybird.hkd.util.ConstConfig;
+import com.ladybird.hkd.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
 
 /**
  * @author Shen
@@ -47,9 +50,21 @@ public class TeacherController extends BaseController {
         return new TokenJsonOut(accessToken, reToken);
     }
 
-//    @CheckToken
-//    public Object beginExam(NativeWebRequest request) throws Exception{
-//
-//    }
+    @CheckToken
+    public Object beginExam(String exam,NativeWebRequest request) throws Exception{
+        //获取登陆教师的信息
+        String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
+        if (teacherJson == null) {
+            return ResultJson.ServerException();
+        }
+        //转为对象
+        TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
+        //查找考试
+
+        //判断考试状态
+
+        //未开始的考试可以开始考试
+        return null;
+    }
 
 }

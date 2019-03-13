@@ -48,7 +48,9 @@ public class ResultJson {
         this.data = data;
     }
 
+    public static ResultJson Success(String msg){return new ResultJson(0, msg, null);}
     public static ResultJson Success(){return new ResultJson(0, "success", null);}
+
 
     public static ResultJson Success(Object data){return new ResultJson(0,"success",data);}
 

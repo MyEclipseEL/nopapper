@@ -10,13 +10,13 @@ import java.util.Date;
  */
 public class Grade {
     private Integer g_id;
-    private Date g_year;
+    private Integer g_year;
     private Integer g_class;
 
     public Grade() {
     }
 
-    public Grade(Integer g_id, Date g_year, Integer g_class) {
+    public Grade(Integer g_id, Integer g_year, Integer g_class) {
         this.g_id = g_id;
         this.g_year = g_year;
         this.g_class = g_class;
@@ -30,11 +30,11 @@ public class Grade {
         this.g_id = g_id;
     }
 
-    public Date getG_year() {
+    public Integer getG_year() {
         return g_year;
     }
 
-    public void setG_year(Date g_year) {
+    public void setG_year(Integer g_year) {
         this.g_year = g_year;
     }
 
