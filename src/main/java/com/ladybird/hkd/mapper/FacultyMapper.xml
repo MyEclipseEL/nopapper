@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ladybird.hkd.mapper.FacultyMapper" >
+
+    <insert id="addFaculty" parameterType="com.ladybird.hkd.model.pojo.Faculty">
+        INSERT INTO faculty  VALUES( #{fac_num}, #{fac_name})
+    </insert>
+
+    <delete id="delFaculty" parameterType="String">
+        DELETE FROM department WHERE dept_num = #{dept_num};
+    </delete>
+
+    <update id="updateFaculty" parameterType="com.ladybird.hkd.model.pojo.Faculty">
+        update faculty set fac_num=#{fac_num},fac_name=#{fac_name} where fac_num=#{fac_num};
+    </update>
+
+    <select id="findFaculty" parameterType="com.ladybird.hkd.model.pojo.Faculty" resultType="com.ladybird.hkd.model.pojo.Faculty">
+        SELECT * FROM faculty
+        <where>
+
+            <if test="fac_num != null and fac_num != ''">
+                and fac_num = #{fac_num}
+            </if>
+            <if test="fac_name != null and fac_name != ''">
+                and fac_name LIKE '%${fac_name}%'
+            </if>
+        </where>
+    </select>
+
+    <select id="findFacultyByName" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Faculty">
+        select * from faculty where fac_name=#{fac_name}
+    </select>
+    <select id="findFacultyByNum" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Faculty">
+        select * from faculty where fac_num=#{fac_num}
+    </select>
+</mapper>
