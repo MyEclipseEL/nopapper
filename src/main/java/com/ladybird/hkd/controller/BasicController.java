@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @description: 基本信息管理
  * @create: 2019-03-13
  */
+@CrossOrigin
 @Api(value = "基本信息controller",tags = "基本信息管理类")
 @Controller
 @RequestMapping("/basic")

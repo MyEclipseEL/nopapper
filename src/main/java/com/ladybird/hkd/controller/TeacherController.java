@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +34,7 @@ import java.util.List;
  * @description: 老师管理类
  * @create: 2019-03-13
  */
+@CrossOrigin(value = "*")
 @RequestMapping("/teacher")
 @Controller
 public class TeacherController extends BaseController {
@@ -66,42 +68,6 @@ public class TeacherController extends BaseController {
         return new TokenJsonOut(accessToken, reToken);
     }
 
-    @ApiOperation("获取考试场次")
-    @CheckToken
-    @ResponseBody
-    @RequestMapping("/exams")
-    public Object findExams(NativeWebRequest request) throws Exception{
-        //获取登陆教师的信息
-        String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-        if (teacherJson == null) {
-            return ResultJson.ServerException();
-        }
-        //转为对象
-        TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
-        //查找考试
-        Teach teach = teacherService.checkOutCourse(teacherJsonOut.getT_num());
-        if (teach == null)
-            throw new BusinessException("没有您的授课记录！");
-        String[] grades = teach.getGrade().split("\\ ");
-        if (grades.length == 0) {
-            throw new Exception();
-        }
-        //得到考试列表
-        List<ExamJsonOut> list = examService.checkOutByCourseGrades(teach.getCourse(),grades);
 
-        return list;
-    }
-
-    @ApiOperation("开始考试，设置倒计时开始")
-    @ApiImplicitParam(name = "exam",value = "考试号",required = true)
-    @CheckToken
-    @RequestMapping("/beginExam")
-    @ResponseBody
-    public Object beginExam(String exam) throws Exception{
-        if (ParamUtils.stringIsNull(exam))
-            throw new ParamException("考试号没有传！");
-        examService.changeStateAndBegin(exam, ExamStateEnum.BEGIN.getCode());
-        return ResultJson.Success();
-    }
 
 }

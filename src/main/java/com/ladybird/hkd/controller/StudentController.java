@@ -35,6 +35,7 @@ import java.math.BigDecimal;
  * @description: 学生控制层
  * @create: 2019-03-20
  */
+@CrossOrigin
 @Api(value = "学生controller",tags = "学生管理类")
 @Controller
 @RequestMapping("/student")
@@ -48,31 +49,7 @@ public class StudentController extends BaseController{
     @Autowired
     private TokenManager tokenManager;
 
-    @ApiOperation("提交试卷成绩")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "score",value = "分数",required = true),
-            @ApiImplicitParam(name = "course",value = "课程号",required = true)
-    })
-    @CheckToken
-    @RequestMapping(value = "/commitPaper",method = RequestMethod.GET)
-    @ResponseBody
-    public Object commitPaper(String score,String course,NativeWebRequest request) throws Exception{
-        if (ParamUtils.stringIsNull(score) || ParamUtils.stringIsNull(course)){
-            return ResultJson.ParameterError();
-        }
-            String studentJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-            if (ParamUtils.stringIsNull(studentJson)) {
-                return ResultJson.ServerException();
-            }
-            Student student = JsonUtil.jsonToPojo(studentJson, Student.class);
-            if (student == null) {
-                return ResultJson.ServerException();
-            }
-            Score param = new Score(student.getStu_num(), Integer.parseInt(course), new BigDecimal(score));
-            studentService.checkInScore(param);
 
-        return ResultJson.Success();
-    }
 
     @ApiOperation(value = "学生登陆")
     @ApiImplicitParams({
@@ -99,26 +76,5 @@ public class StudentController extends BaseController{
         return new TokenJsonOut(accessToken, refreshToken);
     }
 
-    @ApiOperation("请求考试安排")
-    @ApiImplicitParam(name = ConstConfig.AUTHORIZATION,value = "token:xxx accessToken")
-    @CheckToken
-    @RequestMapping("/exam")
-    @ResponseBody
-    public Object exam(NativeWebRequest request) throws Exception{
-        String studentJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-        if (ParamUtils.stringIsNull(studentJson)) {
-            return ResultJson.ServerException();
-        }
-        Student student = JsonUtil.jsonToPojo(studentJson, Student.class);
-        if (student == null) {
-            throw new Exception("Token中没有用户信息！");
-        }
-        if (ParamUtils.stringIsNull(student.getStu_num()))
-            return ResultJson.ServerException();
-        ExamJsonOut examJsonOut = examService.selectExamByStuNum(student.getStu_num());
-        if (examJsonOut == null)
-            return ResultJson.Success("暂时没有考试！");
-        return examJsonOut;
-    }
 
 }

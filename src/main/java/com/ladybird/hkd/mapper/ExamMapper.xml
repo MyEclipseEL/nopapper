@@ -52,15 +52,24 @@
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
             LEFT JOIN grade g ON e.grade=g.g_id
-        WHERE course=${course} AND NOT state=-1
-            grade IN
+        WHERE course=${course} AND NOT state=-1 AND
+            e.grade IN
         <foreach collection="grades" open="(" close=")" separator=","  item="grade">
-            #{grade}
+            ${grade}
         </foreach>
     </select>
 
     <update id="changeStateAndBegin" >
-        UPDATE exam SET state=${state} , begin_time=${begin_time}
+        UPDATE exam SET state=${state} , begin_time=#{begin_time,jdbcType=TIMESTAMP}
         WHERE exam_id=${exam_id}
     </update>
+
+    <update id="updatePaper" parameterType="com.ladybird.hkd.model.pojo.PaperEdit">
+        UPDATE paper_edit SET single_choice=${single_choice},multiple_choice=${multiple_choice},checking=${checking} where id=1
+    </update>
+
+    <select id="checkOutPaper" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
+        select *
+        from paper_edit where id=1
+    </select>
 </mapper>

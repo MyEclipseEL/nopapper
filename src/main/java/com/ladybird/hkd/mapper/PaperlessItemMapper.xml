@@ -40,4 +40,13 @@
     <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score">
         insert into score  values (${student},${course},${s_score});
     </insert>
+
+
+    <update id="updateTypeScore" parameterType="List">
+
+            <foreach collection="list" item="type" index="index">
+                UPDATE item_type SET  type_score = ${type.type_score}
+                WHERE type_id="${type.type_id}";
+            </foreach>
+    </update>
 </mapper>

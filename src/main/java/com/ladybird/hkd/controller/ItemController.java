@@ -7,6 +7,7 @@ import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.json.ExamJsonOut;
 import com.ladybird.hkd.model.json.ItemsOut;
 import com.ladybird.hkd.model.json.ResultJson;
+import com.ladybird.hkd.model.pojo.ItemType;
 import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.model.vo.ItemVO;
 import com.ladybird.hkd.service.ExamService;
@@ -16,10 +17,7 @@ import com.ladybird.hkd.util.JsonUtil;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
@@ -33,6 +31,7 @@ import static com.ladybird.hkd.model.json.ResultJson.Success;
  * @description: 题目控制类
  * @create: 2019-03-13
  */
+@CrossOrigin
 @Api("题目接口")
 @Controller
 @RequestMapping("/item")
@@ -63,7 +62,7 @@ public class ItemController extends BaseController{
     @RequestMapping(value = "/paper",method = RequestMethod.GET)
     @ApiOperation(value = "请求试卷",notes = "请求单张试卷的所有题目")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "exam",value = "考试号"),
+            @ApiImplicitParam(name = "exam",value = "考试号",required = true),
             @ApiImplicitParam(name = "authorization",value = "token",required = true,paramType = "header")
     })
     public Object getPaper(@RequestParam String exam) throws Exception {
@@ -88,4 +87,27 @@ public class ItemController extends BaseController{
 
         return ResultJson.Success(outList);
     }
+
+    @ApiOperation("配置考试题型分数")
+    @CheckToken
+    @ResponseBody
+    @RequestMapping(value = "/editTypeScore",method = RequestMethod.POST)
+    public Object editTypeScore(@RequestBody List<ItemType> itemTypes) throws Exception{
+        if (itemTypes.size() <3)
+            return ResultJson.ServerException();
+        itemService.updateTypeScore(itemTypes);
+        return ResultJson.Success(itemService.checkOutTypes());
+    }
+
+    @CheckToken
+    @ResponseBody
+    @RequestMapping(value = "/checkOutTypes",method = RequestMethod.GET)
+    public Object checkOutTypes() throws Exception{
+        List<ItemType> types = itemService.checkOutTypes();
+        if (types.size() <3)
+            return ResultJson.ServerException();
+        return ResultJson.Success(types);
+    }
+
+
 }

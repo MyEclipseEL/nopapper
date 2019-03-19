@@ -96,4 +96,14 @@ public class ItemServiceImpl implements ItemService {
         result.add(new ItemsOut(checking, checkings));
         return result;
     }
+
+    @Override
+    public List<ItemType> checkOutTypes() throws Exception {
+        return paperlessItemMapper.checkOutItemTypes();
+    }
+
+    @Override
+    public void updateTypeScore(List<ItemType> itemTypes) throws Exception {
+        paperlessItemMapper.updateTypeScore(itemTypes);
+    }
 }
