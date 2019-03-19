@@ -116,7 +116,11 @@ POST /item/editTypeScore
 ```$xslt
 header:{"authorization":"aa access_token"}
 {
-    "exam": 1 考试号
+    [
+    	{"type_id":"A","type_score":15},
+    	{"type_id":"B","type_score":15},
+    	{"type_id":"C","type_score":15}
+    ]
 }
 ```
 
