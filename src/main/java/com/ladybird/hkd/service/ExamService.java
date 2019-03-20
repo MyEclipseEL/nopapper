@@ -1,6 +1,7 @@
 package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 
 import java.sql.Date;
@@ -23,4 +24,6 @@ public interface ExamService {
     void updatePaper(PaperEdit paperEdit) throws Exception;
 
     PaperEdit checkOutPaper() throws Exception;
+
+    ExamJsonOut addExam(Exam exam) throws Exception;
 }

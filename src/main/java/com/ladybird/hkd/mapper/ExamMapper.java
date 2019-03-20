@@ -1,6 +1,7 @@
 package com.ladybird.hkd.mapper;
 
 import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -26,4 +27,6 @@ public interface ExamMapper {
     void updatePaper(PaperEdit paperEdit) throws Exception;
 
     PaperEdit checkOutPaper() throws Exception;
+
+    void addExam(Exam exam) throws Exception;
 }

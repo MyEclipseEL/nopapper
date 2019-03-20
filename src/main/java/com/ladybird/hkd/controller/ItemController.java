@@ -99,6 +99,7 @@ public class ItemController extends BaseController{
         return ResultJson.Success(itemService.checkOutTypes());
     }
 
+    @ApiOperation("查找所有题型")
     @CheckToken
     @ResponseBody
     @RequestMapping(value = "/checkOutTypes",method = RequestMethod.GET)

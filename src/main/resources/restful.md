@@ -32,29 +32,6 @@ error:{
 
 ##StudentController 学生管理类
 ###student login
-```$xslt
-POST /student/login
-```
-参数
-```$xslt
-body:{
-    'stu_num'   : '1', //学号
-    'stu_pwd'   : '1', //密码
-    'stu_ID'    : '1' //身份证
-}
-```
-返回
-```$xslt
-success:{
-    "access_token": "a86d462f028b44179fcb842f9d3fd10e.d86c828583c5c6160e8acfee88ba1590",
-    "refresh_token": "f907308faa044c87a71613ba007a2706.e57941dbe1246fe97a4ffc16e85b5df9"
-}
-error:{
-          'code'  : 1003,1004...,
-          'msg'   : '失败原因',
-          'data'  : null
-      }
-```
 
 ##ItemController 题目管理类
 ###请求所有题目 --一个科目 
@@ -106,7 +83,6 @@ success{
 }
 
 ```
-###请求试卷题目
 
 ###配置试卷题型分数
 ```$xslt
@@ -237,71 +213,48 @@ null
 ]
 ```
 
-###老师开始考试
+###添加考试 
 ```$xslt
-GET /exam/beginExam
+POST /exam/addExam
 ```
 参数
 ```$xslt
 {
-    "exam"  : 1     考试id
+	"course":1,
+	"grade"	:1,
+	"pre_time":1553002861000,
+	"duration":120
 }
 ```
 返回
 ```$xslt
 {
-    "code"  : "0",
-    "msg"   : "成功",
-    "data"  : null
+    "message": "success",
+    "code": 0,
+    "data": {
+        "exam_id": "2019031909410111",
+        "course": {
+            "c_id": 1,
+            "c_name": "软件工程"
+        },
+        "grade": {
+            "g_id": 1,
+            "g_year": 2015,
+            "g_class": 1
+        },
+        "pre_time": "2019-03-19 21:41:01",
+        "begin_time": null,
+        "duration": 120,
+        "state": 0
+    }
 }
 ```
 
-###提交考试分数
-```$xslt
-GET /exam/commitPaper
-```
-参数
-```$xslt
-{
-    "course"    : 1,
-    "score"     : 99
-}
-```
-返回
-```$xslt
-{
-    "code"  : "0",
-    "msg"   : "成功",
-    "data"  : null
-}
-```
-###学生请求考试安排
-```$xslt
-GET /exam/exam
-```
-参数
-```$xslt
-无
-```
-返回
-```$xslt
-{
-    "exam_id": "1",
-    "course": {
-        "c_id": 1,
-        "c_name": "软件工程"
-    },
-    "grade": {
-        "g_id": 1,
-        "g_year": 2015,
-        "g_class": 1
-    },
-    "pre_time": 1552541400,     //预设时间
-    "begin_time": 1552978538,   //开始时间
-    "duration": 120,
-    "state": 1
-}
-```
+
+
+
+
+
 
 
 

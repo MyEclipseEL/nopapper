@@ -29,6 +29,7 @@
               AND course=${course}
     </select>-->
 
+
     <select id="selectExamByStuNum" resultMap="examOut">
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
@@ -72,4 +73,17 @@
         select *
         from paper_edit where id=1
     </select>
+
+    <sql id="selCourseId">
+        SELECT c_id FROM course WHERE c_id = ${course}
+    </sql>
+
+    <sql id="selGradeId">
+        SELECT g_id FROM grade WHERE g_id=${grade}
+    </sql>
+
+    <insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
+        INSERT INTO exam(exam_id,course,grade,pre_time,duration) VALUES (${exam_id},
+        ${course},${grade},#{pre_time,jdbcType=TIMESTAMP},${duration});
+    </insert>
 </mapper>

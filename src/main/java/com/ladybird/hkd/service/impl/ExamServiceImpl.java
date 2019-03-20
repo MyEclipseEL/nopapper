@@ -2,12 +2,14 @@ package com.ladybird.hkd.service.impl;
 
 import com.ladybird.hkd.mapper.ExamMapper;
 import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import com.ladybird.hkd.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +76,15 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public PaperEdit checkOutPaper() throws Exception {
         return examMapper.checkOutPaper();
+    }
+
+    @Override
+    public ExamJsonOut addExam(Exam exam) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
+        String exam_id = format.format(exam.getPre_time()) + exam.getCourse() + exam.getGrade();
+        exam.setExam_id(exam_id);
+        examMapper.addExam(exam);
+        return examMapper.checkOutExamById(exam_id);
     }
 
 }
