@@ -4,7 +4,38 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="application/json"/>
+            </bean>
+            <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd"/>
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>-->
+        </mvc:message-converters>
+
+    </mvc:annotation-driven>
+    <!-- 转换器配置 -->
     <mvc:default-servlet-handler/>
 
     <context:component-scan base-package="com.ladybird.hkd"/>
@@ -12,6 +43,13 @@
     <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
+    <!--<mvc:cors>
+        <mvc:mapping path="/**"
+                    allowed-origins="*"
+                     allowed-methods="POST,GET,OPTIONS,DELETE,PUT"
+                     allowed-headers="Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+                     allow-credentials="true"/>
+    </mvc:cors>-->
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>

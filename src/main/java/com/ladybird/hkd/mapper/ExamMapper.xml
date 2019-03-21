@@ -29,6 +29,7 @@
               AND course=${course}
     </select>-->
 
+
     <select id="selectExamByStuNum" resultMap="examOut">
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
@@ -52,15 +53,37 @@
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
             LEFT JOIN grade g ON e.grade=g.g_id
-        WHERE course=${course} AND NOT state=-1
-            grade IN
+        WHERE course=${course} AND NOT state=-1 AND
+            e.grade IN
         <foreach collection="grades" open="(" close=")" separator=","  item="grade">
-            #{grade}
+            ${grade}
         </foreach>
     </select>
 
     <update id="changeStateAndBegin" >
-        UPDATE exam SET state=${state} , begin_time=${begin_time}
+        UPDATE exam SET state=${state} , begin_time=#{begin_time,jdbcType=TIMESTAMP}
         WHERE exam_id=${exam_id}
     </update>
+
+    <update id="updatePaper" parameterType="com.ladybird.hkd.model.pojo.PaperEdit">
+        UPDATE paper_edit SET single_choice=${single_choice},multiple_choice=${multiple_choice},checking=${checking} where id=1
+    </update>
+
+    <select id="checkOutPaper" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
+        select *
+        from paper_edit where id=1
+    </select>
+
+    <sql id="selCourseId">
+        SELECT c_id FROM course WHERE c_id = ${course}
+    </sql>
+
+    <sql id="selGradeId">
+        SELECT g_id FROM grade WHERE g_id=${grade}
+    </sql>
+
+    <insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
+        INSERT INTO exam(exam_id,course,grade,pre_time,duration) VALUES (${exam_id},
+        ${course},${grade},#{pre_time,jdbcType=TIMESTAMP},${duration});
+    </insert>
 </mapper>

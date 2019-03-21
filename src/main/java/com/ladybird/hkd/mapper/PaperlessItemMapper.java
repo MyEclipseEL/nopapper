@@ -40,4 +40,6 @@ public interface PaperlessItemMapper {
     Set<Item> checkOutItemsByCourseSet(@Param("course") Integer course)throws Exception;
 
     void checkInScore(Score score)throws Exception;
+
+    void updateTypeScore(List<ItemType> itemTypes) throws Exception;
 }

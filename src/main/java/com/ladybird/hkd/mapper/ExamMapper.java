@@ -1,6 +1,8 @@
 package com.ladybird.hkd.mapper;
 
 import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.pojo.Exam;
+import com.ladybird.hkd.model.pojo.PaperEdit;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +20,13 @@ public interface ExamMapper {
 
     ExamJsonOut checkOutExamById(@Param("exam_id") String exam_id) throws Exception;
 
-    List<ExamJsonOut> checkOutByCourseGrades(@Param("course") Integer course,@Param("grades") int[] grades);
+    List<ExamJsonOut> checkOutByCourseGrades(@Param("course") Integer course,@Param("grades") int[] grades) throws Exception;
 
-    void changeStateAndBegin(@Param("exam_id") String exam, @Param("begin_time") Date date,@Param("state") Integer state);
+    void changeStateAndBegin(@Param("exam_id") String exam, @Param("begin_time") Date date, @Param("state") Integer state) throws Exception;
+
+    void updatePaper(PaperEdit paperEdit) throws Exception;
+
+    PaperEdit checkOutPaper() throws Exception;
+
+    void addExam(Exam exam) throws Exception;
 }

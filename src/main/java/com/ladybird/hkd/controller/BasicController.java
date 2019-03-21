@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+/**
+ * @author Shen
+ * @description: 基本信息管理
+ * @create: 2019-03-13
+ */
 @Api(value = "基本信息controller",tags = "基本信息管理类")
 @Controller
 @RequestMapping("/basic")
@@ -41,7 +45,6 @@ public class BasicController extends BaseController {
 
 
         if(ParamUtils.stringIsNull(course.getC_name())){
-
 
             throw new ParamException("请输入添加的课程名称");
         }

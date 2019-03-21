@@ -1,6 +1,7 @@
 package com.ladybird.hkd.model.pojo;
 
 import com.ladybird.hkd.exception.BusinessException;
+import com.ladybird.hkd.exception.ParamException;
 
 import java.sql.Time;
 import java.util.Date;
@@ -18,6 +19,17 @@ public class Exam {
     private Date begin_time;    //考试开始时间
     private Integer duration;   //考试时长  （毫秒）
     private Integer state;      //状态 默认0 表示考试未开始
+
+    public static void ValidExamIn(Exam exam) throws ParamException{
+        if (exam.getCourse() == null || exam.getCourse() == 0)
+            throw new ParamException("没有选择科目！");
+        if (exam.getGrade() == null || exam.getGrade() == 0)
+            throw new ParamException("没有选择班级！");
+        if (exam.getPre_time() == null)
+            throw new ParamException("没有预定时间！");
+        if (exam.getDuration()==null || exam.getDuration() == 0)
+            throw new ParamException("没有考试时长！");
+    }
 
     public Integer getState() {
         return state;

@@ -1,6 +1,7 @@
 package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.model.json.ItemsOut;
+import com.ladybird.hkd.model.pojo.ItemType;
 import com.ladybird.hkd.model.vo.ItemVO;
 
 import java.util.List;
@@ -19,4 +20,8 @@ public interface ItemService {
     Object checkOutItems(Integer course) throws Exception;
 
     List<ItemsOut> getPaper(Integer course) throws Exception;
+
+    List<ItemType> checkOutTypes() throws Exception;
+
+    void updateTypeScore(List<ItemType> itemTypes) throws Exception;
 }
