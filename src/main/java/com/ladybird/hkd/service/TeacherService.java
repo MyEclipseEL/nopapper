@@ -10,5 +10,5 @@ import com.ladybird.hkd.model.pojo.Teacher;
 public interface TeacherService {
     TeacherJsonOut login(Teacher teacher) throws Exception;
 
-    Teach checkOutCourse(String t_num) throws Exception;
+    Teach checkOutTeaches(String t_num) throws Exception;
 }

@@ -3,6 +3,7 @@
 base url: http://nopaper.eiber.cn/nopapper
 ```
 **tap：除登陆外所有的请求请带上token ，格式见前几个请求**
+
 ##TeacherController 教师管理
 ###teacher login
 ```
@@ -221,7 +222,8 @@ POST /exam/addExam
 ```$xslt
 {
 	"course":1,
-	"grade"	:1,
+	"grades":[1,2],
+	"dept"  :"10001",
 	"pre_time":1553002861000,
 	"duration":120
 }

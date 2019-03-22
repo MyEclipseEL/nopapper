@@ -13,5 +13,5 @@ import org.springframework.stereotype.Component;
 public interface TeacherMapper {
     TeacherJsonOut validNumPwd(Teacher teacher) throws Exception;
 
-    Teach checkOutCourse(@Param("teacher") String t_num) throws Exception;
+    Teach checkOutTeaches(@Param("teacher") String t_num) throws Exception;
 }

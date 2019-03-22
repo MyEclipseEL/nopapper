@@ -1,15 +1,22 @@
 package com.ladybird.hkd.service.impl;
 
+import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.mapper.ExamMapper;
+import com.ladybird.hkd.model.json.ExamJsonIn;
 import com.ladybird.hkd.model.json.ExamJsonOut;
 import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.PaperEdit;
+import com.ladybird.hkd.model.pojo.Student;
+import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.service.ExamService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,11 +34,16 @@ public class ExamServiceImpl implements ExamService {
 
 
     @Override
-    public ExamJsonOut selectExamByStuNum(String stu_num) throws Exception {
-        ExamJsonOut examJsonOut = examMapper.selectExamByStuNum(stu_num);
-        examJsonOut.setPre_time(new Date(examJsonOut.getPre_time().getTime()/1000));
-        examJsonOut.setBegin_time(new Date(examJsonOut.getBegin_time().getTime()/1000));
-        return examJsonOut;
+    public List<ExamJsonOut> selectExamByStu(Student student) throws Exception {
+        List<ExamJsonOut> examJsonOuts = examMapper.selectExamByStu(student);
+        for (ExamJsonOut examJsonOut:examJsonOuts) {
+            examJsonOut.setPre_time(new Date(examJsonOut.getPre_time().getTime() / 1000));
+            try {
+                examJsonOut.setBegin_time(new Date(examJsonOut.getBegin_time().getTime() / 1000));
+            } catch (NullPointerException ne) {
+            }
+        }
+        return examJsonOuts;
     }
 
     @Override
@@ -49,23 +61,27 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public List<ExamJsonOut> checkOutByCourseGrades(Integer course, String[] gradesString) throws Exception {
+    public List<ExamJsonOut> checkOutByTeach(Teach teach) throws Exception {
+        String[] gradesString = teach.getGrade().split("\\ ");
         int[] grades = new int[gradesString.length];
         for (int i=0;i<gradesString.length;i++) {
             grades[i] = Integer.parseInt(gradesString[i]);
         }
-        List<ExamJsonOut> examJsonOuts = examMapper.checkOutByCourseGrades(course, grades);
+        List<ExamJsonOut> examJsonOuts = examMapper.checkOutByCourseGradesDept(teach.getCourse(), grades,teach.getDept());
         for (ExamJsonOut e : examJsonOuts) {
             e.setPre_time(new Date(e.getPre_time().getTime()/1000));
-            e.setBegin_time(new Date(e.getBegin_time().getTime()/1000));
+            try {
+                e.setBegin_time(new Date(e.getBegin_time().getTime() / 1000));
+            } catch (NullPointerException ne) {
+            }
         }
         return examJsonOuts;
     }
 
     @Override
-    public void changeStateAndBegin(String exam,Integer state) throws Exception {
+    public void changeStateAndBegin(String[] exams,Integer state) throws Exception {
         Date date = new Date();
-        examMapper.changeStateAndBegin(exam,date,state);
+        examMapper.changeStateAndBegin(exams,date,state);
     }
 
     @Override
@@ -79,12 +95,26 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamJsonOut addExam(Exam exam) throws Exception {
+    public List<ExamJsonOut> addExams(ExamJsonIn exam) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-        String exam_id = format.format(exam.getPre_time()) + exam.getCourse() + exam.getGrade();
-        exam.setExam_id(exam_id);
-        examMapper.addExam(exam);
-        return examMapper.checkOutExamById(exam_id);
+        String exam_id = format.format(exam.getPre_time()) + exam.getCourse() + exam.getDept();
+        List<String> ids = new ArrayList<>();
+        List<Exam> exams = new ArrayList<>();
+        for (Integer i : exam.getGrades()) {
+            Exam e = new Exam();
+            BeanUtils.copyProperties(exam,e);
+            e.setExam_id(exam_id + i);
+            e.setGrade(i);
+            exams.add(e);
+            ids.add(e.getExam_id());
+        }
+        try {
+            examMapper.addExams(exams);
+        } catch (SQLIntegrityConstraintViolationException se) {
+            se.printStackTrace();
+            throw new BusinessException("该考试已存在！");
+        }
+        return examMapper.checkOutExamByIds(ids);
     }
 
 }

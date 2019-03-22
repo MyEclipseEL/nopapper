@@ -14,7 +14,8 @@ import java.util.Date;
 public class Exam {
     private String exam_id;     //考试号
     private Integer course;     //考试课程
-    private Integer grade;      //考试班级
+    private Integer grade;       //考试班级
+    private String dept;        //考试专业
     private Date pre_time;      //预设开始时间
     private Date begin_time;    //考试开始时间
     private Integer duration;   //考试时长  （毫秒）
@@ -23,12 +24,28 @@ public class Exam {
     public static void ValidExamIn(Exam exam) throws ParamException{
         if (exam.getCourse() == null || exam.getCourse() == 0)
             throw new ParamException("没有选择科目！");
-        if (exam.getGrade() == null || exam.getGrade() == 0)
-            throw new ParamException("没有选择班级！");
+        if (exam.getDept()==null || "".equals(exam.getDept().trim()))
+            throw new ParamException("没有选择专业");
         if (exam.getPre_time() == null)
             throw new ParamException("没有预定时间！");
         if (exam.getDuration()==null || exam.getDuration() == 0)
             throw new ParamException("没有考试时长！");
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
+    }
+
+    public String getDept() {
+        return dept;
+    }
+
+    public void setDept(String dept) {
+        this.dept = dept;
     }
 
     public Integer getState() {
@@ -55,13 +72,6 @@ public class Exam {
         this.course = course;
     }
 
-    public Integer getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
 
     public Date getPre_time() {
         return pre_time;

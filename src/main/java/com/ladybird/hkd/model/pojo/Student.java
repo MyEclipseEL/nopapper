@@ -8,7 +8,7 @@ public class Student {
     private String stu_ID;   //身份证号
     private String stu_name; //姓名
     private String stu_faculty;//就读学院
-    private String stu_dept; //就读专业
+    private String dept; //就读专业
     private int grade;      //就读班级
     private String stu_pwd;  //登录密码
 
@@ -44,12 +44,12 @@ public class Student {
         this.stu_faculty = stu_faculty;
     }
 
-    public String getStu_dept() {
-        return stu_dept;
+    public String getDept() {
+        return dept;
     }
 
-    public void setStu_dept(String stu_dept) {
-        this.stu_dept = stu_dept;
+    public void setDept(String dept) {
+        this.dept = dept;
     }
 
     public int getGrade() {

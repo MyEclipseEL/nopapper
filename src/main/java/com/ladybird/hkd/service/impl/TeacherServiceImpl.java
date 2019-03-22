@@ -31,7 +31,7 @@ public class TeacherServiceImpl implements TeacherService{
     }
 
     @Override
-    public Teach checkOutCourse(String t_num) throws Exception {
-        return teacherMapper.checkOutCourse(t_num);
+    public Teach checkOutTeaches(String t_num) throws Exception {
+        return teacherMapper.checkOutTeaches(t_num);
     }
 }
