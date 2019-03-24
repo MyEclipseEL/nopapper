@@ -8,24 +8,24 @@ import com.ladybird.hkd.model.pojo.Grade;
 
 public interface BasicService {
 
-    void addCourse(Course course);
+    int addCourse(Course course);
 
-    void delCourse(Integer c_id);
+    int delCourse(Integer c_id);
 
-    void updateCourse(Course course);
+    int updateCourse(Course course);
 
     Course findCourse(Course course);
 
     Course findCourseByName(String c_name);
+    int checkCourse(Integer c_id);
 
 
 
+    int addDept(Department department);
 
-    void addDept(Department department);
+    int delDept(String dept_num);
 
-    void delDept(String dept_num);
-
-    void updateDept(Department department);
+    int updateDept(Department department);
 
     Department findDept(Department department);
 
@@ -36,11 +36,11 @@ public interface BasicService {
 
 
 
-    void addFaculty(Faculty faculty);
+    int addFaculty(Faculty faculty);
 
-    void delFaculty(String fac_num);
+    int delFaculty(String fac_num);
 
-    void updateFaculty(Faculty faculty);
+    int updateFaculty(Faculty faculty);
 
     Faculty findFaculty(Faculty faculty);
 
@@ -52,11 +52,11 @@ public interface BasicService {
 
 
 
-    void addGrade(Grade grade);
+    int addGrade(Grade grade);
 
-    void delGrade(Integer g_id);
+    int delGrade(Integer g_id);
 
-    void updateGrade(Grade grade);
+    int updateGrade(Grade grade);
 
     Grade findGrade(Grade grade);
 

@@ -36,4 +36,12 @@
     <select id="findCourseByName" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Course">
         SELECT * FROM course where c_name=#{c_name}
     </select>
+
+    <select id="checkCourse" resultType="int" parameterType="Integer">
+    SELECT
+    count(1)
+    from course
+    where c_id = #{C_id}
+
+  </select>
 </mapper>

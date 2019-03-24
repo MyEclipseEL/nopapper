@@ -25,23 +25,23 @@ public class BasicServiceImpl implements BasicService {
 
     @Autowired
     private GradeMapper gradeMapper;
-    //课程
-    @Override
-    public void addCourse(Course course) {
+    //课程c
 
-        courseMapper.addCourse(course);
+    @Override
+    public int addCourse(Course course) {
+        return courseMapper.addCourse(course);
     }
 
     @Override
-    public void delCourse(Integer c_id) {
+    public int delCourse(Integer c_id) {
 
-        courseMapper.delCourse(c_id);
+        return courseMapper.delCourse(c_id);
     }
 
     @Override
-    public void updateCourse(Course course) {
+    public int updateCourse(Course course) {
 
-        courseMapper.updateCourse(course);
+        return courseMapper.updateCourse(course);
     }
 
     @Override
@@ -54,24 +54,27 @@ public class BasicServiceImpl implements BasicService {
         return courseMapper.findCourseByName(c_name);
     }
 
+    public int checkCourse(Integer c_id){
+        return courseMapper.checkCourse(c_id);
+    }
 
 
 
     @Override
-    public void addDept(Department department) {
-        deptMapper.addDept(department);
+    public int addDept(Department department) {
+        return deptMapper.addDept(department);
     }
 
     @Override
-    public void delDept(String dept_num) {
+    public int delDept(String dept_num) {
 
-        deptMapper.delDept(dept_num);
+       return  deptMapper.delDept(dept_num);
     }
 
     @Override
-    public void updateDept(Department department) {
+    public int updateDept(Department department) {
 
-        deptMapper.updateDept(department);
+        return deptMapper.updateDept(department);
     }
 
     @Override
@@ -93,20 +96,20 @@ public class BasicServiceImpl implements BasicService {
 
 
     @Override
-    public void addFaculty(Faculty faculty) {
-        facultyMapper.addFaculty(faculty);
+    public int addFaculty(Faculty faculty) {
+        return facultyMapper.addFaculty(faculty);
     }
 
     @Override
-    public void delFaculty(String fac_num) {
+    public int delFaculty(String fac_num) {
 
-        facultyMapper.delFaculty(fac_num);
+        return facultyMapper.delFaculty(fac_num);
     }
 
     @Override
-    public void updateFaculty(Faculty faculty) {
+    public int updateFaculty(Faculty faculty) {
 
-        facultyMapper.updateFaculty(faculty);
+        return facultyMapper.updateFaculty(faculty);
     }
 
     @Override
@@ -126,19 +129,19 @@ public class BasicServiceImpl implements BasicService {
 
 
     @Override
-    public void addGrade(Grade grade) {
-        gradeMapper.addGrade(grade);
+    public int addGrade(Grade grade) {
+        return gradeMapper.addGrade(grade);
     }
 
     @Override
-    public void delGrade(Integer g_id) {
+    public int delGrade(Integer g_id) {
 
-        gradeMapper.delGrade(g_id);
+        return gradeMapper.delGrade(g_id);
     }
 
     @Override
-    public void updateGrade(Grade grade) {
-        gradeMapper.updateGrade(grade);
+    public int updateGrade(Grade grade) {
+        return gradeMapper.updateGrade(grade);
     }
 
     @Override

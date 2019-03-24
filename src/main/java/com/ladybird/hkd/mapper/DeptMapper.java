@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface DeptMapper {
-    void addDept(Department department);
+    int addDept(Department department);
 
-    void delDept(@Param("dept_num") String dept_num);
+    int delDept(@Param("dept_num") String dept_num);
 
-    void updateDept(Department department);
+    int updateDept(Department department);
 
     Department findDept(Department department);
 

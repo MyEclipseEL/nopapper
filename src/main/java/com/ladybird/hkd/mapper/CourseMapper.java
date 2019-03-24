@@ -12,13 +12,15 @@ public interface CourseMapper {
 
     String findNameById(@Param("c_id") Integer c_id);
 
-    void addCourse(Course course);
+    int addCourse(Course course);
 
-    void delCourse(@Param("c_id") Integer c_id);
+    int delCourse(@Param("c_id") Integer c_id);
 
-    void updateCourse(Course course);
+    int updateCourse(Course course);
 
     Course findCourse(Course course);
 
     Course findCourseByName(@Param("c_name")String c_name);
+
+    int checkCourse(Integer c_id);
 }

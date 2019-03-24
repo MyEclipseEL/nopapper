@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @create: 2019-03-18
  */
 @ApiModel("Json数据返回类")
-public class ResultJson {
+public class ResultJson extends Throwable {
 
     @ApiModelProperty
     private String message;
@@ -50,6 +50,7 @@ public class ResultJson {
 
     public static ResultJson Success(String msg){return new ResultJson(0, msg, null);}
     public static ResultJson Success(){return new ResultJson(0, "success", null);}
+
 
 
     public static ResultJson Success(Object data){return new ResultJson(0,"success",data);}

@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface FacultyMapper {
-    void addFaculty(Faculty faculty);
+    int addFaculty(Faculty faculty);
 
-    void delFaculty(@Param("fac_num") String fac_num);
+    int delFaculty(@Param("fac_num") String fac_num);
 
-    void updateFaculty(Faculty faculty);
+    int updateFaculty(Faculty faculty);
 
     Faculty findFaculty(Faculty faculty);
 
