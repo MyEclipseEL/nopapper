@@ -29,6 +29,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Shen
@@ -113,10 +114,10 @@ public class StudentControllerV1 extends BaseController {
         }
         if (ParamUtils.stringIsNull(student.getStu_num()))
             return ResultJson.ServerException();
-        ExamJsonOut examJsonOut = examService.selectExamByStuNum(student.getStu_num());
-        if (examJsonOut == null)
+        List<ExamJsonOut> examJsonOuts = examService.selectExamByStu(student);
+        if (examJsonOuts.size() == 0)
             return ResultJson.Success("暂时没有考试！");
-        return examJsonOut;
+        return examJsonOuts;
     }
 
 }

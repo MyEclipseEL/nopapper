@@ -31,7 +31,7 @@
         WHERE t_num=${t_num} AND t_pwd=${t_pwd}
     </select>
 
-    <select id="checkOutCourse" resultType="com.ladybird.hkd.model.pojo.Teach">
+    <select id="checkOutTeaches" resultType="com.ladybird.hkd.model.pojo.Teach">
         SELECT * FROM teach WHERE teacher=${teacher}
     </select>
 </mapper>

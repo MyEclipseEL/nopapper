@@ -3,6 +3,7 @@ package com.ladybird.hkd.mapper;
 import com.ladybird.hkd.model.json.ExamJsonOut;
 import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.PaperEdit;
+import com.ladybird.hkd.model.pojo.Student;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -14,19 +15,22 @@ import java.util.List;
  */
 @Component
 public interface ExamMapper {
-    ExamJsonOut selectExamByStuNum(@Param("stu_num") String stu_num) throws Exception;
+    List<ExamJsonOut> selectExamByStu(Student student) throws Exception;
 
     int checkExamState(@Param("exam_id") String exam_id) throws Exception;
 
     ExamJsonOut checkOutExamById(@Param("exam_id") String exam_id) throws Exception;
 
-    List<ExamJsonOut> checkOutByCourseGrades(@Param("course") Integer course,@Param("grades") int[] grades) throws Exception;
+    List<ExamJsonOut> checkOutExamByIds(@Param("ids") List<String> ids) throws Exception;
 
-    void changeStateAndBegin(@Param("exam_id") String exam, @Param("begin_time") Date date, @Param("state") Integer state) throws Exception;
+    List<ExamJsonOut> checkOutByCourseGradesDept(@Param("course") Integer course,@Param("grades") int[] grades,@Param("dept") String dept) throws Exception;
+
+    void changeStateAndBegin(String[] ids, @Param("begin_time") Date date, @Param("state") Integer state) throws Exception;
 
     void updatePaper(PaperEdit paperEdit) throws Exception;
 
     PaperEdit checkOutPaper() throws Exception;
 
-    void addExam(Exam exam) throws Exception;
+    void addExams(@Param("exams") List<Exam> exams) throws Exception;
+
 }

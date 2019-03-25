@@ -8,8 +8,17 @@ package com.ladybird.hkd.model.pojo;
 public class Teach {
     private String teach_id;        //标记
     private String teacher;         //教课老师
+    private String dept;            //授课专业
     private Integer course;         //教授课程
     private String grade;           //教授年级
+
+    public String getDept() {
+        return dept;
+    }
+
+    public void setDept(String dept) {
+        this.dept = dept;
+    }
 
     public String getTeach_id() {
         return teach_id;

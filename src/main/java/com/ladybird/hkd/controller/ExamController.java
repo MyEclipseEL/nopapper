@@ -4,6 +4,7 @@ import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.json.ExamJsonIn;
 import com.ladybird.hkd.model.json.ExamJsonOut;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
@@ -27,6 +28,7 @@ import org.springframework.web.context.request.RequestAttributes;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +97,7 @@ public class ExamController extends BaseController{
         //转为对象
         TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
         //查找考试
-        Teach teach = teacherService.checkOutCourse(teacherJsonOut.getT_num());
+        Teach teach = teacherService.checkOutTeaches(teacherJsonOut.getT_num());
         if (teach == null)
             throw new BusinessException("没有您的授课记录！");
         String[] grades = teach.getGrade().split("\\ ");
@@ -103,7 +105,7 @@ public class ExamController extends BaseController{
             throw new Exception();
         }
         //得到考试列表
-        List<ExamJsonOut> list = examService.checkOutByCourseGrades(teach.getCourse(),grades);
+        List<ExamJsonOut> list = examService.checkOutByTeach(teach);
 
         return list;
     }
@@ -113,10 +115,10 @@ public class ExamController extends BaseController{
     @CheckToken
     @RequestMapping(value = "/beginExam",method = RequestMethod.GET)
     @ResponseBody
-    public Object beginExam(String exam) throws Exception{
-        if (ParamUtils.stringIsNull(exam))
+    public Object beginExam(String[] exams) throws Exception{
+        if (exams.length ==0)
             throw new ParamException("考试号没有传！");
-        examService.changeStateAndBegin(exam, ExamStateEnum.BEGIN.getCode());
+        examService.changeStateAndBegin(exams, ExamStateEnum.BEGIN.getCode());
         return ResultJson.Success();
     }
 
@@ -162,21 +164,21 @@ public class ExamController extends BaseController{
         }
         if (ParamUtils.stringIsNull(student.getStu_num()))
             return ResultJson.ServerException();
-        ExamJsonOut examJsonOut = examService.selectExamByStuNum(student.getStu_num());
-        if (examJsonOut == null)
-            return ResultJson.Success("暂时没有考试！");
-        return examJsonOut;
+        List<ExamJsonOut> examJsonOuts = examService.selectExamByStu(student);
+        if (examJsonOuts.size() == 0)
+            return ResultJson.BusinessErrorException("暂时没有考试！",null);
+        return examJsonOuts;
     }
 
     @ApiOperation("后端添加考试")
     @CheckToken
     @RequestMapping(value = "/addExam",method = RequestMethod.POST)
     @ResponseBody
-    public Object addExam(@RequestBody Exam exam) throws Exception{
+    public Object addExam(@RequestBody ExamJsonIn exam) throws Exception{
         if (exam == null)
             return ResultJson.ParameterError();
-        Exam.ValidExamIn(exam);
-        ExamJsonOut examJsonOut = examService.addExam(exam);
-        return ResultJson.Success(examJsonOut);
+        ExamJsonIn.ValidExamIn(exam);
+        List<ExamJsonOut> examJsonOuts = examService.addExams(exam);
+        return ResultJson.Success(examJsonOuts);
     }
 }
