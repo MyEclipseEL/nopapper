@@ -291,7 +291,7 @@ public class BasicController extends BaseController {
     })
     @RequestMapping(value = "/delGrade",method = RequestMethod.GET)
     @ResponseBody
-    public Object delGrade(Integer g_id){
+    public Object delGrade(String g_id){
         basicService.delGrade(g_id);
         return ResultJson.Success("删除成功");
     }
