@@ -33,4 +33,6 @@ public interface ExamMapper {
 
     void addExams(@Param("exams") List<Exam> exams) throws Exception;
 
+    void addExam(@Param("exam") Exam exam) throws Exception;
+
 }

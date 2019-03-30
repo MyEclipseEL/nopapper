@@ -5,11 +5,11 @@
 <mapper namespace="com.ladybird.hkd.mapper.DeptMapper" >
 
     <select id="selectAllDept" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Department">
-        select * from department where faculty = #{faculty}
+        select * from department where faculty = #{faculty.fac_num}
     </select>
 
     <insert id="addDept" parameterType="com.ladybird.hkd.model.pojo.Department">
-        INSERT INTO department  VALUES( #{dept_num},#{dept_name},#{faculty},#{tip})
+        INSERT INTO department  VALUES( #{dept_num},#{dept_name},#{faculty.fac_num},#{tip})
     </insert>
 
     <update id="updateDept" parameterType="com.ladybird.hkd.model.pojo.Department">

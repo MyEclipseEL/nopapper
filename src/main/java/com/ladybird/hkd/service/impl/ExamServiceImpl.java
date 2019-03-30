@@ -1,5 +1,6 @@
 package com.ladybird.hkd.service.impl;
 
+import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.mapper.ExamMapper;
 import com.ladybird.hkd.model.json.ExamJsonIn;
@@ -107,6 +108,21 @@ public class ExamServiceImpl implements ExamService {
             throw new BusinessException("该考试已存在！");
         }
         return examMapper.checkOutExamByIds(ids);
+    }
+
+    @Override
+    public ExamJsonOut beginExam(String t_num, List<String> grades, String course,Integer duration) throws Exception {
+        String grade = "";
+        for (int i = 0 ;i < grades.size(); i++) {
+            grade += grades.get(i);
+            if (i<grades.size()-1)
+                grade += ",";
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
+        String exam_id = format.format(new Date()) + t_num + course;
+        Exam exam = new Exam(exam_id,course,grade,null,duration, ExamStateEnum.BEGIN.getCode());
+        examMapper.addExam(exam);
+        return examMapper.checkOutExamById(exam_id);
     }
 
 }

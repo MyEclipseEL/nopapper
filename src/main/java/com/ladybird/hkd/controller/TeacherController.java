@@ -145,9 +145,32 @@ public class TeacherController extends BaseController {
         return ResultJson.Success(grades);
     }
 
-//    public Object beginExam() {
-//
-//    }
+    @CheckToken
+    @ResponseBody
+    @RequestMapping(value = "begin",method = {RequestMethod.POST,RequestMethod.GET})
+    public Object beginExam(String course,List<String> grades,Integer duration,NativeWebRequest request) throws Exception {
+        //得到redis中的教师信息
+        TeacherJsonOut teacherJsonOut = getTeacher(request);
+        //得到教师工号
+        String t_num = "";
+        try {
+            t_num = teacherJsonOut.getT_num();
+        } catch (NullPointerException np) {
+            ResultJson.BusinessErrorException("token中没有用户信息！",null);
+        }
+
+        //对选中班级开始考试
+        ExamJsonOut examJsonOut = examService.beginExam(t_num, grades, course,duration);
+        if (examJsonOut == null)
+            return ResultJson.ServerException("开始失败，稍后重试！");
+        try {
+            examJsonOut.getExam_id();
+        } catch (NullPointerException np) {
+            return ResultJson.ServerException();
+        }
+        return ResultJson.Success(examJsonOut);
+
+    }
 
     private TeacherJsonOut getTeacher(NativeWebRequest request) throws Exception{
         //获取登陆教师的信息

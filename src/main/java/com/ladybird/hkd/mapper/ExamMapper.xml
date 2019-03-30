@@ -108,17 +108,21 @@
         SELECT g_id FROM grade WHERE g_id=${grade}
     </sql>
 
-    <insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
+    <!--<insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
             INSERT INTO exam(exam_id,course,grade,pre_time,duration,state) VALUES (${exam_id},
             ${course},${grade},${dept},#{pre_time,jdbcType=TIMESTAMP},${duration},${state});
 
-    </insert>
+    </insert>-->
 
     <insert id="addExams" parameterType="com.ladybird.hkd.model.pojo.Exam">
         <foreach collection="exams" item="e" separator=";">
             INSERT INTO exam(exam_id,course,grade,dept,pre_time,duration,state) VALUES (${e.exam_id},
             ${e.course},${e.grade},${e.dept},#{e.pre_time,jdbcType=TIMESTAMP},${e.duration},${state})
         </foreach>
+    </insert>
 
+    <insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
+        INSERT INTO exam (exam_id,course,teacher,grade,begin_time,duration,state)
+                VALUES (${exam_id},${course},${teacher},${grade},now(),${duration},${state})
     </insert>
 </mapper>
