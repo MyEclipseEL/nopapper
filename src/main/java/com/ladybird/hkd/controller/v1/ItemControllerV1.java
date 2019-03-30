@@ -82,8 +82,9 @@ public class ItemControllerV1 extends BaseController{
         if (date.getTime() - examJsonOut.getBegin_time().getTime() > 0.5 * 3600 * 1000){
             throw new BusinessException("考试已经开始半小时，禁止考试参加");
         }
-        List<ItemsOut> outList = itemService.getPaper(examJsonOut.getCourse().getC_id());
+       List<ItemsOut> outList = itemService.getPaper(examJsonOut.getCourse().getC_id());
 
         return ResultJson.Success(outList);
+
     }
 }
