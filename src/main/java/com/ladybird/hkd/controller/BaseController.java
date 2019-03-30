@@ -37,7 +37,7 @@ public class BaseController {
             return ResultJson.BusinessErrorException(e.getLocalizedMessage(),null);
         }
         e.printStackTrace();
-        return ResultJson.ServerException();
+        return ResultJson.ServerException(e.getMessage());
     }
 
 }

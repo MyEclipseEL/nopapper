@@ -14,7 +14,7 @@ public class ExamJsonIn {
     private Integer course;     //考试课程
     private int[] grades;       //考试班级
     private String dept;        //考试专业
-    private Date pre_time;      //预设开始时间
+//    private Date pre_time;      //预设开始时间
     private Date begin_time;    //考试开始时间
     private Integer duration;   //考试时长  （毫秒）
     private Integer state;      //状态 默认0 表示考试未开始
@@ -26,10 +26,10 @@ public class ExamJsonIn {
             throw new ParamException("没有选择专业");
         if (exam.getGrades().length==0)
             throw new ParamException("没有选择班级！");
-        if (exam.getPre_time() == null)
-            throw new ParamException("没有预定时间！");
-        if ((new Date().getTime())>exam.getPre_time().getTime())
-            throw new ParamException("你设置了一个过去的时间！");
+//        if (exam.getPre_time() == null)
+//            throw new ParamException("没有预定时间！");
+//        if ((new Date().getTime())>exam.getPre_time().getTime())
+//            throw new ParamException("你设置了一个过去的时间！");
         if (exam.getDuration()==null || exam.getDuration() == 0)
             throw new ParamException("没有考试时长！");
     }
@@ -66,13 +66,13 @@ public class ExamJsonIn {
         this.dept = dept;
     }
 
-    public Date getPre_time() {
-        return pre_time;
-    }
-
-    public void setPre_time(Date pre_time) {
-        this.pre_time = pre_time;
-    }
+//    public Date getPre_time() {
+//        return pre_time;
+//    }
+//
+//    public void setPre_time(Date pre_time) {
+//        this.pre_time = pre_time;
+//    }
 
     public Date getBegin_time() {
         return begin_time;

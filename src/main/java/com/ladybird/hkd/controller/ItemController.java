@@ -14,13 +14,25 @@ import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.ItemService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
+import com.ladybird.hkd.util.UrlConf;
 import io.swagger.annotations.*;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +66,7 @@ public class ItemController extends BaseController{
         if (course == null || "".equals(course.trim())) {
             throw new ParamException("查找哪一科的题目呢？");
         }
-        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(Integer.parseInt(course))));
+        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(course)));
     }
 
     @CheckToken
@@ -79,16 +91,15 @@ public class ItemController extends BaseController{
             throw new BusinessException(ExamStateEnum.PREPAR.getMsg());
         }
         Date date = new Date();
-        System.out.println(date);
-        if (date.getTime() - examJsonOut.getBegin_time().getTime() > 0.5 * 3600 * 1000){
-            throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
-        }
+        //TODO 开始测试时打开
+//        if (date.getTime() - examJsonOut.getBegin_time().getTime() > 0.5 * 3600 * 1000){
+//            throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
+//        }
         List<ItemsOut> outList = itemService.getPaper(examJsonOut.getCourse().getC_id());
-
         return ResultJson.Success(outList);
     }
 
-    @ApiOperation("配置考试题型分数")
+    /*@ApiOperation("配置考试题型分数")
     @CheckToken
     @ResponseBody
     @RequestMapping(value = "/editTypeScore",method = RequestMethod.POST)
@@ -97,7 +108,7 @@ public class ItemController extends BaseController{
             return ResultJson.ServerException();
         itemService.updateTypeScore(itemTypes);
         return ResultJson.Success(itemService.checkOutTypes());
-    }
+    }*/
 
     @ApiOperation("查找所有题型")
     @CheckToken
@@ -109,6 +120,39 @@ public class ItemController extends BaseController{
             return ResultJson.ServerException();
         return ResultJson.Success(types);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/upload",method = RequestMethod.POST)
+    public Object importItemExcel(HttpServletRequest request) throws Exception{
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setSizeMax(4*1024*1024);
+        List<FileItem> fileItems = new ArrayList<>();
+        try {
+            fileItems = upload.parseRequest(request);
+        } catch (FileUploadException fe) {
+            fe.printStackTrace();
+        }
+        File file = new File("");
+        for (FileItem fileItem : fileItems) {
+            File fullFile = new File(new String(fileItem.getName().getBytes(), "utf-8"));
+            file = new File(UrlConf.LOCAL_UPLOAD_PATH,fullFile.getName());
+//            file = new File(UrlConf.SERVER_UPLOAD_PATH);
+            fileItem.write(file);
+        }
+        FileInputStream fileInputStream = new FileInputStream(file);
+        MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+                ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+        String readResult = null;
+        try {
+            //调用service
+            readResult = itemService.addItems(multipartFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResultJson.Success(readResult);
+    }
+
 
 
 }

@@ -73,5 +73,7 @@ public class ResultJson {
     }
 
     public static ResultJson ServerException(){return new ResultJson(9999,"系统错误，请联系开发人员!",null);}
+    public static ResultJson ServerException(String message){return new ResultJson(9999,message,null);}
+
 
 }

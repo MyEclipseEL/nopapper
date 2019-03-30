@@ -3,6 +3,7 @@ package com.ladybird.hkd.service;
 import com.ladybird.hkd.model.json.ItemsOut;
 import com.ladybird.hkd.model.pojo.ItemType;
 import com.ladybird.hkd.model.vo.ItemVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,11 +18,13 @@ public interface ItemService {
      */
     void addItemType(String typeName);
 
-    Object checkOutItems(Integer course) throws Exception;
+    Object checkOutItems(String course) throws Exception;
 
-    List<ItemsOut> getPaper(Integer course) throws Exception;
+    List<ItemsOut> getPaper(String course) throws Exception;
 
     List<ItemType> checkOutTypes() throws Exception;
 
     void updateTypeScore(List<ItemType> itemTypes) throws Exception;
+
+    String addItems(MultipartFile multipartFile) throws Exception;
 }

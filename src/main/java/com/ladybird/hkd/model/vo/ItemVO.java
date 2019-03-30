@@ -3,6 +3,9 @@ package com.ladybird.hkd.model.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Shen
  * @description: itemView 方便前端的数据返回类
@@ -19,7 +22,7 @@ public class ItemVO {
     @ApiModelProperty("题目正确答案")
     private String[] item_valid;      //题目正确答案
     @ApiModelProperty("迷惑答案")
-    private String[] item_wrong;      //迷惑答案
+    private List<String> item_choice;      //选项
     @ApiModelProperty("题型")
     private String item_type;       //题型
     @ApiModelProperty("科目")
@@ -57,12 +60,12 @@ public class ItemVO {
         this.item_valid = item_valid;
     }
 
-    public String[] getItem_wrong() {
-        return item_wrong;
+    public List<String> getItem_choice() {
+        return item_choice;
     }
 
-    public void setItem_wrong(String[] item_wrong) {
-        this.item_wrong = item_wrong;
+    public void setItem_choice(List<String> item_choice) {
+        this.item_choice = item_choice;
     }
 
     public String getItem_type() {

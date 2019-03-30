@@ -84,33 +84,9 @@ public class ExamController extends BaseController{
         return ResultJson.Success(paperEdit);
     }
 
-    @ApiOperation( "获取考试场次")
-    @CheckToken
-    @ResponseBody
-    @RequestMapping(value = "/exams",method = RequestMethod.GET)
-    public Object findExams(NativeWebRequest request) throws Exception{
-        //获取登陆教师的信息
-        String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-        if (teacherJson == null) {
-            return ResultJson.ServerException();
-        }
-        //转为对象
-        TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
-        //查找考试
-        Teach teach = teacherService.checkOutTeaches(teacherJsonOut.getT_num());
-        if (teach == null)
-            throw new BusinessException("没有您的授课记录！");
-        String[] grades = teach.getGrade().split("\\ ");
-        if (grades.length == 0) {
-            throw new Exception();
-        }
-        //得到考试列表
-        List<ExamJsonOut> list = examService.checkOutByTeach(teach);
 
-        return list;
-    }
 
-    @ApiOperation(value = "开始考试，设置倒计时开始")
+    /*@ApiOperation(value = "开始考试，设置倒计时开始")
     @ApiImplicitParam(name = "exam",value = "考试号",required = true)
     @CheckToken
     @RequestMapping(value = "/beginExam",method = RequestMethod.GET)
@@ -120,7 +96,7 @@ public class ExamController extends BaseController{
             throw new ParamException("考试号没有传！");
         examService.changeStateAndBegin(exams, ExamStateEnum.BEGIN.getCode());
         return ResultJson.Success();
-    }
+    }*/
 
     @ApiOperation("提交试卷成绩")
     @ApiImplicitParams({
@@ -142,7 +118,7 @@ public class ExamController extends BaseController{
         if (student == null) {
             return ResultJson.ServerException();
         }
-        Score param = new Score(student.getStu_num(), Integer.parseInt(course), new BigDecimal(score));
+        Score param = new Score(student.getStu_num(), course, new BigDecimal(score));
         studentService.checkInScore(param);
 
         return ResultJson.Success();
@@ -170,7 +146,7 @@ public class ExamController extends BaseController{
         return examJsonOuts;
     }
 
-    @ApiOperation("后端添加考试")
+    /*@ApiOperation("后端添加考试")
     @CheckToken
     @RequestMapping(value = "/addExam",method = RequestMethod.POST)
     @ResponseBody
@@ -180,5 +156,5 @@ public class ExamController extends BaseController{
         ExamJsonIn.ValidExamIn(exam);
         List<ExamJsonOut> examJsonOuts = examService.addExams(exam);
         return ResultJson.Success(examJsonOuts);
-    }
+    }*/
 }

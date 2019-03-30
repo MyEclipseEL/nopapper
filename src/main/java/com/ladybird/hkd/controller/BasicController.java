@@ -66,7 +66,7 @@ public class BasicController extends BaseController {
 
     @RequestMapping(value = "/delCourse",method = RequestMethod.GET)
     @ResponseBody
-    public Object delCourse(Integer c_id){
+    public Object delCourse(String c_id) throws Exception{
         basicService.delCourse(c_id);
         return ResultJson.Success("删除成功");
     }

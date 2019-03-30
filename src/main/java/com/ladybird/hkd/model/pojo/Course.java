@@ -6,14 +6,14 @@ package com.ladybird.hkd.model.pojo;
  * @create: 2019-03-20
  */
 public class Course {
-    private Integer c_id;
+    private String c_id;
     private String c_name;
 
-    public Integer getC_id() {
+    public String getC_id() {
         return c_id;
     }
 
-    public void setC_id(Integer c_id) {
+    public void setC_id(String c_id) {
         this.c_id = c_id;
     }
 

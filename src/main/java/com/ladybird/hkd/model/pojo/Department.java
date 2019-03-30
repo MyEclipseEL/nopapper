@@ -8,6 +8,15 @@ package com.ladybird.hkd.model.pojo;
 public class Department {
     private String dept_num;
     private String dept_name;
+    private Faculty faculty;
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 
     public String getDept_num() {
         return dept_num;

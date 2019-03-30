@@ -4,6 +4,8 @@ import com.ladybird.hkd.model.pojo.Department;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface DeptMapper {
     void addDept(Department department);
@@ -18,4 +20,6 @@ public interface DeptMapper {
     Department findDeptByName(String dept_name);
 
     Department findDeptByNum(String dept_num);
+
+    List<Department> selByTeacher(@Param("t_num") String t_num) throws Exception;
 }

@@ -31,13 +31,13 @@ public interface PaperlessItemMapper {
     /**
      * 检出数据库的题目
      */
-    List<Item> checkOutItemsByCourse(@Param("course") Integer course) throws Exception;
+    List<Item> checkOutItemsByCourse(@Param("course") String course) throws Exception;
 
-    PaperEdit checkOutPaperEdit() throws Exception;
+    PaperEdit checkOutPaperEdit(@Param("course") String course) throws Exception;
 
     List<ItemType> checkOutItemTypes() throws Exception;
 
-    Set<Item> checkOutItemsByCourseSet(@Param("course") Integer course)throws Exception;
+    Set<Item> checkOutItemsByCourseSet(@Param("course") String course)throws Exception;
 
     void checkInScore(Score score)throws Exception;
 

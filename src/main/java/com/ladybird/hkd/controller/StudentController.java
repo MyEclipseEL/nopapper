@@ -60,6 +60,8 @@ public class StudentController extends BaseController{
     @ResponseBody
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public Object login(StudentJsonIn studentJsonIn) throws Exception {
+
+        //TODO 判断是否已经登陆
         try {
             StudentJsonIn.ValidRequiredPwd(studentJsonIn);
         }catch (ParamException pe){

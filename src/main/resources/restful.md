@@ -1,6 +1,6 @@
 #restfulAPI接口文档
 ```$xslt
-base url: http://nopaper.eiber.cn/nopapper
+base url: http://nopaper.eiber.cn/paperless
 ```
 **tap：除登陆外所有的请求请带上token ，格式见前几个请求**
 
@@ -86,20 +86,7 @@ success{
 ```
 
 ###配置试卷题型分数
-```$xslt
-POST /item/editTypeScore
-```
-参数
-```$xslt
-header:{"authorization":"aa access_token"}
-{
-    [
-    	{"type_id":"A","type_score":15},
-    	{"type_id":"B","type_score":15},
-    	{"type_id":"C","type_score":15}
-    ]
-}
-```
+
 
 ###查找所有的题型
 ```$xslt
@@ -143,9 +130,13 @@ POST /exam/editPaper
 参数
 ```$xslt
 body:{
-     	"single_choice":3,
-     	"multiple_choice":3,
-     	"checking":3
+        "course"      :1,  
+     	"single_count":2,
+     	"single_score":5,
+     	"multiple_count":3,
+     	"multiple_score":15,
+     	"checking_count":3,
+     	"checking_score":15
      }
 ```
 返回

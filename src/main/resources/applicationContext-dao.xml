@@ -6,6 +6,7 @@
 
     <context:component-scan base-package="com.ladybird.hkd.mapper"/>
     <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--<context:property-placeholder location="classpath:jdbc-server.properties"/>-->
 
     <bean id="log-filter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
         <property name="connectionLogEnabled" value="false"/>

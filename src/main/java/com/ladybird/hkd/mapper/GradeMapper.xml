@@ -36,4 +36,30 @@
         SELECT * FROM Grade where g_year = #{g_year} and  g_class = #{g_class}
     </select>
 
+    <resultMap id="gradeMap" type="com.ladybird.hkd.model.json.GradeOut">
+        <id property="g_id" column="g_id"/>
+        <result property="g_year" column="g_year"/>
+        <result property="g_class" column="g_class"/>
+        <association property="dept" javaType="com.ladybird.hkd.model.pojo.Department">
+            <id property="dept_num" column="dept_num"/>
+            <result property="dept_name" column="dept_name"/>
+            <association property="faculty" javaType="com.ladybird.hkd.model.pojo.Faculty">
+                <id column="fac_num" property="fac_num"/>
+                <result column="fac_name" property="fac_name"/>
+            </association>
+        </association>
+    </resultMap>
+    <select id="selGradesNotInExam" resultMap="gradeMap">
+        SELECT * FROM grade
+            LEFT JOIN department d ON d.dept_num=dept
+            LEFT JOIN faculty f ON d.faculty=f.fac_num
+        WHERE g_id NOT IN (
+            SELECT grade FROM exam e
+            WHERE e.teacher=${t_num} AND e.course=${course}
+                  AND e.begin_time &gt;  #{begin_date} )
+        AND g_id IN
+        <foreach collection="grades" separator="," item="grade" open="(" close=")">
+            ${grade}
+        </foreach>
+    </select>
 </mapper>
