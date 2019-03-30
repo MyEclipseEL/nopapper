@@ -1,20 +1,21 @@
 package com.ladybird.hkd.mapper;
 
+import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Faculty;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public interface FacultyMapper {
-    void addFaculty(Faculty faculty);
+    int addFaculty(Faculty faculty) throws Exception;
 
-    void delFaculty(@Param("fac_num") String fac_num);
+    Faculty findFaculty(Faculty faculty) throws Exception;
 
-    void updateFaculty(Faculty faculty);
+    List<Faculty> selectAllFaculty() throws Exception;
 
-    Faculty findFaculty(Faculty faculty);
+    int updateFaculty(Faculty faculty) throws Exception;
 
-    Faculty findFacultyByName(String fac_name);
-
-    Faculty findFacultyByNum(String fac_num);
+    int selectFacultyByPrimary(String fac_num) throws Exception;
 }

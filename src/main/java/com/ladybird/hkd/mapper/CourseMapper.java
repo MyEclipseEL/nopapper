@@ -14,15 +14,20 @@ public interface CourseMapper {
 
     String findNameById(@Param("c_id") String c_id) throws Exception;
 
-    void addCourse(Course course);
 
     void delCourse(@Param("c_id") String c_id) throws Exception;
 
-    void updateCourse(Course course);
-
-    Course findCourse(Course course);
 
     Course findCourseByName(@Param("c_name")String c_name);
+
+    int checkCourse(Integer c_id);
+
+    int addCourse(Course course) throws Exception;
+    List<Course> selectAllCourse() throws Exception;
+    int updateCourse(Course course) throws Exception;
+
+    int selectCourseByPrimary(String c_id) throws Exception;
+    Course findCourse(Course course) throws Exception;
 
     List<Course> selByTeacher(@Param("t_num") String t_num) throws Exception;
 }

@@ -9,11 +9,11 @@ import java.util.List;
 @Component
 public interface GradeMapper {
 
-    void addGrade(Grade grade);
+    int addGrade(Grade grade);
 
-    void delGrade(Integer g_id);
+    int delGrade(Integer g_id);
 
-    void updateGrade(Grade grade);
+    int updateGrade(Grade grade);
 
     Grade findGrade(Grade grade);
 

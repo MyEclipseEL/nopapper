@@ -8,6 +8,7 @@ package com.ladybird.hkd.model.pojo;
 public class Course {
     private String c_id;
     private String c_name;
+    private String tip;
 
     public String getC_id() {
         return c_id;
@@ -23,5 +24,13 @@ public class Course {
 
     public void setC_name(String c_name) {
         this.c_name = c_name;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
     }
 }

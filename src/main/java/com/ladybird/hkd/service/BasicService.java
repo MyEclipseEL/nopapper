@@ -5,14 +5,12 @@ import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Grade;
 
-import java.util.List;
-
 
 public interface BasicService {
 
     void addCourse(Course course);
 
-    void delCourse(String c_id) throws Exception;
+    void delCourse(String c_id);
 
     void updateCourse(Course course);
 
@@ -56,13 +54,11 @@ public interface BasicService {
 
     void addGrade(Grade grade);
 
-    void delGrade(Integer g_id);
+    void delGrade(String g_id);
 
     void updateGrade(Grade grade);
 
     Grade findGrade(Grade grade);
 
     Grade findGradeByYandC(Grade grade);
-
-    List<Grade> gradesNotInExam(String _num,String course) throws Exception;
 }

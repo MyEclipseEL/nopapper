@@ -4,14 +4,35 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.CourseMapper" >
 
-    <select id="findNameById" parameterType="Integer" resultType="String">
-        SELECT c_name from course WHERE c_id=${c_id}
+    <select id="selectAllCourse" resultType="com.ladybird.hkd.model.pojo.Course">
+        select * from course
     </select>
-
     <insert id="addCourse" parameterType="com.ladybird.hkd.model.pojo.Course">
-        INSERT INTO course (c_name)  VALUES( #{c_name})
+        INSERT INTO course  VALUES( #{c_id},#{c_name},#{tip})
 
     </insert>
+    <update id="updateCourse" parameterType="com.ladybird.hkd.model.pojo.Course">
+        UPDATE course SET c_name = #{c_name} WHERE c_id = #{c_id}
+    </update>
+
+    <select id="selectCourseByPrimary" parameterType="String" resultType="int">
+        SELECT count(1) from course WHERE c_id=#{c_id}
+    </select>
+    <select id="findCourse" parameterType="com.ladybird.hkd.model.pojo.Course" resultType="com.ladybird.hkd.model.pojo.Course">
+        SELECT * FROM course
+        <where>
+
+            <if test="c_id != null">
+                and c_id = #{c_id}
+            </if>
+            <if test="c_name != null and c_name != ''">
+                and c_name LIKE '%${c_name}%'
+            </if>
+        </where>
+    </select>
+   <!--
+
+
 
     <delete id="delCourse" parameterType="Integer">
         DELETE FROM course WHERE c_id = #{c_id}

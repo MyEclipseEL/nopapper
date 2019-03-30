@@ -9,6 +9,7 @@ public class Department {
     private String dept_num;
     private String dept_name;
     private Faculty faculty;
+    private String tip;
 
     public Faculty getFaculty() {
         return faculty;
@@ -32,5 +33,13 @@ public class Department {
 
     public void setDept_name(String dept_name) {
         this.dept_name = dept_name;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
     }
 }
