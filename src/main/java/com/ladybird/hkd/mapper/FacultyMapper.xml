@@ -4,16 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.FacultyMapper" >
 
+    <select id="selectAllFaculty" resultType="com.ladybird.hkd.model.pojo.Faculty">
+        select * from faculty
+    </select>
     <insert id="addFaculty" parameterType="com.ladybird.hkd.model.pojo.Faculty">
-        INSERT INTO faculty  VALUES( #{fac_num}, #{fac_name})
+        INSERT INTO faculty  VALUES( #{fac_num}, #{fac_name},#{tip})
     </insert>
 
-    <delete id="delFaculty" parameterType="String">
-        DELETE FROM department WHERE dept_num = #{dept_num};
-    </delete>
-
     <update id="updateFaculty" parameterType="com.ladybird.hkd.model.pojo.Faculty">
-        update faculty set fac_num=#{fac_num},fac_name=#{fac_name} where fac_num=#{fac_num};
+        UPDATE faculty
+      SET
+        fac_name = #{fac_name},
+        tip = #{tip}
+      WHERE fac_num = #{fac_num} ;
+
     </update>
 
     <select id="findFaculty" parameterType="com.ladybird.hkd.model.pojo.Faculty" resultType="com.ladybird.hkd.model.pojo.Faculty">
@@ -28,11 +32,7 @@
             </if>
         </where>
     </select>
-
-    <select id="findFacultyByName" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Faculty">
-        select * from faculty where fac_name=#{fac_name}
-    </select>
-    <select id="findFacultyByNum" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Faculty">
-        select * from faculty where fac_num=#{fac_num}
+    <select id="selectFacultyByPrimary" parameterType="Stirng" resultType="int">
+        select count(1) from faculty where fac_num = #{fac_num}
     </select>
 </mapper>

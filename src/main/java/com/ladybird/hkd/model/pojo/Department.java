@@ -8,6 +8,8 @@ package com.ladybird.hkd.model.pojo;
 public class Department {
     private String dept_num;
     private String dept_name;
+    private String faculty;
+    private String tip;
 
     public String getDept_num() {
         return dept_num;
@@ -23,5 +25,21 @@ public class Department {
 
     public void setDept_name(String dept_name) {
         this.dept_name = dept_name;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
     }
 }
