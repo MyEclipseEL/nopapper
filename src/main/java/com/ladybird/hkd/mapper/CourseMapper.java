@@ -12,19 +12,15 @@ import java.util.List;
 @Component
 public interface CourseMapper {
 
-    /*String findNameById(@Param("c_id") Integer c_id);
+    String findNameById(@Param("c_id") String c_id) throws Exception;
 
 
-
-    int delCourse(@Param("c_id") Integer c_id);
-
-
-
+    void delCourse(@Param("c_id") String c_id) throws Exception;
 
 
     Course findCourseByName(@Param("c_name")String c_name);
 
-    int checkCourse(Integer c_id);*/
+    int checkCourse(Integer c_id);
 
     int addCourse(Course course) throws Exception;
     List<Course> selectAllCourse() throws Exception;
@@ -32,4 +28,6 @@ public interface CourseMapper {
 
     int selectCourseByPrimary(String c_id) throws Exception;
     Course findCourse(Course course) throws Exception;
+
+    List<Course> selByTeacher(@Param("t_num") String t_num) throws Exception;
 }

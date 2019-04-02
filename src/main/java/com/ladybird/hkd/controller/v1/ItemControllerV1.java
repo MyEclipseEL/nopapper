@@ -54,7 +54,7 @@ public class ItemControllerV1 extends BaseController{
         if (course == null || "".equals(course.trim())) {
             throw new ParamException("查找哪一科的题目呢？");
         }
-        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(Integer.parseInt(course))));
+        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(course)));
     }
 
     @CheckToken

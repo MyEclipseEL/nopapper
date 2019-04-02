@@ -6,19 +6,20 @@
 
     <resultMap id="examOut" type="com.ladybird.hkd.model.json.ExamJsonOut">
         <id column="exam_id" property="exam_id" jdbcType="VARCHAR"/>
-        <result column="pre_time" property="pre_time"  />
+        <!--<result column="pre_time" property="pre_time"  />-->
         <result column="begin_time" property="begin_time" />
         <result column="duration" property="duration" />
         <result column="state" property="state"/>
+        <result column="grade" property="grade"/>
         <association property="dept" javaType="com.ladybird.hkd.model.pojo.Department">
             <id column="dept_num" property="dept_num"/>
             <result column="dept_name" property="dept_name"/>
         </association>
-        <association property="grade" javaType="com.ladybird.hkd.model.pojo.Grade">
+        <!--<association property="grade" javaType="com.ladybird.hkd.model.pojo.Grade">
             <id column="g_id" property="g_id"/>
             <result column="g_year" property="g_year"/>
             <result column="g_class" property="g_class"/>
-        </association>
+        </association>-->
         <association property="course" javaType="com.ladybird.hkd.model.pojo.Course">
             <id column="c_id" property="c_id" />
             <result column="c_name" property="c_name" jdbcType="VARCHAR"/>
@@ -38,22 +39,26 @@
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
         LEFT JOIN department d ON d.dept_num=e.dept
-        LEFT JOIN grade g ON e.grade=g.g_id
-        WHERE e.dept=${dept} AND e.grade =${grade}
-
+#         LEFT JOIN grade g ON e.grade=g.g_id
+        WHERE e.dept=${dept} AND e.grade LIKE '%${grade}%'
+        <!--<foreach collection="grades" open="(" close=")" separator=","  item="grade">-->
+            <!--${grade}-->
+        <!--</foreach>-->
     </select>
 
     <select id="checkOutExamById" resultMap="examOut">
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
-            LEFT JOIN grade g ON e.grade=g.g_id
+            LEFT JOIN department d ON d.dept_num=e.dept
+        #             LEFT JOIN grade g ON e.grade=g.g_id
         WHERE exam_id=${exam_id}
     </select>
 
     <select id="checkOutExamByIds" resultMap="examOut">
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
-        LEFT JOIN grade g ON e.grade=g.g_id
+        LEFT JOIN department d ON d.dept_num=e.dept
+#         LEFT JOIN grade g ON e.grade=g.g_id
         WHERE exam_id IN
         <foreach collection="ids" open="(" close=")" separator=","  item="id">
             ${id}
@@ -68,7 +73,7 @@
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
             LEFT JOIN department d ON e.dept=d.dept_num
-            LEFT JOIN grade g ON e.grade=g.g_id
+#             LEFT JOIN grade g ON e.grade=g.g_id
         WHERE course=${course} AND e.dept=${dept} AND NOT state=-1
         AND e.grade IN
         <foreach collection="grades" open="(" close=")" separator=","  item="grade">
@@ -104,15 +109,15 @@
     </sql>
 
     <insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
-            INSERT INTO exam(exam_id,course,grade,pre_time,duration) VALUES (${exam_id},
-            ${course},${grade},${dept},#{pre_time,jdbcType=TIMESTAMP},${duration});
+            INSERT INTO exam(exam_id,course,grade,pre_time,duration,state) VALUES (${exam_id},
+            ${course},${grade},${dept},#{pre_time,jdbcType=TIMESTAMP},${duration},${state});
 
     </insert>
 
     <insert id="addExams" parameterType="com.ladybird.hkd.model.pojo.Exam">
         <foreach collection="exams" item="e" separator=";">
-            INSERT INTO exam(exam_id,course,grade,dept,pre_time,duration) VALUES (${e.exam_id},
-            ${e.course},${e.grade},${e.dept},#{e.pre_time,jdbcType=TIMESTAMP},${e.duration})
+            INSERT INTO exam(exam_id,course,grade,dept,pre_time,duration,state) VALUES (${e.exam_id},
+            ${e.course},${e.grade},${e.dept},#{e.pre_time,jdbcType=TIMESTAMP},${e.duration},${state})
         </foreach>
 
     </insert>

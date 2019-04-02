@@ -29,7 +29,7 @@
     </select>
 
     <select id="checkOutPaperEdit" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
-        SELECT * FROM paper_edit
+        SELECT * FROM paper_edit WHERE course=${course}
     </select>
 
     <update id="changePaperEdit" parameterType="com.ladybird.hkd.model.pojo.PaperEdit">

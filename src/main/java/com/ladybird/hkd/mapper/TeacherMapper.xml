@@ -16,10 +16,10 @@
             <id column="dept_num" property="dept_num" jdbcType="VARCHAR"/>
             <result column="dept_name" property="dept_name" jdbcType="VARCHAR"/>
         </association>
-        <association property="t_office" javaType="com.ladybird.hkd.model.pojo.Office">
+        <!--<association property="t_office" javaType="com.ladybird.hkd.model.pojo.Office">
             <id column="office_id" property="office_id" jdbcType="VARCHAR"/>
             <result column="office_name" property="office_name" jdbcType="VARCHAR"/>
-        </association>
+        </association>-->
         <!--<association property="group_id" javaType="com.ladybird.hkd.model.pojo.Group">
             <i
         </association>-->
@@ -27,11 +27,23 @@
     <select id="validNumPwd" parameterType="com.ladybird.hkd.model.pojo.Teacher" resultMap="queryTeacherJsonOut">
         SELECT * FROM teachers t left JOIN faculty f ON t.t_faculty=f.fac_num
             LEFT JOIN department d ON t.t_dept=d.dept_num
-            LEFT JOIN office o ON t.t_office=o.office_id
+#             LEFT JOIN office o ON t.t_office=o.office_id
         WHERE t_num=${t_num} AND t_pwd=${t_pwd}
     </select>
 
     <select id="checkOutTeaches" resultType="com.ladybird.hkd.model.pojo.Teach">
         SELECT * FROM teach WHERE teacher=${teacher}
+    </select>
+
+    <select id="selGradesByDeptCourse" resultType="String">
+        SELECT grade FROM teach WHERE teacher=${t_num} AND course=${c_id} AND dept=${dept_num}
+    </select>
+
+    <select id="selGradesByCourse" resultType="String">
+        SELECT grade FROM teach WHERE teacher=${t_num} AND course=${c_id}
+    </select>
+
+    <select id="checkOutCourseByNum" resultType="com.ladybird.hkd.model.pojo.Course">
+        SELECT * FROM course WHERE c_id IN (SELECT course FROM teach WHERE teacher=${t_num})
     </select>
 </mapper>

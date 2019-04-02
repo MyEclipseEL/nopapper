@@ -69,7 +69,7 @@ public class StudentControllerV1 extends BaseController {
         if (student == null) {
             return ResultJson.ServerException();
         }
-        Score param = new Score(student.getStu_num(), Integer.parseInt(course), new BigDecimal(score));
+        Score param = new Score(student.getStu_num(), course, new BigDecimal(score));
         studentService.checkInScore(param);
 
         return ResultJson.Success();

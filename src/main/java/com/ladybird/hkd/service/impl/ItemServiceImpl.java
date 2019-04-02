@@ -9,10 +9,12 @@ import com.ladybird.hkd.model.pojo.ItemType;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import com.ladybird.hkd.model.vo.ItemVO;
 import com.ladybird.hkd.service.ItemService;
+import com.ladybird.hkd.util.excel.ReadItemExcel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -35,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> checkOutItems(Integer course) throws Exception {
+    public List<Item> checkOutItems(String course) throws Exception {
         List<Item> items = paperlessItemMapper.checkOutItemsByCourse(course);
 
         if (items.size() <= 0)
@@ -44,9 +46,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemsOut> getPaper(Integer course) throws Exception{
+    public List<ItemsOut> getPaper(String course) throws Exception{
         Set<Item> items = paperlessItemMapper.checkOutItemsByCourseSet(course);
-        PaperEdit paperEdit = paperlessItemMapper.checkOutPaperEdit();
+        PaperEdit paperEdit = paperlessItemMapper.checkOutPaperEdit(course);
         List<ItemType> itemTypes = paperlessItemMapper.checkOutItemTypes();
         String courseName = courseMapper.findNameById(course);
         ItemType single = new ItemType() ;
@@ -60,31 +62,40 @@ public class ItemServiceImpl implements ItemService {
             if ("判断题".equals(itemType.getType_name()))
                 checking = itemType;
         }
+        single.setType_score(paperEdit.getSingle_score());
+        multiple.setType_score(paperEdit.getMultiple_score());
+        checking.setType_score(paperEdit.getChecking_score());
         Set<ItemVO> singles = new HashSet<>();
         Set<ItemVO> multiples = new HashSet<>();
         Set<ItemVO> checkings = new HashSet<>();
-        while (singles.size() < paperEdit.getSingle_choice()
-                || multiples.size() < paperEdit.getMultiple_choice()
-                || checkings.size() < paperEdit.getChecking()) {
+        while (singles.size() < paperEdit.getSingle_count()
+                || multiples.size() < paperEdit.getMultiple_count()
+                || checkings.size() < paperEdit.getChecking_count()) {
             for (Item item : items) {
+                List<String> choice = new ArrayList<>();
                 ItemVO itemVO = new ItemVO();
                 BeanUtils.copyProperties(item,itemVO);
-                itemVO.setItem_valid(item.getItem_valid().split("\\ "));
-                itemVO.setItem_wrong(item.getItem_wrong().split("\\ "));
+                String[] valids = item.getItem_valid().split(",");
+                for (String v:valids)
+                    v.trim();
+                itemVO.setItem_valid(valids);
+                for (String s:item.getItem_choice().split("\\|\\@\\|"))
+                    choice.add(s);
                 if (item.getItem_type().equals(single.getType_id())
-                        &&singles.size() < paperEdit.getSingle_choice()) {
+                        &&singles.size() < paperEdit.getSingle_count()) {
 
                     itemVO.setItem_type(single.getType_name());
 
                     singles.add(itemVO);
                 }
+                itemVO.setItem_choice(choice);
                 if (item.getItem_type().equals(multiple.getType_id())
-                        &&multiples.size() < paperEdit.getMultiple_choice()){
+                        &&multiples.size() < paperEdit.getMultiple_count()){
                     itemVO.setItem_type(multiple.getType_name());
                     multiples.add(itemVO);
                 }
                 if (item.getItem_type().equals(checking.getType_id())
-                        &&checkings.size() < paperEdit.getChecking()){
+                        &&checkings.size() < paperEdit.getChecking_count()){
                     itemVO.setItem_type(checking.getType_name());
                     checkings.add(itemVO);
                 }
@@ -106,4 +117,25 @@ public class ItemServiceImpl implements ItemService {
     public void updateTypeScore(List<ItemType> itemTypes) throws Exception {
         paperlessItemMapper.updateTypeScore(itemTypes);
     }
+
+    @Override
+    public String addItems(MultipartFile file) throws Exception {
+        //创建处理Excel的类
+        ReadItemExcel readItemExcel = new ReadItemExcel();
+        //解析excel
+        List<Item> items = null;
+        int insertResult = 0;   //记录插入数
+        String insertMsg = "";
+        try {
+            items = readItemExcel.getExcelInfo(file);
+            System.out.println(items);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(insertMsg);
+
+        }
+        return insertMsg;
+    }
+
+
 }

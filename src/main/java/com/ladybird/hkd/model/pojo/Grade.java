@@ -9,24 +9,28 @@ import java.util.Date;
  * @create: 2019-03-13
  */
 public class Grade {
-    private Integer g_id;
+    private String g_id;
     private Integer g_year;
     private Integer g_class;
+    private Department dept;
 
     public Grade() {
     }
 
-    public Grade(Integer g_id, Integer g_year, Integer g_class) {
-        this.g_id = g_id;
-        this.g_year = g_year;
-        this.g_class = g_class;
+
+    public Department getDept() {
+        return dept;
     }
 
-    public Integer getG_id() {
+    public void setDept(Department dept) {
+        this.dept = dept;
+    }
+
+    public String getG_id() {
         return g_id;
     }
 
-    public void setG_id(Integer g_id) {
+    public void setG_id(String g_id) {
         this.g_id = g_id;
     }
 

@@ -14,11 +14,12 @@ public interface DeptMapper {
 
 
 
-    Department findDept(Department department);
 
 
     Department findDeptByName(String dept_name);
 
+
+    List<Department> selByTeacher(@Param("t_num") String t_num) throws Exception;
     Department findDeptByNum(String dept_num);*/
     int addDept(Department department) throws Exception;
     List<Department> selectAllDept(String faculty) throws Exception;
@@ -29,4 +30,6 @@ public interface DeptMapper {
 
 
     int selectDeptByPrimary(String dept_num) throws Exception;
+    List<Department> selByTeacher(@Param("t_num") String t_num) throws Exception;
+
 }

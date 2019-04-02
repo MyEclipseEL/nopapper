@@ -23,7 +23,7 @@ public interface ExamMapper {
 
     List<ExamJsonOut> checkOutExamByIds(@Param("ids") List<String> ids) throws Exception;
 
-    List<ExamJsonOut> checkOutByCourseGradesDept(@Param("course") Integer course,@Param("grades") int[] grades,@Param("dept") String dept) throws Exception;
+    List<ExamJsonOut> checkOutByCourseGradesDept(@Param("course") String course,@Param("grades") String[] grades,@Param("dept") String dept) throws Exception;
 
     void changeStateAndBegin(String[] ids, @Param("begin_time") Date date, @Param("state") Integer state) throws Exception;
 

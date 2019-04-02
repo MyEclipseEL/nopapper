@@ -37,11 +37,8 @@ public class ExamServiceImpl implements ExamService {
     public List<ExamJsonOut> selectExamByStu(Student student) throws Exception {
         List<ExamJsonOut> examJsonOuts = examMapper.selectExamByStu(student);
         for (ExamJsonOut examJsonOut:examJsonOuts) {
-            examJsonOut.setPre_time(new Date(examJsonOut.getPre_time().getTime() / 1000));
-            try {
-                examJsonOut.setBegin_time(new Date(examJsonOut.getBegin_time().getTime() / 1000));
-            } catch (NullPointerException ne) {
-            }
+//            examJsonOut.setPre_time(new Date(examJsonOut.getPre_time().getTime() / 1000));
+            examJsonOut.setBegin_time(new Date(examJsonOut.getBegin_time().getTime() / 1000));
         }
         return examJsonOuts;
     }
@@ -62,14 +59,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public List<ExamJsonOut> checkOutByTeach(Teach teach) throws Exception {
-        String[] gradesString = teach.getGrade().split("\\ ");
-        int[] grades = new int[gradesString.length];
-        for (int i=0;i<gradesString.length;i++) {
-            grades[i] = Integer.parseInt(gradesString[i]);
-        }
+        String[] grades = teach.getGrade().split("\\ ");
         List<ExamJsonOut> examJsonOuts = examMapper.checkOutByCourseGradesDept(teach.getCourse(), grades,teach.getDept());
         for (ExamJsonOut e : examJsonOuts) {
-            e.setPre_time(new Date(e.getPre_time().getTime()/1000));
             try {
                 e.setBegin_time(new Date(e.getBegin_time().getTime() / 1000));
             } catch (NullPointerException ne) {
@@ -97,17 +89,17 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public List<ExamJsonOut> addExams(ExamJsonIn exam) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-        String exam_id = format.format(exam.getPre_time()) + exam.getCourse() + exam.getDept();
+        String exam_id = format.format(new Date()) + exam.getCourse() + exam.getDept();
         List<String> ids = new ArrayList<>();
         List<Exam> exams = new ArrayList<>();
-        for (Integer i : exam.getGrades()) {
-            Exam e = new Exam();
-            BeanUtils.copyProperties(exam,e);
-            e.setExam_id(exam_id + i);
-            e.setGrade(i);
-            exams.add(e);
-            ids.add(e.getExam_id());
-        }
+//        for (Integer i : exam.getGrades()) {
+//            Exam e = new Exam();
+//            BeanUtils.copyProperties(exam,e);
+//            e.setExam_id(exam_id + i);
+//            e.setGrade(i);
+//            exams.add(e);
+//            ids.add(e.getExam_id());
+//        }
         try {
             examMapper.addExams(exams);
         } catch (SQLIntegrityConstraintViolationException se) {

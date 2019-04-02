@@ -10,9 +10,10 @@ public class Item {
     private String item_title;      //题目标题
     private String item_desc;       //题目描述
     private String item_valid;      //题目正确答案
-    private String item_wrong;      //迷惑答案
+    private String item_choice;      //迷惑答案
     private String item_type;       //题型
     private String course;          //科目
+    private String tip;             //备注
 
     public String getItem_id() {
         return item_id;
@@ -46,12 +47,12 @@ public class Item {
         this.item_valid = item_valid;
     }
 
-    public String getItem_wrong() {
-        return item_wrong;
+    public String getItem_choice() {
+        return item_choice;
     }
 
-    public void setItem_wrong(String item_wrong) {
-        this.item_wrong = item_wrong;
+    public void setItem_choice(String item_choice) {
+        this.item_choice = item_choice;
     }
 
     public String getItem_type() {
@@ -68,5 +69,27 @@ public class Item {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "item_id='" + item_id + '\'' +
+                ", item_title='" + item_title + '\'' +
+                ", item_desc='" + item_desc + '\'' +
+                ", item_valid='" + item_valid + '\'' +
+                ", item_choice='" + item_choice + '\'' +
+                ", item_type='" + item_type + '\'' +
+                ", course='" + course + '\'' +
+                ", tip='" + tip + '\'' +
+                '}';
     }
 }

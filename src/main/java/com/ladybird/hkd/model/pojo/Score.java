@@ -9,13 +9,13 @@ import java.math.BigDecimal;
  */
 public class Score {
     private String student;
-    private Integer course;
+    private String course;
     private BigDecimal s_score;
 
     public Score() {
     }
 
-    public Score(String student, Integer course, BigDecimal s_score) {
+    public Score(String student, String course, BigDecimal s_score) {
         this.course = course;
         this.s_score = s_score;
         this.student = student;
@@ -29,11 +29,11 @@ public class Score {
         this.student = student;
     }
 
-    public Integer getCourse() {
+    public String getCourse() {
         return course;
     }
 
-    public void setCourse(Integer course) {
+    public void setCourse(String course) {
         this.course = course;
     }
 
