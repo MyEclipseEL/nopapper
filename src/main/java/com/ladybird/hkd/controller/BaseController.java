@@ -26,7 +26,7 @@ public class BaseController {
         if (e.getClass() == ParamException.class) {
             //TODO 日志记录
             e.printStackTrace();
-            return ResultJson.ParameterException(e.getLocalizedMessage(), null);
+            return ResultJson.ParameterException(e.getMessage(), null);
         }
         if (e.getClass() == TokenException.class) {
             e.printStackTrace();
@@ -34,7 +34,7 @@ public class BaseController {
         }
         if (e.getClass() == BusinessException.class) {
             e.printStackTrace();
-            return ResultJson.BusinessErrorException(e.getLocalizedMessage(),null);
+            return ResultJson.BusinessErrorException(e.getMessage(),null);
         }
         e.printStackTrace();
         return ResultJson.ServerException(e.getMessage());

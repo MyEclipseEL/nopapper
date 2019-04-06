@@ -22,10 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
@@ -63,7 +60,7 @@ public class TeacherController extends BaseController {
         try {
             TeacherJsonIn.ValidNumPwd(teacher);
         } catch (ParamException pe) {
-            return ResponseEntity.badRequest().body(ResultJson.Forbidden(pe.getLocalizedMessage()));
+            return ResultJson.Forbidden(pe.getMessage());
         }
         TeacherJsonOut teacherJsonOut = teacherService.login(teacher);
         //创建token
@@ -102,7 +99,7 @@ public class TeacherController extends BaseController {
     }
 
     @CheckToken
-    @RequestMapping(value = "examCourses")
+    @RequestMapping(value = "/examCourses",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Object examCourses(NativeWebRequest request) throws Exception{
         TeacherJsonOut teacherJsonOut = getTeacher(request);
@@ -128,7 +125,7 @@ public class TeacherController extends BaseController {
      */
     @CheckToken
     @ResponseBody
-    @RequestMapping(value = "examGrades")
+    @RequestMapping(value = "/examGrades",method = {RequestMethod.GET,RequestMethod.POST})
     public Object examGrade(String course,NativeWebRequest request) throws Exception{
         TeacherJsonOut teacherJsonOut = getTeacher(request);
         //查找老师教授的未参加过考试的班级
@@ -147,8 +144,8 @@ public class TeacherController extends BaseController {
 
     @CheckToken
     @ResponseBody
-    @RequestMapping(value = "begin",method = {RequestMethod.POST,RequestMethod.GET})
-    public Object beginExam(String course,List<String> grades,Integer duration,NativeWebRequest request) throws Exception {
+    @RequestMapping(value = "/begin",method = {RequestMethod.POST,RequestMethod.GET})
+    public Object beginExam( String course,String[] grades, Integer duration,NativeWebRequest request) throws Exception {
         //得到redis中的教师信息
         TeacherJsonOut teacherJsonOut = getTeacher(request);
         //得到教师工号
@@ -156,11 +153,23 @@ public class TeacherController extends BaseController {
         try {
             t_num = teacherJsonOut.getT_num();
         } catch (NullPointerException np) {
-            ResultJson.BusinessErrorException("token中没有用户信息！",null);
+            throw new BusinessException("token中没有用户信息");
         }
-
         //对选中班级开始考试
-        ExamJsonOut examJsonOut = examService.beginExam(t_num, grades, course,duration);
+        if (grades.length == 0)
+            throw new ParamException("没有选择考试的班级！");
+        try {
+            for (String s : grades){
+                if ("".equals(s.trim()))
+                    throw new ParamException("请选择班级！");
+                Integer.parseInt(s);
+            }
+        } catch (NumberFormatException nfe) {
+            throw new ParamException("班级出错！grades:");
+        }
+        if (course == null || "".equals(course))
+            throw new ParamException("没有选择课程！");
+        ExamJsonOut examJsonOut = examService.beginExam(t_num, grades, course);
         if (examJsonOut == null)
             return ResultJson.ServerException("开始失败，稍后重试！");
         try {

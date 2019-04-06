@@ -1,20 +1,21 @@
-package com.ladybird.hkd.model.pojo;
+package com.ladybird.hkd.model.example;
+
+import com.ladybird.hkd.model.pojo.Course;
 
 /**
  * @author Shen
- * @description: 题目实体
- * @create: 2019-03-22
+ * @description:
+ * @create: 2019-04-21
  */
-public class Item {
+public class ItemExample {
     private String item_id;         //题目编号
     private String item_title;      //题目标题
     private String item_desc;       //题目描述
     private String item_valid;      //题目正确答案
     private String item_choice;      //迷惑答案
     private String item_type;       //题型
-    private String course;          //科目
+    private Course course;          //科目
     private String tip;             //备注
-
 
     public String getItem_id() {
         return item_id;
@@ -64,11 +65,11 @@ public class Item {
         this.item_type = item_type;
     }
 
-    public String getCourse() {
+    public Course getCourse() {
         return course;
     }
 
-    public void setCourse(String course) {
+    public void setCourse(Course course) {
         this.course = course;
     }
 
@@ -78,19 +79,5 @@ public class Item {
 
     public void setTip(String tip) {
         this.tip = tip;
-    }
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "item_id='" + item_id + '\'' +
-                ", item_title='" + item_title + '\'' +
-                ", item_desc='" + item_desc + '\'' +
-                ", item_valid='" + item_valid + '\'' +
-                ", item_choice='" + item_choice + '\'' +
-                ", item_type='" + item_type + '\'' +
-                ", course='" + course + '\'' +
-                ", tip='" + tip + '\'' +
-                '}';
     }
 }

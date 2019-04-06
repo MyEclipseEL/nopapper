@@ -19,5 +19,6 @@ public interface GradeMapper {
 
     Grade findGradeByYandC(Grade grade);
 
-    List<Grade> selGradesNotInExam(@Param("t_num") String t_num,@Param("course") String course,@Param("begin_date") Date begin_date,@Param("grades") String[] grades) throws Exception;
+    List<Grade> selGradesNotInExam(@Param("t_num") String t_num,@Param("course") String course,
+                                   @Param("grades") String[] grades, @Param("already") String already) throws Exception;
 }

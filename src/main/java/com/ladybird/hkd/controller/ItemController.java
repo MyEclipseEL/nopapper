@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,11 +63,11 @@ public class ItemController extends BaseController{
             @ApiImplicitParam(name = "course",value = "课程编号"),
             @ApiImplicitParam(name = "authorization",value = "token",required = true,paramType = "header")
     })
-    public Object getItems(String course) throws Exception{
+    public Object getItems(String course,String item_type) throws Exception{
         if (course == null || "".equals(course.trim())) {
             throw new ParamException("查找哪一科的题目呢？");
         }
-        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(course)));
+        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(course,item_type)));
     }
 
     @CheckToken
@@ -91,11 +92,12 @@ public class ItemController extends BaseController{
             throw new BusinessException(ExamStateEnum.PREPAR.getMsg());
         }
         Date date = new Date();
-        //TODO 开始测试时打开
-//        if (date.getTime() - examJsonOut.getBegin_time().getTime() > 0.5 * 3600 * 1000){
-//            throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
-//        }
+        System.out.println(date);
+        if (date.getTime() - examJsonOut.getBegin_time().getTime() > 0.5 * 3600 * 1000){
+            throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
+        }
         List<ItemsOut> outList = itemService.getPaper(examJsonOut.getCourse().getC_id());
+
         return ResultJson.Success(outList);
     }
 
@@ -121,12 +123,15 @@ public class ItemController extends BaseController{
         return ResultJson.Success(types);
     }
 
+    @CheckToken
     @ResponseBody
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public Object importItemExcel(HttpServletRequest request) throws Exception{
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setSizeMax(4*1024*1024);
+        String course = "";
+        String item_type = "";
         List<FileItem> fileItems = new ArrayList<>();
         try {
             fileItems = upload.parseRequest(request);
@@ -134,23 +139,43 @@ public class ItemController extends BaseController{
             fe.printStackTrace();
         }
         File file = new File("");
+        MultipartFile multipartFile = null;
         for (FileItem fileItem : fileItems) {
-            File fullFile = new File(new String(fileItem.getName().getBytes(), "utf-8"));
-            file = new File(UrlConf.LOCAL_UPLOAD_PATH,fullFile.getName());
+            if (fileItem.isFormField()) {
+                if (fileItem.getFieldName().trim().equals("course"))
+                    course = fileItem.getString();
+                else
+                    item_type = fileItem.getString();
+            }else {
+                try {
+                    File fullFile = new File(fileItem.getName());
+                    file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
 //            file = new File(UrlConf.SERVER_UPLOAD_PATH);
-            fileItem.write(file);
+                    fileItem.write(file);
+                } catch (NullPointerException npe) {
+                    throw new ParamException("请选择上传到文件！");
+                }
+            }
         }
-        FileInputStream fileInputStream = new FileInputStream(file);
-        MultipartFile multipartFile = new MockMultipartFile(file.getName(), file.getName(),
-                ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
-        String readResult = null;
         try {
-            //调用service
-            readResult = itemService.addItems(multipartFile);
-        } catch (Exception e) {
-            e.printStackTrace();
+            FileInputStream fileInputStream = new FileInputStream(file);
+            multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+                    ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+        } catch (FileNotFoundException fe) {
+            throw new ParamException("请选择上传的文件！");
         }
-        return ResultJson.Success(readResult);
+        //调用service
+        return ResultJson.Success(itemService.addItems(multipartFile,course,item_type));
+    }
+
+    @CheckToken
+    @ResponseBody
+    @RequestMapping(value = "/delItem")
+    public Object delItem(String item_id) throws Exception {
+        if (item_id == null || "".equals(item_id.trim()))
+            throw new ParamException("选择删除的题！");
+        itemService.delItem(item_id);
+        return ResultJson.Success();
     }
 
 

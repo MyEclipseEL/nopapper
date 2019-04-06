@@ -9,14 +9,12 @@ import io.swagger.annotations.ApiModelProperty;
  * @create: 2019-03-18
  */
 @ApiModel("Json数据返回类")
-public class ResultJson extends Throwable {
+public class ResultJson{
 
     @ApiModelProperty
     private String message;
     private Integer code;
     private Object data;
-
-
 
     public ResultJson(Integer code,String message, Object  data) {
         this.message = message;

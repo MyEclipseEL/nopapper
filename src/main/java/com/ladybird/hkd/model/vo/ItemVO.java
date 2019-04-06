@@ -1,8 +1,11 @@
 package com.ladybird.hkd.model.vo;
 
+import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.pojo.Item;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +30,82 @@ public class ItemVO {
     private String item_type;       //题型
     @ApiModelProperty("科目")
     private String course;          //科目
+    private String tip;
+
+    public static void validItem(ItemVO item) throws Exception{
+        if (item.getItem_type() != null && !"".equals(item.getItem_type().trim())) {
+            if (item.getItem_type().trim().equalsIgnoreCase("A")){
+                if (item.getItem_choice().size() != 4)
+                    throw new ParamException("单选题选项出错！");
+                if (item.getItem_valid().length != 1)
+                    throw new ParamException("单选题答案错误！");
+                for (String s : item.getItem_valid())
+                    if (!s.equalsIgnoreCase("A")&&!s.equalsIgnoreCase("B")
+                            &&!s.equalsIgnoreCase("C")&&!s.equalsIgnoreCase("D"))
+                        throw new ParamException("选项只能是‘A'‘B’‘C’‘D’");
+            }else if (item.getItem_type().trim().equalsIgnoreCase("B")) {
+                if (item.getItem_choice().size() !=5 )
+                    throw new ParamException("多选题选项出错！");
+                if (item.getItem_valid().length == 0 || item.getItem_valid().length > 5)
+                    throw new ParamException("多选题答案出错！多选题答案最多为5");
+                for (String s : item.getItem_valid())
+                    if (!s.equalsIgnoreCase("A")&&!s.equalsIgnoreCase("B")
+                            &&!s.equalsIgnoreCase("C")&&!s.equalsIgnoreCase("D")
+                            &&!s.equalsIgnoreCase("E"))
+                        throw new ParamException("选项只能是‘A'‘B’‘C’‘D’‘E’");
+            } else if (item.getItem_type().trim().equalsIgnoreCase("C")) {
+                if (item.getItem_valid().length != 1)
+                    throw new ParamException("判断题答案出错！");
+                if (!item.getItem_valid()[0].equals("正确") || !item.getItem_valid()[0].equals("错误"))
+                    throw new ParamException("判断题答案只允许为‘正确’‘错误’");
+            }else
+                throw new ParamException("题型出错！");
+            if (item.getItem_desc() == null || "".equals(item.getItem_desc().trim()))
+                throw new ParamException("题目缺失！");
+        }
+    }
+
+    //将Item转为ItemVO
+    public static ItemVO Item2VOConveter(Item item) throws Exception{
+        ItemVO result = new ItemVO();
+        if (item.getItem_id() != null)
+            result.setItem_id(item.getItem_id());
+        if (item.getItem_title() != null &&! "".equals(item.getItem_title().trim()))
+            result.setItem_title(item.getItem_title());
+        if (item.getTip() != null && !"".equals(item.getTip().trim()))
+            result.setTip(item.getTip());
+        if (item.getItem_desc() == null || "".equals(item.getItem_desc().trim()))
+            throw new ParamException("题目为空！");
+        result.setItem_desc(item.getItem_desc());
+        if (item.getCourse() == null || "".equals(item.getCourse().trim()))
+            throw new ParamException("课程为空！");
+        result.setCourse(item.getCourse());
+        if (item.getItem_type() == null || "".equals(item.getItem_title().trim()))
+            throw new ParamException("题型为空！");
+        if (item.getItem_type().equalsIgnoreCase("C")) {
+            result.setItem_type(item.getItem_type());
+            if (!item.getItem_valid().trim().equals("正确") && !item.getItem_valid().trim().equals("错误"))
+                throw new ParamException("判断题答案只允许为‘正确’‘错误’");
+            result.setItem_valid(new String[]{item.getItem_valid()});
+        } else {
+            result.setItem_type(item.getItem_type());
+            if (item.getItem_choice() == null || "".equals(item.getItem_choice()))
+                throw new ParamException("选项为空！");
+            List<String> choices = new ArrayList<>();
+            String[] c = item.getItem_choice().split("\\|\\@\\|");
+            for (String s : c)
+                choices.add(s);
+            result.setItem_choice(choices);
+            if (item.getItem_type().equals("B")) {
+                String[] v = item.getItem_valid().split(",");
+                for (int i = 0;i < v.length; i ++)
+                    v[i] = v[i].trim();
+                result.setItem_valid(v);
+            }else
+                result.setItem_valid(new String[]{item.getItem_valid()});
+        }
+        return result;
+    }
 
     public String getItem_id() {
         return item_id;
@@ -82,5 +161,13 @@ public class ItemVO {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
     }
 }

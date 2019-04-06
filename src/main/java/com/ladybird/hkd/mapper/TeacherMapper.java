@@ -23,5 +23,5 @@ public interface TeacherMapper {
     String selGradesByCourse(@Param("t_num") String t_num,@Param("c_id") String c_id) throws Exception;
 
 
-    List<Course> checkOutCourseByNum(String t_num) throws Exception;
+    List<Course> checkOutCourseByNum(@Param("t_num") String t_num) throws Exception;
 }

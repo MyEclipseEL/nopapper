@@ -5,7 +5,7 @@
 <mapper namespace="com.ladybird.hkd.mapper.ScoreMapper" >
 
     <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score" >
-        INSERT INTO score VALUES (${student},${course},${s_score})
+        INSERT INTO score VALUES (${student},${exam},${s_score})
     </insert>
 
 

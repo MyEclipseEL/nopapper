@@ -6,7 +6,7 @@
 
     <resultMap id="examOut" type="com.ladybird.hkd.model.json.ExamJsonOut">
         <id column="exam_id" property="exam_id" jdbcType="VARCHAR"/>
-        <!--<result column="pre_time" property="pre_time"  />-->
+        <result column="finish_time" property="finish_time"  />
         <result column="begin_time" property="begin_time" />
         <result column="duration" property="duration" />
         <result column="state" property="state"/>
@@ -26,6 +26,22 @@
         </association>
     </resultMap>
 
+    <resultMap id="paperEditMap" type="com.ladybird.hkd.model.example.PaperEditExample">
+        <id property="id" column="id"/>
+        <result property="single_count" column="single_count"/>
+        <result property="single_score" column="single_score"/>
+        <result property="multiple_count" column="multiple_count"/>
+        <result property="multiple_score" column="multiple_score"/>
+        <result property="checking_count" column="checking_count"/>
+        <result property="checking_score" column="checking_score"/>
+        <result property="duration" column="duration"/>
+        <association property="course" column="course" javaType="com.ladybird.hkd.model.pojo.Course">
+            <id property="c_id" column="c_id"/>
+            <result property="c_name" column="c_name"/>
+            <result property="tip" column="tip"/>
+        </association>
+    </resultMap>
+
    <!-- <select id="selectExamByCourseStuNum" resultMap="examOut">
         SELECT * FROM exam e
          LEFT JOIN course c ON e.course=c.c_id
@@ -33,14 +49,38 @@
         WHERE grade=(SELECT grade FROM students WHERE stu_num=${stu_num} )
               AND course=${course}
     </select>-->
+    <select id="checkOutPaperEditExm" resultMap="paperEditMap">
+        SELECT * FROM paper_edit WHERE course=${course}
+    </select>
 
+    <select id="checkOutPaperEdit" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
+        SELECT * FROM paper_edit WHERE course=${course}
+    </select>
+
+    <update id="changePaperEdit" parameterType="com.ladybird.hkd.model.pojo.PaperEdit">
+        UPDATE paper_edit SET single_count=#{single_count},single_score=#{single_score}
+        ,multiple_count=#{multiple_count},multiple_score=#{multiple_score}
+        ,checking_count=#{checking_count},checking_score=#{checking_score}
+        WHERE course=${course}
+    </update>
+
+    <insert id="checkInPaperEdit" parameterType="com.ladybird.hkd.model.pojo.PaperEdit">
+        INSERT INTO paper_edit
+        VALUES (#{id},#{course},#{single_count},#{single_score}
+        ,#{multiple_count},#{multiple_score},#{checking_count},#{checking_score},#{duration},#{tip})
+    </insert>
+
+    <select id="checkOutPaperEditExs" resultMap="paperEditMap">
+        SELECT * FROM paper_edit
+    </select>
 
     <select id="selectExamByStu" resultMap="examOut" parameterType="com.ladybird.hkd.model.pojo.Student">
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
         LEFT JOIN department d ON d.dept_num=e.dept
 #         LEFT JOIN grade g ON e.grade=g.g_id
-        WHERE e.dept=${dept} AND e.grade LIKE '%${grade}%'
+        WHERE finish_time &gt; now() AND
+        e.grade LIKE CONCAT('%',#{grade},'%')
         <!--<foreach collection="grades" open="(" close=")" separator=","  item="grade">-->
             <!--${grade}-->
         <!--</foreach>-->
@@ -66,7 +106,7 @@
     </select>
 
     <select id="checkExamState" resultType="Integer" parameterType="String">
-        SELECT state from exam WHERE exam_id=${exam_id}
+        SELECT state from exam WHERE exam_id=#{exam_id}
     </select>
 
     <select id="checkOutByCourseGradesDept" resultMap="examOut">
@@ -122,7 +162,11 @@
     </insert>
 
     <insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
-        INSERT INTO exam (exam_id,course,teacher,grade,begin_time,duration,state)
-                VALUES (${exam_id},${course},${teacher},${grade},now(),${duration},${state})
+        INSERT INTO exam (exam_id,course,teacher,grade,finish_time,begin_time,duration,state)
+                VALUES (#{exam.exam_id},#{exam.course},#{exam.teacher},#{exam.grade},#{exam.finish_time,jdbcType=TIMESTAMP},now(),#{exam.duration},#{exam.state})
     </insert>
+
+    <select id="selGradesByTC" resultType="String">
+        SELECT grade FROM exam WHERE teacher=#{t_num} AND course=#{course} AND begin_time &gt;  #{begin_date}
+    </select>
 </mapper>

@@ -3,6 +3,28 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.PaperlessItemMapper" >
+    
+
+
+    <resultMap id="itemExampleMap" type="com.ladybird.hkd.model.example.ItemExample">
+        <id property="item_id" column="item_id"/>
+        <result property="item_title" column="item_title"/>
+        <result property="item_desc" column="item_desc"/>
+        <result property="item_valid" column="item_valid"/>
+        <result property="item_choice" column="item_choice"/>
+        <result property="tip" column="tip"/>
+        <association property="item_type" column="item_type" javaType="com.ladybird.hkd.model.pojo.ItemType">
+            <id property="type_id" column="type_id"/>
+            <result property="type_name" column="type_name"/>
+            <result property="tip" column="tip"/>
+        </association>
+        <association property="course" column="course" javaType="com.ladybird.hkd.model.pojo.Course">
+            <id property="c_id" column="c_id"/>
+            <result property="c_name" column="c_name"/>
+            <result property="tip" column="tip"/>
+        </association>
+    </resultMap>
+
     <update id="createItemBank" parameterType="String" statementType="STATEMENT">
         CREATE TABLE item_${tableName} (id INT AUTO_INCREMENT NOT NULL,
         title VARCHAR(30) ,
@@ -16,29 +38,77 @@
         INSERT INTO item_type VALUES (${itemId},${itemName})
     </insert>
 
-    <select id="checkOutItemsByCourse" parameterType="java.lang.Integer" resultType="com.ladybird.hkd.model.pojo.Item">
+    <insert id="addItem" useGeneratedKeys="true" keyProperty="item_id" parameterType="com.ladybird.hkd.model.pojo.Item">
+        INSERT INTO items (
+        <if test="item_title != null">
+            item_title,
+        </if>
+        item_desc,item_valid,item_choice,item_type,course
+        <if test="tip != null">
+            ,tip
+        </if>)
+        VALUES (
+        <if test="item_title != null">
+            #{item_title},
+        </if>
+        #{item_desc},#{item_valid},#{item_choice},#{item_type},#{course}
+        <if test="tip != null">
+            ,#{tip}
+        </if>
+        )
+    </insert>
+
+    <select id="checkOutItemsByCourse" parameterType="java.lang.String" resultMap="itemExampleMap">
+        SELECT * from items
+        <if test="(course!=null)||(item_type!=null)">
+        WHERE
+            <if test="course != null">
+                course=#{course},
+            </if>
+          <if test="item_type != null">
+            item_type=#{item_type}
+          </if>
+        </if>
+
+    </select>
+
+    <select id="checkOutItemsByCourseSet" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Item">
         SELECT * from items WHERE course=${course}
     </select>
 
-    <select id="checkOutItemsByCourseSet" parameterType="Integer" resultType="com.ladybird.hkd.model.pojo.Item">
-        SELECT * from items WHERE course=${course}
+    <select id="selItemById" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Item">
+        SELECT * FROM items WHERE item_id=#{item_id}
     </select>
+
+    <update id="changeItem" parameterType="com.ladybird.hkd.model.pojo.Item">
+        UPDATE items SET
+        <if test="item_desc!=null">
+            item_desc=#{item_desc}
+        </if>
+        <if test="item_title!=null">
+            ,item_title=#{item_title}
+        </if>
+        <if test="tip!=null">
+            ,tip=#{tip}
+        </if>
+
+        <if test="item_valid!=null">
+            ,item_valid=#{item_valid}
+        </if>
+        <if test="item_choice!=null">
+            ,item_choice=#{item_choice}
+        </if>
+        WHERE item_id=#{item_id}
+    </update>
 
     <select id="checkOutItemTypes" resultType="com.ladybird.hkd.model.pojo.ItemType">
         SELECT * from item_type
     </select>
 
-    <select id="checkOutPaperEdit" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
-        SELECT * FROM paper_edit WHERE course=${course}
-    </select>
 
-    <update id="changePaperEdit" parameterType="com.ladybird.hkd.model.pojo.PaperEdit">
-        UPDATE paper_edit SET single_choice=${single_choice},multiple_choice=${multiple_choice},checking=${checking}
-        WHERE id=1
-    </update>
     
     <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score">
-        insert into score  values (${student},${course},${s_score});
+        insert into score (student,exam,s_score) values (${student},${exam},${s_score});
     </insert>
 
 
@@ -49,4 +119,22 @@
                 WHERE type_id="${type.type_id}";
             </foreach>
     </update>
+
+    <insert id="checkInItems" parameterType="List">
+        INSERT INTO items (item_desc,item_valid,item_choice,item_type,course) VALUES
+            <foreach collection="items" item="item" index="index" separator=",">
+                (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course})
+            </foreach>
+    </insert>
+
+    <insert id="checkInChecking" parameterType="List">
+        INSERT INTO items (item_desc,item_valid,item_type,course) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.item_desc},#{item.item_valid},#{item.item_type},#{item.course})
+        </foreach>
+    </insert>
+
+    <delete id="delItemById" parameterType="String">
+        DELETE FROM items WHERE item_id=#{item_id}
+    </delete>
 </mapper>

@@ -4,6 +4,7 @@ import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.json.ExamJsonIn;
 import com.ladybird.hkd.model.json.ExamJsonOut;
 import com.ladybird.hkd.model.json.ResultJson;
@@ -53,11 +54,6 @@ public class ExamController extends BaseController{
 
     @CheckToken
     @ApiOperation(value = "修改试卷",notes= "修改试卷题型分配")
-    @ApiImplicitParams({
-            @ApiImplicitParam(value = "单选题个数", name = "single_choice", required = true),
-            @ApiImplicitParam(value = "多选题个数", name = "multiple_choice", required = true),
-            @ApiImplicitParam(value = "判断题个数",name = "checking",required = true)
-    })
     @ResponseBody
     @RequestMapping(value = "/editPaper",method = {RequestMethod.POST}, consumes="application/json", produces="application/json")
     public Object editPaper(@RequestBody PaperEdit paperEdit) throws Exception{
@@ -71,54 +67,33 @@ public class ExamController extends BaseController{
     @RequestMapping(value = "/checkOutPaper",method = RequestMethod.GET)
     @ResponseBody
     public Object checkOutPaper() throws Exception{
-        PaperEdit paperEdit = examService.checkOutPaper();
-        if (paperEdit == null) {
-            return ResultJson.ServerException();
-        }
-        try {
-            PaperEdit.checkParams(paperEdit);
-        } catch (ParamException pe) {
-            pe.printStackTrace();
-            return ResultJson.ServerException();
-        }
-        return ResultJson.Success(paperEdit);
+        List<PaperEditExample> paperEdits = examService.checkOutPaper();
+        return ResultJson.Success(paperEdits);
     }
 
 
 
-    /*@ApiOperation(value = "开始考试，设置倒计时开始")
-    @ApiImplicitParam(name = "exam",value = "考试号",required = true)
-    @CheckToken
-    @RequestMapping(value = "/beginExam",method = RequestMethod.GET)
-    @ResponseBody
-    public Object beginExam(String[] exams) throws Exception{
-        if (exams.length ==0)
-            throw new ParamException("考试号没有传！");
-        examService.changeStateAndBegin(exams, ExamStateEnum.BEGIN.getCode());
-        return ResultJson.Success();
-    }*/
-
     @ApiOperation("提交试卷成绩")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "score",value = "分数",required = true),
-            @ApiImplicitParam(name = "course",value = "课程号",required = true)
+            @ApiImplicitParam(name = "exam",value = "考试场次",required = true)
     })
     @CheckToken
     @RequestMapping(value = "/commitPaper",method = RequestMethod.GET)
     @ResponseBody
-    public Object commitPaper(String score,String course,NativeWebRequest request) throws Exception{
-        if (ParamUtils.stringIsNull(score) || ParamUtils.stringIsNull(course)){
-            return ResultJson.ParameterError();
+    public Object commitPaper(String score,String exam,NativeWebRequest request) throws Exception{
+        if (ParamUtils.stringIsNull(score) || ParamUtils.stringIsNull(exam)){
+            throw new ParamException("分数没传！");
         }
         String studentJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
         if (ParamUtils.stringIsNull(studentJson)) {
-            return ResultJson.ServerException();
+            throw new BusinessException("没有学生信息！");
         }
         Student student = JsonUtil.jsonToPojo(studentJson, Student.class);
         if (student == null) {
-            return ResultJson.ServerException();
+            throw new BusinessException("没有学生信息！");
         }
-        Score param = new Score(student.getStu_num(), course, new BigDecimal(score));
+        Score param = new Score(student.getStu_num(), exam, new BigDecimal(score));
         studentService.checkInScore(param);
 
         return ResultJson.Success();
@@ -146,15 +121,4 @@ public class ExamController extends BaseController{
         return examJsonOuts;
     }
 
-    /*@ApiOperation("后端添加考试")
-    @CheckToken
-    @RequestMapping(value = "/addExam",method = RequestMethod.POST)
-    @ResponseBody
-    public Object addExam(@RequestBody ExamJsonIn exam) throws Exception{
-        if (exam == null)
-            return ResultJson.ParameterError();
-        ExamJsonIn.ValidExamIn(exam);
-        List<ExamJsonOut> examJsonOuts = examService.addExams(exam);
-        return ResultJson.Success(examJsonOuts);
-    }*/
 }

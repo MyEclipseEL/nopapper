@@ -42,20 +42,6 @@ public class ItemControllerV1 extends BaseController{
     @Autowired
     private ExamService examService;
 
-    @CheckToken
-    @ResponseBody
-    @RequestMapping(value = "/items",method = RequestMethod.GET)
-    @ApiOperation(value = "请求题目",notes = "请求所有题目")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "course",value = "课程编号"),
-            @ApiImplicitParam(name = "authorization",value = "token",required = true,paramType = "header")
-    })
-    public Object getItems(String course) throws Exception{
-        if (course == null || "".equals(course.trim())) {
-            throw new ParamException("查找哪一科的题目呢？");
-        }
-        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(course)));
-    }
 
     @CheckToken
     @ResponseBody
