@@ -15,7 +15,6 @@ import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
 import com.ladybird.hkd.util.ParamUtils;
-import com.ladybird.hkd.vo.ItemTypeListVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

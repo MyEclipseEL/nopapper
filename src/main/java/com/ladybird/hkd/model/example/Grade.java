@@ -1,7 +1,7 @@
-package com.ladybird.hkd.model.pojo;
+package com.ladybird.hkd.model.example;
 
 
-import java.util.Date;
+import com.ladybird.hkd.model.pojo.Department;
 
 /**
  * @author Shen

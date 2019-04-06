@@ -1,6 +1,7 @@
 package com.ladybird.hkd.controller;
 
 
+
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Department;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -48,7 +48,7 @@ public class MessageController extends BaseController {
 
     @RequestMapping(value = "/selectAllDept",method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson selectAllDept(String faculty) throws Exception{
+    public ResultJson selectAllDept(Faculty faculty) throws Exception{
         return messageService.selectAllDept(faculty);
     }
     @RequestMapping(value = "/addDept",method = RequestMethod.GET)

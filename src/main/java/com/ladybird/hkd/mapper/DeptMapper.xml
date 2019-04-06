@@ -4,11 +4,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.DeptMapper" >
 
-    <select id="selectAllDept" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Department">
-        select * from department where faculty = #{faculty}
+    <resultMap id="department_faculty_map" type="com.ladybird.hkd.model.example.DepartmentExample">
+        <id column="dept_num" property="dept_num"/>
+        <result column="dept_name" property="dept_name"/>
+        <result column="tip" property="tip"/>
+        <association property="faculty" javaType="com.ladybird.hkd.model.pojo.Faculty">
+            <id property="fac_num" column="fac_num"/>
+        </association>
+    </resultMap>
+
+
+    <select id="selectAllDept" parameterType="com.ladybird.hkd.model.pojo.Faculty" resultType="com.ladybird.hkd.model.pojo.Department">
+        SELECT
+		  d.dept_num,
+		  d.dept_name,
+		  d.tip,
+		  f.fac_num
+		FROM department d
+		LEFT JOIN faculty f
+		ON d.faculty = #{fac_num}
     </select>
 
-    <insert id="addDept" parameterType="com.ladybird.hkd.model.pojo.Department">
+    <insert id="addDept" parameterType= "com.ladybird.hkd.model.pojo.Department">
         INSERT INTO department  VALUES( #{dept_num},#{dept_name},#{faculty},#{tip})
     </insert>
 
@@ -31,33 +48,9 @@
             </if>
         </where>
     </select>
-   <!--
 
-    <delete id="delDept" parameterType="com.ladybird.hkd.model.pojo.Department">
-        DELETE FROM department WHERE dept_num = #{dept_num};
-    </delete>
-
-
-
-    <select id="findDept" parameterType="com.ladybird.hkd.model.pojo.Department" resultType="com.ladybird.hkd.model.pojo.Department">
-        SELECT * FROM department
-        <where>
-
-            <if test="dept_num != null and dept_num != ''">
-                and dept_num = #{dept_num}
-            </if>
-            <if test="dept_name != null and dept_name != ''">
-                and dept_name LIKE '%${dept_name}%'
-            </if>
-        </where>
-    </select>
-
-    <select id="findDeptByName" parameterType="java.lang.String" resultType="com.ladybird.hkd.model.pojo.Department">
-        SELECT * FROM department where dept_name=#{dept_name}
-    </select>
-    -->
     <select id="findDeptByNum" parameterType="java.lang.String" resultType="com.ladybird.hkd.model.pojo.Department">
-        SELECT * FROM department where dept_Num=#{dept_Num}
+        SELECT * FROM department where dept_num=#{dept_num}
     </select>
 
     <select id="selByTeacher" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Department">

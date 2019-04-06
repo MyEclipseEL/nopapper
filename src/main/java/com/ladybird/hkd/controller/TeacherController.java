@@ -1,21 +1,19 @@
 package com.ladybird.hkd.controller;
 
 import com.ladybird.hkd.annotation.CheckToken;
-import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.manager.TokenManager;
+import com.ladybird.hkd.model.example.Grade;
 import com.ladybird.hkd.model.json.*;
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
-import com.ladybird.hkd.service.BasicService;
 import com.ladybird.hkd.service.ExamService;
+import com.ladybird.hkd.service.MessageService;
 import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
-import com.ladybird.hkd.util.ParamUtils;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,7 +46,7 @@ public class TeacherController extends BaseController {
     @Autowired
     private TokenManager manager;
     @Autowired
-    private BasicService basicService;
+    private MessageService messageService;
 
 
     @ApiOperation("教师登陆")
@@ -139,7 +136,7 @@ public class TeacherController extends BaseController {
             ResultJson.BusinessErrorException("token中没有用户信息！",null);
         }
         //查询近期还未考过该门课程的班级
-        List<Grade> grades = basicService.gradesNotInExam(t_num,course);
+        List<Grade> grades = messageService.gradesNotInExam(t_num,course);
         if (grades.size() == 0)
             return ResultJson.Success("没有需要考试的班级！");
         return ResultJson.Success(grades);

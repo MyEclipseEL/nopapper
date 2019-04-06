@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.GradeMapper" >
-<insert id="addGrade" parameterType="com.ladybird.hkd.model.pojo.Grade" >
+<insert id="addGrade" parameterType="com.ladybird.hkd.model.example.Grade" >
     INSERT INTO grade (g_year, g_class) VALUES (#{g_year}, #{g_class});
 </insert>
 
@@ -11,11 +11,11 @@
      DELETE FROM grade WHERE g_id = #{g_id};
  </delete>
 
-    <update id="updateGrade" parameterType="com.ladybird.hkd.model.pojo.Grade">
+    <update id="updateGrade" parameterType="com.ladybird.hkd.model.example.Grade">
         UPDATE grade SET g_year=#{g_year},g_class=#{g_class} where g_id=#{g_id}
 
     </update>
-    <select id="findGrade" parameterType="com.ladybird.hkd.model.pojo.Grade" resultType="com.ladybird.hkd.model.pojo.Grade">
+    <select id="findGrade" parameterType="com.ladybird.hkd.model.example.Grade" resultType="com.ladybird.hkd.model.example.Grade">
         SELECT * FROM Grade
         <where>
 
@@ -32,7 +32,7 @@
         </where>
     </select>
 
-    <select id="findGradeByYandC" parameterType="com.ladybird.hkd.model.pojo.Grade" resultType="com.ladybird.hkd.model.pojo.Grade">
+    <select id="findGradeByYandC" parameterType="com.ladybird.hkd.model.example.Grade" resultType="com.ladybird.hkd.model.example.Grade">
         SELECT * FROM Grade where g_year = #{g_year} and  g_class = #{g_class}
     </select>
 

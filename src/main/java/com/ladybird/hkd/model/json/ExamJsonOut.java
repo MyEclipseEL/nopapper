@@ -2,10 +2,8 @@ package com.ladybird.hkd.model.json;
 
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Department;
-import com.ladybird.hkd.model.pojo.Grade;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Shen

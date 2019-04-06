@@ -9,7 +9,7 @@ public class Student {
     private String stu_name; //姓名
     private String stu_faculty;//就读学院
     private String dept; //就读专业
-    private int grade;      //就读班级
+    private String grade;      //就读班级
     private String stu_pwd;  //登录密码
 
     public String getStu_num() {
@@ -52,11 +52,11 @@ public class Student {
         this.dept = dept;
     }
 
-    public int getGrade() {
+    public String getGrade() {
         return grade;
     }
 
-    public void setGrade(int grade) {
+    public void setGrade(String grade) {
         this.grade = grade;
     }
 

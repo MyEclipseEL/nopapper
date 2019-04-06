@@ -1,13 +1,14 @@
-package com.ladybird.hkd.model.example;
+package com.ladybird.hkd.model.pojo;
 
-
-import com.ladybird.hkd.model.pojo.Department;
-import com.ladybird.hkd.model.pojo.Faculty;
-
-public class DepartmentExample  {
+/**
+ * @author Shen
+ * @description: 专业实体
+ * @create: 2019-03-13
+ */
+public class Department {
     private String dept_num;
     private String dept_name;
-    private Faculty faculty;
+    private String faculty;
     private String tip;
 
     public String getDept_num() {
@@ -26,11 +27,11 @@ public class DepartmentExample  {
         this.dept_name = dept_name;
     }
 
-    public Faculty getFaculty() {
+    public String getFaculty() {
         return faculty;
     }
 
-    public void setFaculty(Faculty faculty) {
+    public void setFaculty(String faculty) {
         this.faculty = faculty;
     }
 
@@ -42,4 +43,3 @@ public class DepartmentExample  {
         this.tip = tip;
     }
 }
-
