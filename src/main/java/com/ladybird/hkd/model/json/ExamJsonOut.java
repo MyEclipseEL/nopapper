@@ -15,7 +15,7 @@ public class ExamJsonOut {
     private Course course;     //考试课程
     private String grade;        //考试班级
     private Department dept;    //考试专业
-//    private Date pre_time;      //预设开始时间
+    private Date finish_time;      //预设开始时间
     private Date begin_time;    //考试开始时间
     private Integer duration;   //考试时长  （毫秒）
     private Integer state;      //考试状态 默认0 考试未开始 1 表示考试已经开始  -1 表示考试已经结束
@@ -60,14 +60,13 @@ public class ExamJsonOut {
         this.course = course;
     }
 
+    public Date getFinish_time() {
+        return finish_time;
+    }
 
-//    public Date getPre_time() {
-//        return pre_time;
-//    }
-//
-//    public void setPre_time(Date pre_time) {
-//        this.pre_time = pre_time;
-//    }
+    public void setFinish_time(Date finish_time) {
+        this.finish_time = finish_time;
+    }
 
     public Date getBegin_time() {
         return begin_time;

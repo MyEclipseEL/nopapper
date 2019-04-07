@@ -29,12 +29,105 @@ error:{
       }
 ```
 
+###老师获取教授课程
+```
+GET  /teacher/examCourses
+POST /teacher/examCourses
+```
+参数
+```
+null
+```
+返回
+```
+{
+    "message": "success",
+    "code": 0,
+    "data": [
+        {
+            "c_id": "1",
+            "c_name": "软件工程",
+            "tip": null
+        }
+    ]
+}
+```
+###老师请求未参加该门考试的班级
+```
+GET  /teacher/examGrades
+POST /teacher/examGrades
+```
+参数
+```text
+{
+"course":"1"
+
+}
+```
+参数 url
+```text
+{
+ "message": "success",
+    "code": 0,
+    "data": [
+        {
+            "g_id": "3",
+            "g_year": 2016,
+            "g_class": 1,
+            "dept": {
+                "dept_num": "10001",
+                "dept_name": "软件工程",
+                "faculty": {
+                    "fac_num": "10001",
+                    "fac_name": "计算机与信息工程",
+                    "tip": null
+                },
+                "tip": null
+            }
+        }
+    ]
+ }
+```
+###教师选择班级开始考试
+```text
+GET  /teacher/begin
+POST /teacher/begin
+```
+参数 x-www-form-urlencoded
+```text
+{
+"course"    : 1
+"duration"  : 120 (分钟数)
+"grades"    : 3,4
+}
+```
+返回
+```text
+{
+    "message": "success",
+    "code": 0,
+    "data": {
+        "exam_id": "2019033111004211",
+        "course": {
+            "c_id": "1",
+            "c_name": "软件工程",
+            "tip": null
+        },
+        "grade": "3,4",
+        "dept": null,
+        "begin_time": 1554001243000,(毫秒数，除1000使用)
+        "duration": 120,
+        "state": 1
+    }
+}
+```
+
 ##StudentController 学生管理类
 ###student login
 ```$xslt
 POST /student/login
 ```
-参数
+参数 x-www-form-urlencoded
 ```$xslt
 body:{
     'stu_num'   : '1', //学号
@@ -64,7 +157,7 @@ error:{
 ```$xslt
 GET /exam/beginExam
 ```
-参数
+参数 url
 ```$xslt
 {
     "exam"  : 1     考试id
@@ -83,10 +176,10 @@ GET /exam/beginExam
 ```$xslt
 GET /exam/commitPaper
 ```
-参数
+参数 url
 ```$xslt
 {
-    "course"    : 1,
+    "exam"    : 201903190941011100012,
     "score"     : 99
 }
 ```

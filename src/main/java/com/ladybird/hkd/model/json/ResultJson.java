@@ -16,8 +16,6 @@ public class ResultJson{
     private Integer code;
     private Object data;
 
-
-
     public ResultJson(Integer code,String message, Object  data) {
         this.message = message;
         this.code = code;

@@ -17,5 +17,5 @@ public interface FacultyMapper {
 
     int updateFaculty(Faculty faculty) throws Exception;
 
-    int selectFacultyByPrimary(String fac_num) throws Exception;
+    int selectFacultyByPrimary(@Param("fac_num") String fac_num) throws Exception;
 }

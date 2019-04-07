@@ -96,7 +96,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson addDept(Department department) throws Exception {
-        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty())){
+        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty().getFac_num())){
             return ResultJson.ParameterError();
         }
         int resultCount = deptMapper.selectDeptByPrimary(department.getDept_num());
@@ -112,7 +112,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson updateDept(Department department) throws Exception {
-        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty())){
+        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty().getFac_num())){
             return ResultJson.ParameterError();
         }
         int resultCount = deptMapper.updateDept(department);

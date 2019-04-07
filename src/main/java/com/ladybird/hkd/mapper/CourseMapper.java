@@ -27,6 +27,9 @@ public interface CourseMapper {
     int updateCourse(Course course) throws Exception;
 
     int selectCourseByPrimary(String c_id) throws Exception;
+
+    Course selCourseById(@Param("c_id") String c_id) throws Exception;
+
     Course findCourse(Course course) throws Exception;
 
     List<Course> selByTeacher(@Param("t_num") String t_num) throws Exception;

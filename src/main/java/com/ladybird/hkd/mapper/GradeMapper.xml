@@ -53,13 +53,19 @@
         SELECT * FROM grade
             LEFT JOIN department d ON d.dept_num=dept
             LEFT JOIN faculty f ON d.faculty=f.fac_num
-        WHERE g_id NOT IN (
-            SELECT grade FROM exam e
-            WHERE e.teacher=${t_num} AND e.course=${course}
-                  AND e.begin_time &gt;  #{begin_date} )
+        WHERE g_id 
+        <if test="already != null">
+            NOT IN (
+            ${already}
+            )
+        </if>
         AND g_id IN
         <foreach collection="grades" separator="," item="grade" open="(" close=")">
             ${grade}
         </foreach>
     </select>
+
+    <!--/*SELECT grade FROM exam e-->
+    <!--WHERE e.teacher=${t_num} AND e.course=${course}-->
+    <!--AND e.begin_time &gt;  #{begin_date}*/-->
 </mapper>

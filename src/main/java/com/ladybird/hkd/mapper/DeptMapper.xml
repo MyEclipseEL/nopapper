@@ -25,7 +25,7 @@
 		ON d.faculty = #{fac_num}
     </select>
 
-    <insert id="addDept" parameterType= "com.ladybird.hkd.model.pojo.Department">
+    <insert id="addDept" parameterType="com.ladybird.hkd.model.pojo.Department">
         INSERT INTO department  VALUES( #{dept_num},#{dept_name},#{faculty},#{tip})
     </insert>
 

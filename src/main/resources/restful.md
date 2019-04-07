@@ -7,10 +7,11 @@ base url: http://nopaper.eiber.cn/paperless
 ##TeacherController 教师管理
 ###teacher login
 ```
-POST /teacher/login
+POST /teacher/login   //x-www-form-urlencoded  
 ```
 参数
 ```$xslt
+
 body:{
     t_num:'1', //教师工号
     t_pwd:'1'  //密码
@@ -30,20 +31,18 @@ error:{
       }
 ```
 
-
-##StudentController 学生管理类
-###student login
-
 ##ItemController 题目管理类
-###请求所有题目 --一个科目 
+###请求所有题目  
+
 ```$xslt
-GET /item/items
+GET /item/items     
 ```
 参数
 ```$xslt
 header:{"authorization":"aa access_token"}
 {
-    "course": 1 课程号
+    "course"    : 1 课程号  //不传则查找所有科目题型
+    "item_type" :"A" 题型   //不传则查询所有题型
 }
 ```
 返回
@@ -69,7 +68,7 @@ success{
                                       "item_valid": [
                                           "正确答案1"
                                       ],
-                                      "answer": [
+                                      "item_choice": [
                                           "错误答案1",
                                           "正确答案1",
                                           "错误答案2",
@@ -84,9 +83,99 @@ success{
 }
 
 ```
+###修改题目
+```
+POST /item/changeItem       //x-www-form-urlencoded
+```
+参数
+```
+{
+    "item_id": "4",             //题目id
+    "item_title": null,         //(没有填写则不需传)
+    "item_desc": "题目描述",    //题目
+    "item_valid": [             //正确答案
+        正确答案1"
+    ],
+    "item_choice": [            //选项
+        "错误答案1",
+        "正确答案1",
+        "错误答案2",
+        "错误答案3"
+    ],
+    "item_type": "A",               //题型
+    "course": "1"                   //课程
+    "tip"   :                   //备注 （没填可不传）
+}
+```
+返回
+```
+success:{
+    'code'  : 0,
+    'msg'   : '成功',
+    'data'  : [
+        {
+        "item_id": "4",             //题目id
+        "item_title": null,         
+        "item_desc": "题目描述",    //题目
+        "item_valid": [             //正确答案
+            正确答案1"
+        ],
+        "item_choice": [            //选项
+            "错误答案1",
+            "正确答案1",
+            "错误答案2",
+            "错误答案3"
+        ],
+        "item_type": "A",               //题型
+        "course": "1"                   //课程
+        }
+    ]
+}
+```
 
-###配置试卷题型分数
-
+###添加题目
+```
+POST /item/addItem      //x-www-form-urlencoded
+```
+参数
+```
+{
+    "item_title": null,         //（可不填）
+    "item_desc": "题目描述",    //题目
+    "item_valid": [             //正确答案
+        正确答案1"
+    ],
+    "item_choice": [            //选项
+        "错误答案1",
+        "正确答案1",
+        "错误答案2",
+        "错误答案3"
+    ],
+     "item_type": "A",               //题型
+    "course": "1"                   //课程
+    "tip"   :                   //备注(可不填写)
+}
+```
+返回
+```
+{
+    "item_id"   : 22
+    "item_title": null,         
+    "item_desc": "题目描述",    //题目
+    "item_valid": [             //正确答案
+        正确答案1"
+    ],
+    "item_choice": [            //选项
+        "错误答案1",
+        "正确答案1",
+        "错误答案2",
+        "错误答案3"
+    ],
+     "item_type": "A",               //题型
+    "course": "1"                   //课程
+    "tip"   :                   //备注
+}
+```
 
 ###查找所有的题型
 ```$xslt
@@ -105,17 +194,14 @@ null
         {
             "type_id": "A",
             "type_name": "单选题",
-            "type_score": 15
         },
         {
             "type_id": "B",
             "type_name": "多选题",
-            "type_score": 15
         },
         {
             "type_id": "C",
             "type_name": "判断题",
-            "type_score": 15
         }
     ]
 }
@@ -137,6 +223,7 @@ body:{
      	"multiple_score":15,
      	"checking_count":3,
      	"checking_score":15
+     	"duration"      :120 时长 （分钟）
      }
 ```
 返回
@@ -146,9 +233,14 @@ body:{
     "code": 0,
     "data": {
         "id": null,
-        "single_choice": 3,
-        "multiple_choice": 3,
-        "checking": 3
+        "course"      :1,  
+        "single_count":2,
+        "single_score":5,
+        "multiple_count":3,
+        "multiple_score":15,
+        "checking_count":3,
+        "checking_score":15
+        "duration"      :120 时长 （分钟）
     }
 }
 ```
@@ -168,9 +260,14 @@ GET /exam/checkOutPaper
     "code": 0,
     "data": {
         "id": 1,
-        "single_choice": 3,
-        "multiple_choice": 3,
-        "checking": 3
+        "course"      :1,  
+        "single_count":2,
+        "single_score":5,
+        "multiple_count":3,
+        "multiple_score":15,
+        "checking_count":3,
+        "checking_score":15
+        "duration"      :120 时长 （分钟）
     }
 }
 ```
@@ -197,7 +294,7 @@ null
             "g_year": 2015,     //级
             "g_class": 1        //班
         },
-        "pre_time": 1552541400,     //预计开始时间
+        "finish_time": ,            //结束时间
         "begin_time": 1552564208,   //实际开始时间
         "duration": 120,            //考试时长
         "state": 1                  //考试状态
@@ -205,43 +302,6 @@ null
 ]
 ```
 
-###添加考试 
-```$xslt
-POST /exam/addExam
-```
-参数
-```$xslt
-{
-	"course":1,
-	"grades":[1,2],
-	"dept"  :"10001",
-	"pre_time":1553002861000,
-	"duration":120
-}
-```
-返回
-```$xslt
-{
-    "message": "success",
-    "code": 0,
-    "data": {
-        "exam_id": "2019031909410111",
-        "course": {
-            "c_id": 1,
-            "c_name": "软件工程"
-        },
-        "grade": {
-            "g_id": 1,
-            "g_year": 2015,
-            "g_class": 1
-        },
-        "pre_time": "2019-03-19 21:41:01",
-        "begin_time": null,
-        "duration": 120,
-        "state": 0
-    }
-}
-```
 
 
 
