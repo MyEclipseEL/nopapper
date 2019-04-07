@@ -1,14 +1,11 @@
 package com.ladybird.hkd.controller;
 
 import com.ladybird.hkd.annotation.CheckToken;
-import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.example.PaperEditExample;
-import com.ladybird.hkd.model.json.ExamJsonIn;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.json.ResultJson;
-import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.*;
 import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.StudentService;
@@ -16,7 +13,6 @@ import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
 import com.ladybird.hkd.util.ParamUtils;
-import com.ladybird.hkd.vo.ItemTypeListVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -28,10 +24,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Shen
@@ -115,10 +108,10 @@ public class ExamController extends BaseController{
         }
         if (ParamUtils.stringIsNull(student.getStu_num()))
             return ResultJson.ServerException();
-        List<ExamJsonOut> examJsonOuts = examService.selectExamByStu(student);
-        if (examJsonOuts.size() == 0)
+        List<ExamExample> examExamples = examService.selectExamByStu(student);
+        if (examExamples.size() == 0)
             return ResultJson.BusinessErrorException("暂时没有考试！",null);
-        return examJsonOuts;
+        return examExamples;
     }
 
 }

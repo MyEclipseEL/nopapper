@@ -188,7 +188,7 @@ body:{
 success:{
     'code'  : 0,
     'msg'   : 'success',
-    'data'  : "department": {"dept_num": '1001',"dept_name": "软件工程"}
+    'data'  : "departmentExample": {"dept_num": '1001',"dept_name": "软件工程"}
 }
 error:{
           'code'  : 1003,1004...,

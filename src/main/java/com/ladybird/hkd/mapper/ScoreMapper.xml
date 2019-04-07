@@ -4,9 +4,66 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.ScoreMapper" >
 
+    <resultMap id="ScoreExmMap" type="com.ladybird.hkd.model.example.ScoreExample">
+        <result property="s_score" column="s_score"/>
+        <result property="tip" column="tip"/>
+        <association property="student" javaType="com.ladybird.hkd.model.example.StudentExample">
+            <id property="stu_num" column="stu_num"/>
+            <result column="stu_ID" property="stu_ID"/>
+            <result column="stu_name" property="stu_name"/>
+            <result property="stu_pwd" column="stu_pwd"/>
+            <result column="tip" property="tip"/>
+            <association property="grade" column="grade" javaType="com.ladybird.hkd.model.example.GradeExample">
+                <id property="g_id" column="g_id"/>
+                <result column="g_year" property="g_year"/>
+                <result property="g_class" column="g_class"/>
+                <result column="tip" property="tip"/>
+                <association property="dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">
+                    <id property="dept_num" column="dept_num"/>
+                    <result column="dept_name" property="dept_name"/>
+                    <result property="tip" column="tip"/>
+                    <association property="faculty" column="faculty" javaType="com.ladybird.hkd.model.pojo.Faculty">
+                        <id column="fac_num" property="fac_num"/>
+                        <result column="fac_name" property="fac_name"/>
+                        <result column="tip" property="tip"/>
+                    </association>
+                </association>
+            </association>
+        </association>
+        <association property="exam" javaType="com.ladybird.hkd.model.example.ExamExample">
+        </association>
+    </resultMap>
+
     <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score" >
         INSERT INTO score VALUES (${student},${exam},${s_score})
     </insert>
 
-
+    <select id="checkOutScores" resultMap="ScoreExmMap">
+        SELECT * FROM score s
+        LEFT JOIN students stu ON s.student=stu.stu_num
+        LEFT JOIN grade g ON stu.grade=g.g_id
+        LEFT JOIN department d ON g.dept=d.dept_num
+        LEFT JOIN faculty f ON d.faculty=f.fac_num
+        WHERE 1=1
+        <if test="t_num != null">
+          AND  exam IN (SELECT exam_id FROM exam WHERE teacher=#{t_num})
+        </if>
+        <if test="course != null">
+            AND exam IN (SELECT exam_id FROM exam WHERE course=#{course})
+        </if>
+        <if test="faculty != null">
+            AND student IN (SELECT stu_num FROM students WHERE stu_faculty=#{faculty})
+        </if>
+        <if test="dept != null">
+            AND student IN (SELECT stu_num FROM students WHERE dept=#{dept})
+        </if>
+        <if test="year != null">
+            AND student IN (SELECT stu_num FROM students WHERE grade
+            IN (SELECT g_id FROM grade WHERE g_year=#{year}))
+        </if>
+        <if test="clazz != null">
+            AND student IN (SELECT stu_num FROM students WHERE grade
+            IN (SELECT g_id FROM grade WHERE g_class=#{clazz})
+        </if>
+    </select>
 </mapper>

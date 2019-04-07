@@ -3,6 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.StudentMapper" >
+
+
     <select id="findByNumAndPwd" parameterType="com.ladybird.hkd.model.json.StudentJsonIn" resultType="com.ladybird.hkd.model.pojo.Student">
         SELECT * FROM students WHERE stu_num=${stu_num} and stu_pwd=${stu_pwd} AND stu_ID=${stu_ID}
     </select>

@@ -4,15 +4,12 @@ import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.json.ItemsOut;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.ItemType;
-import com.ladybird.hkd.model.pojo.Student;
-import com.ladybird.hkd.model.vo.ItemVO;
 import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.ItemService;
-import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
 import com.ladybird.hkd.util.UrlConf;
 import io.swagger.annotations.*;
@@ -25,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,19 +79,19 @@ public class ItemController extends BaseController{
         if (exam == null || "".equals(exam.trim())) {
             throw new ParamException("哪场考试呢？");
         }
-        ExamJsonOut examJsonOut = examService.checkOutExamById(exam);
-        if (examJsonOut.getState() == ExamStateEnum.FINISH.getCode()) {
+        ExamExample examExample = examService.checkOutExamById(exam);
+        if (examExample.getState() == ExamStateEnum.FINISH.getCode()) {
             throw new BusinessException(ExamStateEnum.FINISH.getMsg());
         }
-        if (examJsonOut.getState() == ExamStateEnum.PREPAR.getCode()) {
+        if (examExample.getState() == ExamStateEnum.PREPAR.getCode()) {
             throw new BusinessException(ExamStateEnum.PREPAR.getMsg());
         }
         Date date = new Date();
         System.out.println(date);
-        if (date.getTime() - examJsonOut.getBegin_time().getTime() > 0.5 * 3600 * 1000){
+        if (date.getTime() - examExample.getBegin_time().getTime() > 0.5 * 3600 * 1000){
             throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
         }
-        List<ItemsOut> outList = itemService.getPaper(examJsonOut.getCourse().getC_id());
+        List<ItemsOut> outList = itemService.getPaper(examExample.getCourse().getC_id());
 
         return ResultJson.Success(outList);
     }

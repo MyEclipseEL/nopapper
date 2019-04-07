@@ -5,12 +5,11 @@ import com.ladybird.hkd.controller.BaseController;
 import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.json.ItemsOut;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.ItemService;
-import com.ladybird.hkd.util.JsonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -57,18 +56,18 @@ public class ItemControllerV1 extends BaseController{
         if (exam == null || "".equals(exam.trim())) {
             throw new ParamException("哪场考试呢？");
         }
-        ExamJsonOut examJsonOut = examService.checkOutExamById(exam);
-        if (examJsonOut.getState() == ExamStateEnum.FINISH.getCode()) {
+        ExamExample examExample = examService.checkOutExamById(exam);
+        if (examExample.getState() == ExamStateEnum.FINISH.getCode()) {
             throw new BusinessException(ExamStateEnum.FINISH.getMsg());
         }
-        if (examJsonOut.getState() == ExamStateEnum.PREPAR.getCode()) {
+        if (examExample.getState() == ExamStateEnum.PREPAR.getCode()) {
             throw new BusinessException(ExamStateEnum.PREPAR.getMsg());
         }
         Date date = new Date();
-        if (date.getTime() - examJsonOut.getBegin_time().getTime() > 0.5 * 3600 * 1000){
+        if (date.getTime() - examExample.getBegin_time().getTime() > 0.5 * 3600 * 1000){
             throw new BusinessException("考试已经开始半小时，禁止考试参加");
         }
-        List<ItemsOut> outList = itemService.getPaper(examJsonOut.getCourse().getC_id());
+        List<ItemsOut> outList = itemService.getPaper(examExample.getCourse().getC_id());
 
         return ResultJson.Success(outList);
     }

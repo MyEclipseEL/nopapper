@@ -1,16 +1,15 @@
 package com.ladybird.hkd.controller;
 
 
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -53,18 +52,18 @@ public class MessageController extends BaseController {
     }
     @RequestMapping(value = "/addDept",method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson addDept(Department department) throws Exception{
-        return messageService.addDept(department);
+    public ResultJson addDept(DepartmentExample departmentExample) throws Exception{
+        return messageService.addDept(departmentExample);
     }
     @RequestMapping(value = "/updateDept",method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson updateDept(Department department) throws Exception{
-        return messageService.updateDept(department);
+    public ResultJson updateDept(DepartmentExample departmentExample) throws Exception{
+        return messageService.updateDept(departmentExample);
     }
     @RequestMapping(value = "/findDept",method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson findDept(Department department) throws Exception{
-        return messageService.findDept(department);
+    public ResultJson findDept(DepartmentExample departmentExample) throws Exception{
+        return messageService.findDept(departmentExample);
     }
 
     @RequestMapping(value = "/selectAllCourse",method = RequestMethod.GET)

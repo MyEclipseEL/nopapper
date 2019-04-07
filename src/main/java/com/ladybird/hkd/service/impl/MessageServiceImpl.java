@@ -6,7 +6,7 @@ import com.ladybird.hkd.mapper.FacultyMapper;
 import com.ladybird.hkd.model.json.ResultJson;
 
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.service.MessageService;
 
@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service("messageService")
 public class MessageServiceImpl implements MessageService {
@@ -80,24 +78,24 @@ public class MessageServiceImpl implements MessageService {
         if(!StringUtils.isNotBlank(faculty)){
             return ResultJson.ParameterError();
         }
-        List<Department> departments = deptMapper.selectAllDept(faculty);
-        if(departments == null || departments.isEmpty()){
+        List<DepartmentExample> departmentExamples = deptMapper.selectAllDept(faculty);
+        if(departmentExamples == null || departmentExamples.isEmpty()){
 
              return ResultJson.Forbidden("查询错误");
         }
-        return ResultJson.Success(departments);
+        return ResultJson.Success(departmentExamples);
     }
 
 
-    public ResultJson addDept(Department department) throws Exception {
-        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty().getFac_num())){
+    public ResultJson addDept(DepartmentExample departmentExample) throws Exception {
+        if(!StringUtils.isNotBlank(departmentExample.getDept_num())||!StringUtils.isNotBlank(departmentExample.getDept_name())||!StringUtils.isNotBlank(departmentExample.getFaculty().getFac_num())){
             return ResultJson.ParameterError();
         }
-        int resultCount = deptMapper.selectDeptByPrimary(department.getDept_num());
+        int resultCount = deptMapper.selectDeptByPrimary(departmentExample.getDept_num());
         if(resultCount > 0){
-            this.updateDept(department);
+            this.updateDept(departmentExample);
         }
-        resultCount = deptMapper.addDept(department);
+        resultCount = deptMapper.addDept(departmentExample);
         if(resultCount > 0){
             return ResultJson.Success("添加专业成功");
         }
@@ -105,11 +103,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
 
-    public ResultJson updateDept(Department department) throws Exception {
-        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty().getFac_num())){
+    public ResultJson updateDept(DepartmentExample departmentExample) throws Exception {
+        if(!StringUtils.isNotBlank(departmentExample.getDept_num())||!StringUtils.isNotBlank(departmentExample.getDept_name())||!StringUtils.isNotBlank(departmentExample.getFaculty().getFac_num())){
             return ResultJson.ParameterError();
         }
-        int resultCount = deptMapper.updateDept(department);
+        int resultCount = deptMapper.updateDept(departmentExample);
         if(resultCount > 0) {
             return ResultJson.Success("修改成功");
         }
@@ -117,15 +115,15 @@ public class MessageServiceImpl implements MessageService {
     }
 
 
-    public ResultJson findDept(Department department) throws Exception {
-        if (!StringUtils.isNotBlank(department.getDept_num())&&!StringUtils.isNotBlank(department.getDept_name())){
+    public ResultJson findDept(DepartmentExample departmentExample) throws Exception {
+        if (!StringUtils.isNotBlank(departmentExample.getDept_num())&&!StringUtils.isNotBlank(departmentExample.getDept_name())){
             return ResultJson.ParameterError();
         }
-        Department department1 = deptMapper.findDept(department);
-        if(department1==null){
+        DepartmentExample departmentExample1 = deptMapper.findDept(departmentExample);
+        if(departmentExample1 ==null){
             return ResultJson.Forbidden("查询失败");
         }
-        return ResultJson.Success(department1);
+        return ResultJson.Success(departmentExample1);
     }
 
 

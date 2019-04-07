@@ -1,13 +1,13 @@
 package com.ladybird.hkd.controller;
 
 import com.ladybird.hkd.annotation.CheckToken;
-import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.manager.TokenManager;
+import com.ladybird.hkd.model.example.ExamExample;
+import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.json.*;
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
 import com.ladybird.hkd.service.BasicService;
@@ -15,18 +15,15 @@ import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
-import com.ladybird.hkd.util.ParamUtils;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -70,6 +67,14 @@ public class TeacherController extends BaseController {
         return new TokenJsonOut(accessToken, reToken);
     }
 
+    @CheckToken
+    @ResponseBody
+    @RequestMapping(value = "/afterLogin")
+    public Object afterLogin(NativeWebRequest request) throws Exception{
+        TeacherJsonOut teacherJsonOut = getTeacher(request);
+        return ResultJson.Success(teacherJsonOut);
+    }
+
     @ApiOperation( "获取考试场次")
     @CheckToken
     @ResponseBody
@@ -93,7 +98,7 @@ public class TeacherController extends BaseController {
         //TODO 课程，专业班级
 
         //得到考试列表
-        List<ExamJsonOut> list = examService.checkOutByTeach(teach);
+        List<ExamExample> list = examService.checkOutByTeach(teach);
 
         return list;
     }
@@ -136,10 +141,10 @@ public class TeacherController extends BaseController {
             ResultJson.BusinessErrorException("token中没有用户信息！",null);
         }
         //查询近期还未考过该门课程的班级
-        List<Grade> grades = basicService.gradesNotInExam(t_num,course);
-        if (grades.size() == 0)
+        List<GradeExample> gradeExamples = basicService.gradesNotInExam(t_num,course);
+        if (gradeExamples.size() == 0)
             return ResultJson.Success("没有需要考试的班级！");
-        return ResultJson.Success(grades);
+        return ResultJson.Success(gradeExamples);
     }
 
     @CheckToken
@@ -169,15 +174,15 @@ public class TeacherController extends BaseController {
         }
         if (course == null || "".equals(course))
             throw new ParamException("没有选择课程！");
-        ExamJsonOut examJsonOut = examService.beginExam(t_num, grades, course);
-        if (examJsonOut == null)
+        ExamExample examExample = examService.beginExam(t_num, grades, course);
+        if (examExample == null)
             return ResultJson.ServerException("开始失败，稍后重试！");
         try {
-            examJsonOut.getExam_id();
+            examExample.getExam_id();
         } catch (NullPointerException np) {
             return ResultJson.ServerException();
         }
-        return ResultJson.Success(examJsonOut);
+        return ResultJson.Success(examExample);
 
     }
 

@@ -2,7 +2,8 @@
 SQLyog Ultimate v12.09 (64 bit)
 MySQL - 5.7.22-log : Database - nopaper
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -29,11 +30,11 @@ CREATE TABLE `course` (
 
 insert  into `course`(`c_id`,`c_name`,`tip`) values ('1','软件工程',NULL);
 
-/*Table structure for table `department` */
+/*Table structure for table `departmentExample` */
 
-DROP TABLE IF EXISTS `department`;
+DROP TABLE IF EXISTS `departmentExample`;
 
-CREATE TABLE `department` (
+CREATE TABLE `departmentExample` (
   `dept_num` varchar(30) NOT NULL COMMENT '专业代码',
   `dept_name` varchar(30) NOT NULL COMMENT '专业名称',
   `faculty` varchar(30) NOT NULL COMMENT '所属学院',
@@ -43,9 +44,9 @@ CREATE TABLE `department` (
   CONSTRAINT `department_ibfk_1` FOREIGN KEY (`faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `department` */
+/*Data for the table `departmentExample` */
 
-insert  into `department`(`dept_num`,`dept_name`,`faculty`,`tip`) values ('10001','软件工程','10001',NULL);
+insert  into `departmentExample`(`dept_num`,`dept_name`,`faculty`,`tip`) values ('10001','软件工程','10001',NULL);
 
 /*Table structure for table `exam` */
 
@@ -54,7 +55,7 @@ DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
   `exam_id` varchar(50) NOT NULL COMMENT '考试号',
   `course` varchar(15) NOT NULL COMMENT '考试课程',
-  `grade` varchar(15) NOT NULL COMMENT '考试班级',
+  `gradeExample` varchar(15) NOT NULL COMMENT '考试班级',
   `dept` varchar(30) NOT NULL COMMENT '考试专业',
   `pre_time` datetime DEFAULT NULL COMMENT '考试预设时间',
   `begin_time` datetime DEFAULT NULL COMMENT '开始时间',
@@ -64,13 +65,13 @@ CREATE TABLE `exam` (
   PRIMARY KEY (`exam_id`),
   KEY `coures` (`course`),
   KEY `dept` (`dept`),
-  KEY `grade` (`grade`),
-  CONSTRAINT `exam_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`)
+  KEY `gradeExample` (`gradeExample`),
+  CONSTRAINT `exam_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `exam` */
 
-insert  into `exam`(`exam_id`,`course`,`grade`,`dept`,`pre_time`,`begin_time`,`duration`,`state`,`tip`) values ('1','1','1','10001','2019-03-14 13:30:00','2019-03-27 20:22:38',120,1,NULL),('2019031909410111','1','1','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('201903190941011100011','1','1','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('201903190941011100012','1','2','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('2019031909410112','1','2','10001','2019-03-19 21:41:01',NULL,120,0,NULL);
+insert  into `exam`(`exam_id`,`course`,`gradeExample`,`dept`,`pre_time`,`begin_time`,`duration`,`state`,`tip`) values ('1','1','1','10001','2019-03-14 13:30:00','2019-03-27 20:22:38',120,1,NULL),('2019031909410111','1','1','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('201903190941011100011','1','1','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('201903190941011100012','1','2','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('2019031909410112','1','2','10001','2019-03-19 21:41:01',NULL,120,0,NULL);
 
 /*Table structure for table `faculty` */
 
@@ -87,11 +88,11 @@ CREATE TABLE `faculty` (
 
 insert  into `faculty`(`fac_num`,`fac_name`,`tip`) values ('10001','计算机与信息工程',NULL);
 
-/*Table structure for table `grade` */
+/*Table structure for table `gradeExample` */
 
-DROP TABLE IF EXISTS `grade`;
+DROP TABLE IF EXISTS `gradeExample`;
 
-CREATE TABLE `grade` (
+CREATE TABLE `gradeExample` (
   `g_id` varchar(15) NOT NULL COMMENT '年级id',
   `dept` varchar(30) NOT NULL,
   `g_year` int(4) NOT NULL,
@@ -100,9 +101,9 @@ CREATE TABLE `grade` (
   PRIMARY KEY (`g_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `grade` */
+/*Data for the table `gradeExample` */
 
-insert  into `grade`(`g_id`,`dept`,`g_year`,`g_class`,`tip`) values ('1','',2015,1,NULL),('2','',2015,2,NULL);
+insert  into `gradeExample`(`g_id`,`dept`,`g_year`,`g_class`,`tip`) values ('1','',2015,1,NULL),('2','',2015,2,NULL);
 
 /*Table structure for table `group` */
 
@@ -228,20 +229,20 @@ CREATE TABLE `students` (
   `stu_name` varchar(15) NOT NULL COMMENT '学生姓名',
   `stu_faculty` varchar(30) NOT NULL COMMENT '学院',
   `dept` varchar(30) NOT NULL COMMENT '专业',
-  `grade` varchar(15) NOT NULL COMMENT '班级',
+  `gradeExample` varchar(15) NOT NULL COMMENT '班级',
   `stu_pwd` varchar(18) NOT NULL DEFAULT '1' COMMENT '登陆密码',
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`stu_num`),
-  KEY `grade` (`grade`),
+  KEY `gradeExample` (`gradeExample`),
   KEY `stu_dept` (`dept`),
   KEY `stu_faculty` (`stu_faculty`),
-  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`),
+  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`),
   CONSTRAINT `students_ibfk_3` FOREIGN KEY (`stu_faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `students` */
 
-insert  into `students`(`stu_num`,`stu_ID`,`stu_name`,`stu_faculty`,`dept`,`grade`,`stu_pwd`,`tip`) values ('1','1','aa','10001','10001','1','1',NULL),('2016034400','555555555555555555','bb','10001','10001','2','123456',NULL);
+insert  into `students`(`stu_num`,`stu_ID`,`stu_name`,`stu_faculty`,`dept`,`gradeExample`,`stu_pwd`,`tip`) values ('1','1','aa','10001','10001','1','1',NULL),('2016034400','555555555555555555','bb','10001','10001','2','123456',NULL);
 
 /*Table structure for table `teach` */
 
@@ -252,19 +253,19 @@ CREATE TABLE `teach` (
   `teacher` varchar(15) NOT NULL COMMENT '教师工号',
   `course` varchar(15) NOT NULL COMMENT '课程',
   `dept` varchar(30) NOT NULL COMMENT '专业',
-  `grade` varchar(255) NOT NULL COMMENT '班级',
+  `gradeExample` varchar(255) NOT NULL COMMENT '班级',
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`teach_id`),
   KEY `teacher` (`teacher`),
   KEY `course` (`course`),
   KEY `dept` (`dept`),
   CONSTRAINT `teach_ibfk_1` FOREIGN KEY (`teacher`) REFERENCES `teachers` (`t_num`),
-  CONSTRAINT `teach_ibfk_3` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`)
+  CONSTRAINT `teach_ibfk_3` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `teach` */
 
-insert  into `teach`(`teach_id`,`teacher`,`course`,`dept`,`grade`,`tip`) values ('1','1','1','10001','1 2',NULL);
+insert  into `teach`(`teach_id`,`teacher`,`course`,`dept`,`gradeExample`,`tip`) values ('1','1','1','10001','1 2',NULL);
 
 /*Table structure for table `teachers` */
 
@@ -286,7 +287,7 @@ CREATE TABLE `teachers` (
   KEY `t_dept` (`t_dept`),
   CONSTRAINT `teachers_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
   CONSTRAINT `teachers_ibfk_3` FOREIGN KEY (`t_faculty`) REFERENCES `faculty` (`fac_num`),
-  CONSTRAINT `teachers_ibfk_4` FOREIGN KEY (`t_dept`) REFERENCES `department` (`dept_num`)
+  CONSTRAINT `teachers_ibfk_4` FOREIGN KEY (`t_dept`) REFERENCES `departmentExample` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `teachers` */

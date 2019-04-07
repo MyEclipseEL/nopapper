@@ -1,22 +1,19 @@
-package com.ladybird.hkd.model.json;
+package com.ladybird.hkd.model.example;
 
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Department;
-import com.ladybird.hkd.model.pojo.Grade;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Shen
  * @description: 考试输出类
  * @create: 2019-03-20
  */
-public class ExamJsonOut {
+public class ExamExample {
     private String exam_id;     //考试号
     private Course course;     //考试课程
     private String grade;        //考试班级
-    private Department dept;    //考试专业
+    private DepartmentExample dept;    //考试专业
     private Date finish_time;      //预设开始时间
     private Date begin_time;    //考试开始时间
     private Integer duration;   //考试时长  （毫秒）
@@ -30,11 +27,11 @@ public class ExamJsonOut {
         this.grade = grade;
     }
 
-    public Department getDept() {
+    public DepartmentExample getDept() {
         return dept;
     }
 
-    public void setDept(Department dept) {
+    public void setDept(DepartmentExample dept) {
         this.dept = dept;
     }
 

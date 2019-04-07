@@ -1,12 +1,9 @@
 package com.ladybird.hkd.service.impl;
 
-import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.mapper.*;
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Department;
-import com.ladybird.hkd.model.pojo.Faculty;
-import com.ladybird.hkd.model.pojo.Grade;
+import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.service.BasicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +23,7 @@ public class BasicServiceImpl implements BasicService {
     private CourseMapper courseMapper;
 
     @Override
-    public List<Grade> gradesNotInExam(String t_num,String course) throws Exception {
+    public List<GradeExample> gradesNotInExam(String t_num, String course) throws Exception {
         Date now = new Date();
         //查找课程是否存在
         Course exist = courseMapper.selCourseById(course);

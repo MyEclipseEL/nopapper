@@ -2,7 +2,7 @@ package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.json.ExamJsonIn;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.model.pojo.Teach;
@@ -15,13 +15,13 @@ import java.util.List;
  */
 @Transactional
 public interface ExamService {
-    List<ExamJsonOut> selectExamByStu(Student student) throws Exception;
+    List<ExamExample> selectExamByStu(Student student) throws Exception;
 
     int checkExamState(String exam) throws Exception;
 
-    ExamJsonOut checkOutExamById(String exam) throws Exception;
+    ExamExample checkOutExamById(String exam) throws Exception;
 
-    List<ExamJsonOut> checkOutByTeach(Teach teach) throws Exception;
+    List<ExamExample> checkOutByTeach(Teach teach) throws Exception;
 
     void changeStateAndBegin(String[] exams,Integer state) throws Exception;
 
@@ -29,7 +29,7 @@ public interface ExamService {
 
     List<PaperEditExample> checkOutPaper() throws Exception;
 
-    List<ExamJsonOut> addExams(ExamJsonIn exam) throws Exception;
+    List<ExamExample> addExams(ExamJsonIn exam) throws Exception;
 
-    ExamJsonOut beginExam(String t_num, String[] grades, String course) throws Exception;
+    ExamExample beginExam(String t_num, String[] grades, String course) throws Exception;
 }

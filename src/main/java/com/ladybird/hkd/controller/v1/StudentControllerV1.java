@@ -4,7 +4,7 @@ import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.controller.BaseController;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.manager.TokenManager;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.StudentJsonIn;
 import com.ladybird.hkd.model.json.TokenJsonOut;
@@ -114,10 +114,10 @@ public class StudentControllerV1 extends BaseController {
         }
         if (ParamUtils.stringIsNull(student.getStu_num()))
             return ResultJson.ServerException();
-        List<ExamJsonOut> examJsonOuts = examService.selectExamByStu(student);
-        if (examJsonOuts.size() == 0)
+        List<ExamExample> examExamples = examService.selectExamByStu(student);
+        if (examExamples.size() == 0)
             return ResultJson.Success("暂时没有考试！");
-        return examJsonOuts;
+        return examExamples;
     }
 
 }

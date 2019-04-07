@@ -2,7 +2,7 @@ package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
 
 public interface MessageService {
@@ -16,11 +16,11 @@ public interface MessageService {
 
     ResultJson selectAllDept(String faculty) throws Exception;
 
-    ResultJson addDept(Department department) throws Exception;
+    ResultJson addDept(DepartmentExample departmentExample) throws Exception;
 
-    ResultJson updateDept(Department department) throws Exception;
+    ResultJson updateDept(DepartmentExample departmentExample) throws Exception;
 
-    ResultJson findDept(Department department) throws Exception;
+    ResultJson findDept(DepartmentExample departmentExample) throws Exception;
 
     ResultJson selectAllCourse() throws Exception;
 

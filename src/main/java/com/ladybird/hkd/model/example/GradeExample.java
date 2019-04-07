@@ -1,15 +1,28 @@
-package com.ladybird.hkd.model.pojo;
+package com.ladybird.hkd.model.example;
+
 
 /**
  * @author Shen
- * @description:
- * @create: 2019-04-16
+ * @description: 年级实体
+ * @create: 2019-03-13
  */
-public class Grade {
+public class GradeExample {
     private String g_id;
     private Integer g_year;
     private Integer g_class;
-    private String dept;
+    private DepartmentExample dept;
+
+    public GradeExample() {
+    }
+
+
+    public DepartmentExample getDept() {
+        return dept;
+    }
+
+    public void setDept(DepartmentExample dept) {
+        this.dept = dept;
+    }
 
     public String getG_id() {
         return g_id;
@@ -33,13 +46,5 @@ public class Grade {
 
     public void setG_class(Integer g_class) {
         this.g_class = g_class;
-    }
-
-    public String getDept() {
-        return dept;
-    }
-
-    public void setDept(String dept) {
-        this.dept = dept;
     }
 }

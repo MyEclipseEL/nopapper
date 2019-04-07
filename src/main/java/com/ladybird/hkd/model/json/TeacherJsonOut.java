@@ -1,6 +1,6 @@
 package com.ladybird.hkd.model.json;
 
-import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Group;
 import com.ladybird.hkd.model.pojo.Office;
@@ -14,7 +14,7 @@ public class TeacherJsonOut {
     private String t_num;        //教师工号
     private String t_name;       //教师姓名
     private Faculty t_faculty;    //所属学院
-    private Department t_dept;       //所属专业
+    private DepartmentExample t_dept;       //所属专业
     private Office t_office;     //所属教研室
     private String t_pwd;        //登陆密码
     private Group group_id;     //权限组
@@ -43,11 +43,11 @@ public class TeacherJsonOut {
         this.t_faculty = t_faculty;
     }
 
-    public Department getT_dept() {
+    public DepartmentExample getT_dept() {
         return t_dept;
     }
 
-    public void setT_dept(Department t_dept) {
+    public void setT_dept(DepartmentExample t_dept) {
         this.t_dept = t_dept;
     }
 
