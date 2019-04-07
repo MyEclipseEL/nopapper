@@ -1,10 +1,5 @@
 package com.ladybird.hkd.model.pojo;
 
-/**
- * @author Shen
- * @description: 学院实体
- * @create: 2019-03-13
- */
 public class Faculty {
     private String fac_num;
     private String fac_name;

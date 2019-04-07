@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ladybird.hkd.mapper.StudentManageMapper" >
+
+    <select id="selectAllGrade" parameterType="int" resultType="Integer">
+          SELECT
+              g_year
+            FROM
+              grade
+            where
+              g_year > #{gradelow}
+
+    </select>
+    <select id="selectStudent" parameterType="com.ladybird.hkd.model.pojo.Student" resultType="com.ladybird.hkd.model.pojo.Student">
+        select * from student where stu_faculty = #{stu_faculty} and dept = #{dept} and grade = #{grade}
+    </select>
+    <insert id="addStudent" parameterType="com.ladybird.hkd.model.pojo.Student">
+        INSERT INTO `nopaper`.`students` (
+          `stu_num`,
+          `stu_ID`,
+          `stu_name`,
+          `stu_faculty`,
+          `dept`,
+          `grade`,
+          `stu_pwd`,
+          `tip`
+        )
+        VALUES
+          (
+            'stu_num' = #{stu_num},
+            'stu_ID' = #{stu_ID},
+            'stu_name' = #{stu_name},
+            'stu_faculty' = #{stu_faculty},
+            'dept' = #{dept},
+            'grade' = #{grade},
+            'stu_pwd' = #{stu_pwd},
+            'tip' = #{tip}
+          ) ;
+    </insert>
+    <delete id="deleteStudent" parameterType="string">
+        DELETE
+        FROM
+          students
+        WHERE stu_num = #{stu_num};
+
+    </delete>
+
+    <update id="updateStudent" parameterType="com.ladybird.hkd.model.pojo.Student">
+        UPDATE
+          students
+        SET
+          stu_ID = #{stu_ID},
+          stu_name = #{stu_name},
+          stu_faculty = #{stu_faculty},
+          dept = #{dept},
+          grade = #{grade},
+          stu_pwd = #{stu_pwd},
+          tip = #{tip}
+        WHERE stu_num = #{stu_num} ;
+    </update>
+    <select id="findStudent" parameterType="com.ladybird.hkd.model.pojo.Student" resultType="com.ladybird.hkd.model.pojo.Student">
+        select * from student
+         <where>
+             <if test="stu_num != null and stu_nun !=''">
+                  and stu_num = #{stu_num}
+             </if>
+             <if test="stu_name != null and stu_name !=''">
+                  and stu_name like '%${stu_name}%'
+             </if>
+         </where>
+         where stu_faculty = #{stu_faculty} and dept = #{dept} and grade = #{grade}
+    </select>
+</mapper>

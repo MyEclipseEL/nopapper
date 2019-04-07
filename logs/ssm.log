@@ -1032,7 +1032,7 @@ com.alibaba.druid.sql.parser.ParserException: ERROR. pos 194, line 5, column 41,
 	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:75)
 	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:53)
 	at com.sun.proxy.$Proxy60.selGradesNotInExam(Unknown Source)
-	at com.ladybird.hkd.service.impl.BasicServiceImpl.gradesNotInExam(BasicServiceImpl.java:162)
+
 	at com.ladybird.hkd.controller.TeacherController.examGrade(TeacherController.java:142)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -1117,7 +1117,7 @@ java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check th
 	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:75)
 	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:53)
 	at com.sun.proxy.$Proxy60.selGradesNotInExam(Unknown Source)
-	at com.ladybird.hkd.service.impl.BasicServiceImpl.gradesNotInExam(BasicServiceImpl.java:162)
+
 	at com.ladybird.hkd.controller.TeacherController.examGrade(TeacherController.java:142)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
@@ -1557,7 +1557,7 @@ java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check th
 	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:75)
 	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:53)
 	at com.sun.proxy.$Proxy60.selGradesNotInExam(Unknown Source)
-	at com.ladybird.hkd.service.impl.BasicServiceImpl.gradesNotInExam(BasicServiceImpl.java:162)
+
 	at com.ladybird.hkd.controller.TeacherController.examGrade(TeacherController.java:142)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)

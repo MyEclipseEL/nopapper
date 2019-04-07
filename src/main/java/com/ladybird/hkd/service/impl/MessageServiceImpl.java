@@ -1,8 +1,9 @@
 package com.ladybird.hkd.service.impl;
 
-import com.ladybird.hkd.mapper.CourseMapper;
-import com.ladybird.hkd.mapper.DeptMapper;
-import com.ladybird.hkd.mapper.FacultyMapper;
+
+import com.ladybird.hkd.mapper.*;
+
+import com.ladybird.hkd.model.example.Grade;
 import com.ladybird.hkd.model.json.ResultJson;
 
 import com.ladybird.hkd.model.pojo.Course;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service("messageService")
@@ -24,6 +26,12 @@ public class MessageServiceImpl implements MessageService {
     private DeptMapper deptMapper;
     @Autowired
     private CourseMapper courseMapper;
+
+    @Autowired
+    private GradeMapper gradeMapper;
+    @Autowired
+    private TeacherMapper teacherMapper;
+
     public ResultJson selectAllFaculty() throws Exception{
         List<Faculty> faculties = facultyMapper.selectAllFaculty();
         if(faculties==null||faculties.isEmpty()){
@@ -74,8 +82,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
 
-    public ResultJson selectAllDept(String faculty) throws Exception {
-        if(!StringUtils.isNotBlank(faculty)){
+    public ResultJson selectAllDept(Faculty faculty) throws Exception {
+        if(faculty == null){
             return ResultJson.ParameterError();
         }
         List<DepartmentExample> departmentExamples = deptMapper.selectAllDept(faculty);
@@ -174,6 +182,19 @@ public class MessageServiceImpl implements MessageService {
         }
         return ResultJson.Success(course1);
     }
+
+    @Override
+    public List<Grade> gradesNotInExam(String t_num, String course) throws Exception {
+        Date now = new Date();
+        String sgrade = teacherMapper.selGradesByCourse(t_num, course);
+        String[] grades = sgrade.split(",");
+        //判断八周内是否参加过考试
+        long time= 8 * 7 * 24 * 3600 * 100;
+        return gradeMapper.selGradesNotInExam(t_num,course,new Date(now.getTime()-time),grades);
+    }
+
+
+
 
 
 }

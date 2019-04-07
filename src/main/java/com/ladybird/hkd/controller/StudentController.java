@@ -46,8 +46,6 @@ public class StudentController extends BaseController{
     @Autowired
     private TokenManager tokenManager;
 
-
-
     @ApiOperation(value = "学生登陆")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "stu_num", value = "学号", required = true),
