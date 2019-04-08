@@ -1,7 +1,7 @@
 package com.ladybird.hkd.service.impl;
 
 import com.ladybird.hkd.mapper.StudentManageMapper;
-import com.ladybird.hkd.model.example.Grade;
+import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.service.StudentManageService;

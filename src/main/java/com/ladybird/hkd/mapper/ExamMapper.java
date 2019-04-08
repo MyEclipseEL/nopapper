@@ -72,4 +72,6 @@ public interface ExamMapper {
 
     //查找近期有过考试的班级
     List<String> selGradesByTC(@Param("t_num") String t_num,@Param("course") String course, @Param("begin_date") Date begin_date);
+
+    String selCourseById(@Param("exam_id") String exam) throws Exception;
 }

@@ -92,6 +92,15 @@ public class ExamController extends BaseController{
         return ResultJson.Success();
     }
 
+    //微信端请求单个试卷配置
+    @ResponseBody
+    @RequestMapping(value = "/paper")
+    public Object paper(String exam) throws Exception {
+        if (exam == null || "".equals(exam.trim()))
+            throw new ParamException("考试场次未知！");
+        return ResultJson.Success(examService.checkOutPaperByCourse(exam));
+    }
+
     @ApiOperation("学生请求考试安排")
     @ApiImplicitParam(name = ConstConfig.AUTHORIZATION,value = "token:xxx accessToken")
     @CheckToken

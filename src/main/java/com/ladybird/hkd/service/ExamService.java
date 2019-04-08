@@ -32,4 +32,6 @@ public interface ExamService {
     List<ExamExample> addExams(ExamJsonIn exam) throws Exception;
 
     ExamExample beginExam(String t_num, String[] grades, String course) throws Exception;
+
+    PaperEditExample checkOutPaperByCourse(String exam) throws Exception;
 }

@@ -4,14 +4,16 @@ import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.manager.TokenManager;
+import com.ladybird.hkd.model.example.AdminExample;
 import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.json.*;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
-import com.ladybird.hkd.service.BasicService;
+import com.ladybird.hkd.service.AdminService;
 import com.ladybird.hkd.service.ExamService;
+import com.ladybird.hkd.service.MessageService;
 import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
@@ -43,28 +45,37 @@ public class TeacherController extends BaseController {
     @Autowired
     private TokenManager manager;
     @Autowired
-    private BasicService basicService;
+    private MessageService messageService;
+    @Autowired
+    private AdminService adminService;
 
-
-    @ApiOperation("教师登陆")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "t_num",value = "教师工号",required = true),
-            @ApiImplicitParam(name = "t_pwd",value = "登陆密码",required = true)
-    })
+    //登陆web端
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     @ResponseBody
-    public Object login(Teacher teacher) throws Exception {
-        try {
-            TeacherJsonIn.ValidNumPwd(teacher);
-        } catch (ParamException pe) {
-            return ResultJson.Forbidden(pe.getMessage());
-        }
+    public Object login(String t_num,String t_pwd) throws Exception {
+        if (t_num == null || "".equals(t_num.trim()))
+            throw new ParamException("请填写工号！");
+        if (t_pwd == null || "".equals(t_pwd.trim()))
+            throw new ParamException("请填写密码！");
+        Teacher teacher = new Teacher();
+        teacher.setT_num(t_num);
+        teacher.setT_pwd(t_pwd);
         TeacherJsonOut teacherJsonOut = teacherService.login(teacher);
-        //创建token
-        String accessToken = manager.createToken(teacherJsonOut);
-        //创建refreshToken
-        String reToken = manager.createReToken(accessToken);
-        return new TokenJsonOut(accessToken, reToken);
+        if (teacherJsonOut != null) {
+            //创建token
+            String accessToken = manager.createToken(teacherJsonOut);
+            //创建refreshToken
+            String reToken = manager.createReToken(accessToken);
+            return new TokenJsonOut(accessToken, reToken);
+        }else {
+            AdminExample admin = adminService.login(t_num, t_pwd);
+            if (admin == null)
+                throw new ParamException("用户名密码错误！");
+            String accessToken = manager.createToken(admin);
+            String reToken = manager.createReToken(accessToken);
+            return new TokenJsonOut(accessToken, reToken);
+        }
+
     }
 
     @CheckToken
@@ -104,7 +115,7 @@ public class TeacherController extends BaseController {
     }
 
     @CheckToken
-    @RequestMapping(value = "/examCourses",method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = {"/examCourses","/courses"},method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Object examCourses(NativeWebRequest request) throws Exception{
         TeacherJsonOut teacherJsonOut = getTeacher(request);
@@ -141,7 +152,7 @@ public class TeacherController extends BaseController {
             ResultJson.BusinessErrorException("token中没有用户信息！",null);
         }
         //查询近期还未考过该门课程的班级
-        List<GradeExample> gradeExamples = basicService.gradesNotInExam(t_num,course);
+        List<GradeExample> gradeExamples = messageService.gradesNotInExam(t_num,course);
         if (gradeExamples.size() == 0)
             return ResultJson.Success("没有需要考试的班级！");
         return ResultJson.Success(gradeExamples);
@@ -183,7 +194,6 @@ public class TeacherController extends BaseController {
             return ResultJson.ServerException();
         }
         return ResultJson.Success(examExample);
-
     }
 
     private TeacherJsonOut getTeacher(NativeWebRequest request) throws Exception{

@@ -59,10 +59,10 @@ public class ItemController extends BaseController{
             @ApiImplicitParam(name = "authorization",value = "token",required = true,paramType = "header")
     })
     public Object getItems(String course,String item_type) throws Exception{
-        if (course == null || "".equals(course.trim())) {
-            throw new ParamException("查找哪一科的题目呢？");
-        }
-        return  Success(JsonUtil.objectToJson(itemService.checkOutItems(course,item_type)));
+//        if (course == null || "".equals(course.trim())) {
+//            throw new ParamException("查找哪一科的题目呢？");
+//        }
+        return  Success(itemService.checkOutItems(course,item_type));
     }
 
     @CheckToken
@@ -80,12 +80,12 @@ public class ItemController extends BaseController{
             throw new ParamException("哪场考试呢？");
         }
         ExamExample examExample = examService.checkOutExamById(exam);
-        if (examExample.getState() == ExamStateEnum.FINISH.getCode()) {
-            throw new BusinessException(ExamStateEnum.FINISH.getMsg());
-        }
-        if (examExample.getState() == ExamStateEnum.PREPAR.getCode()) {
-            throw new BusinessException(ExamStateEnum.PREPAR.getMsg());
-        }
+//        if (examExample.getState() == ExamStateEnum.FINISH.getCode()) {
+//            throw new BusinessException(ExamStateEnum.FINISH.getMsg());
+//        }
+//        if (examExample.getState() == ExamStateEnum.PREPAR.getCode()) {
+//            throw new BusinessException(ExamStateEnum.PREPAR.getMsg());
+//        }
         Date date = new Date();
         System.out.println(date);
         if (date.getTime() - examExample.getBegin_time().getTime() > 0.5 * 3600 * 1000){

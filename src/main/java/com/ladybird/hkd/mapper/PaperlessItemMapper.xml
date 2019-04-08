@@ -58,18 +58,17 @@
         )
     </insert>
 
-    <select id="checkOutItemsByCourse" parameterType="java.lang.String" resultMap="itemExampleMap">
-        SELECT * from items
-        <if test="(course!=null)||(item_type!=null)">
-        WHERE
+    <select id="checkOutItems" parameterType="java.lang.String" resultMap="itemExampleMap">
+        SELECT * from items i
+        LEFT JOIN course c ON c.c_id=i.course
+        LEFT JOIN item_type t ON t.type_id=i.item_type
+        WHERE 1=1
             <if test="course != null">
-                course=#{course},
+               AND course=#{course}
             </if>
           <if test="item_type != null">
-            item_type=#{item_type}
+           AND item_type=#{item_type}
           </if>
-        </if>
-
     </select>
 
     <select id="checkOutItemsByCourseSet" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Item">

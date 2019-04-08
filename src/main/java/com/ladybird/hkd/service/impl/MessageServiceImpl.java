@@ -1,9 +1,12 @@
 package com.ladybird.hkd.service.impl;
 
 
+import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.mapper.*;
 
-import com.ladybird.hkd.model.example.Grade;
+import com.ladybird.hkd.model.example.GradeExample;
+import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.model.json.ResultJson;
 
 import com.ladybird.hkd.model.pojo.Course;
@@ -31,6 +34,8 @@ public class MessageServiceImpl implements MessageService {
     private GradeMapper gradeMapper;
     @Autowired
     private TeacherMapper teacherMapper;
+    @Autowired
+    private ExamMapper examMapper;
 
     public ResultJson selectAllFaculty() throws Exception{
         List<Faculty> faculties = facultyMapper.selectAllFaculty();
@@ -86,7 +91,7 @@ public class MessageServiceImpl implements MessageService {
         if(faculty == null){
             return ResultJson.ParameterError();
         }
-        List<DepartmentExample> departmentExamples = deptMapper.selectAllDept(faculty);
+        List<Department> departmentExamples = deptMapper.selectAllDept(faculty);
         if(departmentExamples == null || departmentExamples.isEmpty()){
 
              return ResultJson.Forbidden("查询错误");
@@ -95,15 +100,15 @@ public class MessageServiceImpl implements MessageService {
     }
 
 
-    public ResultJson addDept(DepartmentExample departmentExample) throws Exception {
-        if(!StringUtils.isNotBlank(departmentExample.getDept_num())||!StringUtils.isNotBlank(departmentExample.getDept_name())||!StringUtils.isNotBlank(departmentExample.getFaculty().getFac_num())){
+    public ResultJson addDept(Department department) throws Exception {
+        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty())){
             return ResultJson.ParameterError();
         }
-        int resultCount = deptMapper.selectDeptByPrimary(departmentExample.getDept_num());
+        int resultCount = deptMapper.selectDeptByPrimary(department.getDept_num());
         if(resultCount > 0){
-            this.updateDept(departmentExample);
+            this.updateDept(department);
         }
-        resultCount = deptMapper.addDept(departmentExample);
+        resultCount = deptMapper.addDept(department);
         if(resultCount > 0){
             return ResultJson.Success("添加专业成功");
         }
@@ -111,11 +116,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
 
-    public ResultJson updateDept(DepartmentExample departmentExample) throws Exception {
-        if(!StringUtils.isNotBlank(departmentExample.getDept_num())||!StringUtils.isNotBlank(departmentExample.getDept_name())||!StringUtils.isNotBlank(departmentExample.getFaculty().getFac_num())){
+    public ResultJson updateDept(Department department) throws Exception {
+        if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty())){
             return ResultJson.ParameterError();
         }
-        int resultCount = deptMapper.updateDept(departmentExample);
+        int resultCount = deptMapper.updateDept(department);
         if(resultCount > 0) {
             return ResultJson.Success("修改成功");
         }
@@ -123,11 +128,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
 
-    public ResultJson findDept(DepartmentExample departmentExample) throws Exception {
-        if (!StringUtils.isNotBlank(departmentExample.getDept_num())&&!StringUtils.isNotBlank(departmentExample.getDept_name())){
+    public ResultJson findDept(Department department) throws Exception {
+        if (!StringUtils.isNotBlank(department.getDept_num())&&!StringUtils.isNotBlank(department.getDept_name())){
             return ResultJson.ParameterError();
         }
-        DepartmentExample departmentExample1 = deptMapper.findDept(departmentExample);
+        Department departmentExample1 = deptMapper.findDept(department);
         if(departmentExample1 ==null){
             return ResultJson.Forbidden("查询失败");
         }
@@ -184,13 +189,33 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Grade> gradesNotInExam(String t_num, String course) throws Exception {
+    public List<GradeExample> gradesNotInExam(String t_num, String course) throws Exception {
         Date now = new Date();
+        //查找课程是否存在
+        Course exist = courseMapper.selCourseById(course);
+        if (exist == null)
+            throw new ParamException("课程不存在！course：" + course);
+        //教师教授的班级
         String sgrade = teacherMapper.selGradesByCourse(t_num, course);
         String[] grades = sgrade.split(",");
-        //判断八周内是否参加过考试
         long time= 8 * 7 * 24 * 3600 * 100;
-        return gradeMapper.selGradesNotInExam(t_num,course,new Date(now.getTime()-time),grades);
+        //八周内参加过该门课程考试的班级
+        List<String> gradeList = examMapper.selGradesByTC(t_num, course,new Date(now.getTime()-time));
+        if (gradeList.size() != 0) {
+            String already = "";
+            if (gradeList.size()==1){
+                already += gradeList.get(0);
+            }else {
+                for (int i = 0; i < gradeList.size(); i++) {
+                    already += gradeList.get(i);
+                    if (i < gradeList.size() - 1)
+                        already += ",";
+                }
+            }
+            return gradeMapper.selGradesNotInExam(t_num, course, grades, already);
+        }else {
+            return gradeMapper.selGradesNotInExam(t_num, course, grades,null);
+        }
     }
 
 

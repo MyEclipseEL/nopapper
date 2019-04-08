@@ -169,4 +169,8 @@
     <select id="selGradesByTC" resultType="String">
         SELECT grade FROM exam WHERE teacher=#{t_num} AND course=#{course} AND begin_time &gt;  #{begin_date}
     </select>
+
+    <select id="selCourseById" resultType="String">
+        SELECT course FROM exam WHERE exam_id=#{exam_id}
+    </select>
 </mapper>

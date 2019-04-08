@@ -1,6 +1,7 @@
 package com.ladybird.hkd.model.example;
 
 import com.ladybird.hkd.model.pojo.Course;
+import com.ladybird.hkd.model.pojo.ItemType;
 
 /**
  * @author Shen
@@ -13,7 +14,7 @@ public class ItemExample {
     private String item_desc;       //题目描述
     private String item_valid;      //题目正确答案
     private String item_choice;      //迷惑答案
-    private String item_type;       //题型
+    private ItemType item_type;       //题型
     private Course course;          //科目
     private String tip;             //备注
 
@@ -57,11 +58,11 @@ public class ItemExample {
         this.item_choice = item_choice;
     }
 
-    public String getItem_type() {
+    public ItemType getItem_type() {
         return item_type;
     }
 
-    public void setItem_type(String item_type) {
+    public void setItem_type(ItemType item_type) {
         this.item_type = item_type;
     }
 

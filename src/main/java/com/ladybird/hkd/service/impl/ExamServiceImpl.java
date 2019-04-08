@@ -11,8 +11,8 @@ import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.json.ExamJsonIn;
 import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.pojo.*;
-import com.ladybird.hkd.service.BasicService;
 import com.ladybird.hkd.service.ExamService;
+import com.ladybird.hkd.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,8 +40,7 @@ public class ExamServiceImpl implements ExamService {
     @Autowired
     private CourseMapper courseMapper;
     @Autowired
-    private BasicService basicService;
-
+    private MessageService messageService;
     @Override
     public List<ExamExample> selectExamByStu(Student student) throws Exception {
         List<ExamExample> examExamples = examMapper.selectExamByStu(student);
@@ -136,7 +135,7 @@ public class ExamServiceImpl implements ExamService {
     public ExamExample beginExam(String t_num, String[] grades, String course) throws Exception {
         String grade = "";
         //判断考试班级是否已经存在
-        List<GradeExample> gradeExampleList = basicService.gradesNotInExam(t_num, course);
+        List<GradeExample> gradeExampleList = messageService.gradesNotInExam(t_num, course);
         for (int i = 0 ;i < grades.length; i++) {
             grade += grades[i];
             if (i<grades.length-1)
@@ -150,6 +149,12 @@ public class ExamServiceImpl implements ExamService {
                 paperEdit.getDuration(), ExamStateEnum.BEGIN.getCode());
         examMapper.addExam(exam);
         return examMapper.checkOutExamById(exam_id);
+    }
+
+    @Override
+    public PaperEditExample checkOutPaperByCourse(String exam) throws Exception{
+        String course = examMapper.selCourseById(exam);
+        return examMapper.checkOutPaperEditExm(course);
     }
 
 }
