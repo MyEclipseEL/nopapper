@@ -94,7 +94,7 @@ public class MessageServiceImpl implements MessageService {
         List<Department> departmentExamples = deptMapper.selectAllDept(faculty);
         if(departmentExamples == null || departmentExamples.isEmpty()){
 
-             return ResultJson.Forbidden("查询错误");
+            return ResultJson.Forbidden("查询错误");
         }
         return ResultJson.Success(departmentExamples);
     }

@@ -75,7 +75,7 @@ public class ExamServiceImpl implements ExamService {
             } catch (NullPointerException ne) {
             }
         }
-        return examExamples;
+        return examJsonOuts;
     }
 
 
@@ -88,7 +88,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public PaperEdit updatePaper(PaperEdit paperEdit) throws Exception {
         //判断id是否存在 不存在则是新增
-            //判断课程是否存在记录
+        //判断课程是否存在记录
         Course course = courseMapper.selCourseById(paperEdit.getCourse());
         if (course == null)
             throw new ParamException("课程不存在！");
@@ -96,7 +96,7 @@ public class ExamServiceImpl implements ExamService {
         paperEdit.setId(paperEdit.getCourse());
         int result = -1;
         if (exist == null) {
-             result = examMapper.checkInPaperEdit(paperEdit);
+            result = examMapper.checkInPaperEdit(paperEdit);
             System.out.println(result);
         }else {
             examMapper.changePaperEdit(paperEdit);

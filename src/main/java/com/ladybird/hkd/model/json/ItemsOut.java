@@ -1,12 +1,9 @@
 package com.ladybird.hkd.model.json;
 
-import com.ladybird.hkd.model.pojo.Item;
 import com.ladybird.hkd.model.pojo.ItemType;
-import com.ladybird.hkd.model.vo.ItemVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.List;
 import java.util.Set;
 
 /**

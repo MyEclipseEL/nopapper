@@ -20,7 +20,7 @@ public interface ItemService {
      */
     void addItemType(String typeName);
 
-    List<ItemVO> checkOutItems(String course,String item_type) throws Exception;
+    List<ItemVO> checkOutItems(String course, String item_type) throws Exception;
 
     List<ItemsOut> getPaper(String course) throws Exception;
 

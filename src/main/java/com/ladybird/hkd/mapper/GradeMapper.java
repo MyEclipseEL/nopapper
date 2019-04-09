@@ -1,7 +1,6 @@
 package com.ladybird.hkd.mapper;
 
-import com.ladybird.hkd.model.example.GradeExample;
-import com.ladybird.hkd.model.pojo.Grade;
+import com.ladybird.hkd.model.example.Grade;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 

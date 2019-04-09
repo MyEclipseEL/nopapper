@@ -8,14 +8,46 @@
           SELECT
               g_year
             FROM
-              grade
+              gradeExample
             where
               g_year > #{gradelow}
 
     </select>
-    <select id="selectStudent" parameterType="com.ladybird.hkd.model.pojo.Student" resultType="com.ladybird.hkd.model.pojo.Student">
-        select * from student where stu_faculty = #{stu_faculty} and dept = #{dept} and grade = #{grade}
+    <select id="selectStudent" parameterType="com.ladybird.hkd.model.pojo.Student" resultType="com.ladybird.hkd.model.vo.StudentVo">
+        select
+         s.stu_name,
+          s.stu_num,
+          d.dept_name,
+         g.g_year,
+          g.g_class,
+         s.stu_ID
+        from students s
+        LEFT JOIN department d ON s.dept = d.dept_num
+        LEFT JOIN grade g ON s.grade = g.g_id
+        <where>
+            <if test="stu_num != null and stu_num != ''">
+                and stu_num = #{stu_num}
+            </if>
+            <if test="stu_ID != null and stu_ID != ''">
+                and stu_ID = #{stu_ID}
+            </if>
+            <if test="stu_name != null and stu_name != ''">
+                and stu_name = #{stu_name}
+            </if>
+            <if test="stu_faculty != null and stu_faculty != ''">
+                and stu_faculty = #{stu_faculty}
+            </if>
+            <if test="dept != null and dept != ''">
+                and dept = #{dept}
+            </if>
+            <if test="grade != null and grade != ''">
+                and grade = #{grade}
+            </if>
+        </where>
     </select>
+
+
+
     <insert id="addStudent" parameterType="com.ladybird.hkd.model.pojo.Student">
         INSERT INTO `nopaper`.`students` (
           `stu_num`,
@@ -23,7 +55,7 @@
           `stu_name`,
           `stu_faculty`,
           `dept`,
-          `grade`,
+          `gradeExample`,
           `stu_pwd`,
           `tip`
         )
@@ -34,7 +66,7 @@
             'stu_name' = #{stu_name},
             'stu_faculty' = #{stu_faculty},
             'dept' = #{dept},
-            'grade' = #{grade},
+            'gradeExample' = #{gradeExample},
             'stu_pwd' = #{stu_pwd},
             'tip' = #{tip}
           ) ;
@@ -55,7 +87,7 @@
           stu_name = #{stu_name},
           stu_faculty = #{stu_faculty},
           dept = #{dept},
-          grade = #{grade},
+          gradeExample = #{gradeExample},
           stu_pwd = #{stu_pwd},
           tip = #{tip}
         WHERE stu_num = #{stu_num} ;
@@ -66,10 +98,19 @@
              <if test="stu_num != null and stu_nun !=''">
                   and stu_num = #{stu_num}
              </if>
+             <if test="stu_ID != null and stu_ID !=''">
+                 and stu_ID = #{stu_ID}
+             </if>
              <if test="stu_name != null and stu_name !=''">
                   and stu_name like '%${stu_name}%'
              </if>
+             <if test="stu_faculty != null and stu_faculty !=''">
+                 and stu_faculty = #{stu_faculty}
+             </if>
+             <if test="stu_name != null and stu_name !=''">
+                 and stu_name like '%${stu_name}%'
+             </if>
          </where>
-         where stu_faculty = #{stu_faculty} and dept = #{dept} and grade = #{grade}
+
     </select>
 </mapper>

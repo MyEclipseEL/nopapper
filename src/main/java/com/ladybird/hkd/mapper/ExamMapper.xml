@@ -90,7 +90,7 @@
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
             LEFT JOIN department d ON d.dept_num=e.dept
-        #             LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+        #             LEFT JOIN grade g ON e.grade=g.g_id
         WHERE exam_id=${exam_id}
     </select>
 
@@ -98,7 +98,7 @@
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
         LEFT JOIN department d ON d.dept_num=e.dept
-#         LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+#         LEFT JOIN grade g ON e.grade=g.g_id
         WHERE exam_id IN
         <foreach collection="ids" open="(" close=")" separator=","  item="id">
             ${id}
@@ -168,9 +168,5 @@
 
     <select id="selGradesByTC" resultType="String">
         SELECT grade FROM exam WHERE teacher=#{t_num} AND course=#{course} AND begin_time &gt;  #{begin_date}
-    </select>
-
-    <select id="selCourseById" resultType="String">
-        SELECT course FROM exam WHERE exam_id=#{exam_id}
     </select>
 </mapper>

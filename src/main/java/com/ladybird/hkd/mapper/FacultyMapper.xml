@@ -35,4 +35,5 @@
     <select id="selectFacultyByPrimary" parameterType="String" resultType="int">
         select count(1) from faculty where fac_num = #{fac_num}
     </select>
+
 </mapper>
