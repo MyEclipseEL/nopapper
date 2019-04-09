@@ -30,11 +30,11 @@ CREATE TABLE `course` (
 
 insert  into `course`(`c_id`,`c_name`,`tip`) values ('1','软件工程',NULL);
 
-/*Table structure for table `department` */
+/*Table structure for table `departmentExample` */
 
-DROP TABLE IF EXISTS `department`;
+DROP TABLE IF EXISTS `departmentExample`;
 
-CREATE TABLE `department` (
+CREATE TABLE `departmentExample` (
   `dept_num` varchar(30) NOT NULL COMMENT '专业代码',
   `dept_name` varchar(30) NOT NULL COMMENT '专业名称',
   `faculty` varchar(30) NOT NULL COMMENT '所属学院',
@@ -44,9 +44,9 @@ CREATE TABLE `department` (
   CONSTRAINT `department_ibfk_1` FOREIGN KEY (`faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `department` */
+/*Data for the table `departmentExample` */
 
-insert  into `department`(`dept_num`,`dept_name`,`faculty`,`tip`) values ('10001','软件工程','10001',NULL);
+insert  into `departmentExample`(`dept_num`,`dept_name`,`faculty`,`tip`) values ('10001','软件工程','10001',NULL);
 
 /*Table structure for table `exam` */
 
@@ -66,7 +66,7 @@ CREATE TABLE `exam` (
   KEY `coures` (`course`),
   KEY `dept` (`dept`),
   KEY `gradeExample` (`gradeExample`),
-  CONSTRAINT `exam_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`)
+  CONSTRAINT `exam_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `exam` */
@@ -236,7 +236,7 @@ CREATE TABLE `students` (
   KEY `gradeExample` (`gradeExample`),
   KEY `stu_dept` (`dept`),
   KEY `stu_faculty` (`stu_faculty`),
-  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`),
+  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`),
   CONSTRAINT `students_ibfk_3` FOREIGN KEY (`stu_faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -260,7 +260,7 @@ CREATE TABLE `teach` (
   KEY `course` (`course`),
   KEY `dept` (`dept`),
   CONSTRAINT `teach_ibfk_1` FOREIGN KEY (`teacher`) REFERENCES `teachers` (`t_num`),
-  CONSTRAINT `teach_ibfk_3` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`)
+  CONSTRAINT `teach_ibfk_3` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `teach` */
@@ -287,7 +287,7 @@ CREATE TABLE `teachers` (
   KEY `t_dept` (`t_dept`),
   CONSTRAINT `teachers_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
   CONSTRAINT `teachers_ibfk_3` FOREIGN KEY (`t_faculty`) REFERENCES `faculty` (`fac_num`),
-  CONSTRAINT `teachers_ibfk_4` FOREIGN KEY (`t_dept`) REFERENCES `department` (`dept_num`)
+  CONSTRAINT `teachers_ibfk_4` FOREIGN KEY (`t_dept`) REFERENCES `departmentExample` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `teachers` */

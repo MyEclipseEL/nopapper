@@ -1,5 +1,6 @@
 package com.ladybird.hkd.mapper;
 
+import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.model.vo.StudentVo;
 import org.apache.ibatis.annotations.Param;

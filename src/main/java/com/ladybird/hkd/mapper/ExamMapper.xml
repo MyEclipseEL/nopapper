@@ -42,13 +42,13 @@
         </association>
     </resultMap>
 
-    <!-- <select id="selectExamByCourseStuNum" resultMap="examOut">
-         SELECT * FROM exam e
-          LEFT JOIN course c ON e.course=c.c_id
-         LEFT JgradeExamplerade g OgradeExamplerade=g.g_id
-         WHgradeExamplerade=(SELgradeExamplerade FROM students WHERE stu_num=${stu_num} )
-               AND course=${course}
-     </select>-->
+   <!-- <select id="selectExamByCourseStuNum" resultMap="examOut">
+        SELECT * FROM exam e
+         LEFT JOIN course c ON e.course=c.c_id
+        LEFT JgradeExamplerade g OgradeExamplerade=g.g_id
+        WHgradeExamplerade=(SELgradeExamplerade FROM students WHERE stu_num=${stu_num} )
+              AND course=${course}
+    </select>-->
     <select id="checkOutPaperEditExm" resultMap="paperEditMap">
         SELECT * FROM paper_edit WHERE course=${course}
     </select>
@@ -78,11 +78,11 @@
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
         LEFT JOIN department d ON d.dept_num=e.dept
-        #         LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+#         LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
         WHERE finish_time &gt; now() AND
         e.grade LIKE CONCAT('%',#{grade},'%')
         <!--<foreach collectigradeExamplesades" open="(" close=")" separator=","  itgradeExamplerade">-->
-        <!--gradeExamplerade}-->
+            <!--gradeExamplerade}-->
         <!--</foreach>-->
     </select>
 
@@ -90,7 +90,7 @@
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
             LEFT JOIN department d ON d.dept_num=e.dept
-        #             LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+        #             LEFT JOIN grade g ON e.grade=g.g_id
         WHERE exam_id=${exam_id}
     </select>
 
@@ -98,7 +98,7 @@
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
         LEFT JOIN department d ON d.dept_num=e.dept
-        #         LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+#         LEFT JOIN grade g ON e.grade=g.g_id
         WHERE exam_id IN
         <foreach collection="ids" open="(" close=")" separator=","  item="id">
             ${id}
@@ -111,9 +111,9 @@
 
     <select id="checkOutByCourseGradesDept" resultMap="examOut">
         SELECT * FROM exam e
-        LEFT JOIN course c ON e.course=c.c_id
-        LEFT JOIN department d ON e.dept=d.dept_num
-        #             LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+            LEFT JOIN course c ON e.course=c.c_id
+            LEFT JOIN department d ON e.dept=d.dept_num
+#             LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
         WHERE course=${course} AND e.dept=${dept} AND NOT state=-1
         AND e.grade IN
         <foreach collection="gradeExamples" open="(" close=")" separator=","  item="gradeExample">
@@ -151,6 +151,7 @@
     <!--<insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
             INSERT INTO exam(exam_id,cougradeExamplerade,pre_time,duration,state) VALUES (${exam_id},
             ${coursegradeExamplerade},${dept},#{pre_time,jdbcType=TIMESTAMP},${duration},${state});
+
     </insert>-->
 
     <insert id="addExams" parameterType="com.ladybird.hkd.model.pojo.Exam">
@@ -167,9 +168,5 @@
 
     <select id="selGradesByTC" resultType="String">
         SELECT grade FROM exam WHERE teacher=#{t_num} AND course=#{course} AND begin_time &gt;  #{begin_date}
-    </select>
-
-    <select id="selCourseById" resultType="String">
-        SELECT course FROM exam WHERE exam_id=#{exam_id}
     </select>
 </mapper>

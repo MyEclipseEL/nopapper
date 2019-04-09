@@ -1,34 +1,31 @@
 package com.ladybird.hkd.controller;
 
-import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
-import com.ladybird.hkd.exception.TokenException;
 import com.ladybird.hkd.manager.TokenManager;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.example.ScoreExample;
 import com.ladybird.hkd.model.json.StudentJsonIn;
+import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.json.TokenJsonOut;
 import com.ladybird.hkd.model.pojo.Score;
 import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.StudentService;
-import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.model.json.ResultJson;
+import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
-import com.ladybird.hkd.util.ParamUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author Shen
@@ -77,4 +74,26 @@ public class StudentController extends BaseController{
     }
 
     //TODO 导出成绩
+    @ResponseBody
+    @RequestMapping(value = "/checkOutScores")
+//    教师导出自己教授的学生的成绩
+    public Object checkOutScores(NativeWebRequest request,String course, String faculty, String dept, String year, String clazz) throws Exception {
+        //获取登陆教师的信息
+        String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
+        String t_num = null;
+        TeacherJsonOut teacherJsonOut = null;
+        if (teacherJson == null) {
+            t_num = null;
+        }else {
+            //转为对象
+            teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
+            try {
+                t_num = teacherJsonOut.getT_num();
+            } catch (NullPointerException npe) {
+                throw new BusinessException("token用户信息错误！");
+            }
+        }
+        List<ScoreExample> scoreList = studentService.checkOutScores(t_num,course, faculty, dept, year,clazz);
+        return ResultJson.Success(scoreList);
+    }
 }

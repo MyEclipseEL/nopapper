@@ -44,7 +44,7 @@ public class MessageController extends BaseController {
     @ResponseBody
     public ResultJson addFaculty(Faculty faculty) throws Exception {
 
-        return  messageService.addFaculty(faculty);
+       return  messageService.addFaculty(faculty);
 
     }
     @RequestMapping(value = "/updateFaculty",method = RequestMethod.GET)

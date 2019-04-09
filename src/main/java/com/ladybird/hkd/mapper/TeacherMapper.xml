@@ -12,7 +12,7 @@
             <id column="fac_num" property="fac_num" jdbcType="VARCHAR"/>
             <result column="fac_name" property="fac_name" jdbcType="VARCHAR"/>
         </association>
-        <association property="t_dept" javaType="com.ladybird.hkd.model.pojo.Department">
+        <association property="t_dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">
             <id column="dept_num" property="dept_num" jdbcType="VARCHAR"/>
             <result column="dept_name" property="dept_name" jdbcType="VARCHAR"/>
         </association>
@@ -20,14 +20,17 @@
             <id column="office_id" property="office_id" jdbcType="VARCHAR"/>
             <result column="office_name" property="office_name" jdbcType="VARCHAR"/>
         </association>-->
-        <!--<association property="group_id" javaType="com.ladybird.hkd.model.pojo.Group">
-            <i
-        </association>-->
+        <association property="group_id" javaType="com.ladybird.hkd.model.pojo.Group">
+            <id column="group_id" property="group_id"/>
+            <result property="group_type" column="group_type"/>
+            <result column="tip" property="tip"/>
+        </association>
     </resultMap>
     <select id="validNumPwd" parameterType="com.ladybird.hkd.model.pojo.Teacher" resultMap="queryTeacherJsonOut">
         SELECT * FROM teachers t left JOIN faculty f ON t.t_faculty=f.fac_num
             LEFT JOIN department d ON t.t_dept=d.dept_num
 #             LEFT JOIN office o ON t.t_office=o.office_id
+            LEFT JOIN groups g ON t.group_id=g.group_id
         WHERE t_num=${t_num} AND t_pwd=${t_pwd}
     </select>
 

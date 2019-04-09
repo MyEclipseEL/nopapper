@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.PaperlessItemMapper" >
-
+    
 
 
     <resultMap id="itemExampleMap" type="com.ladybird.hkd.model.example.ItemExample">
@@ -63,12 +63,12 @@
         LEFT JOIN course c ON c.c_id=i.course
         LEFT JOIN item_type t ON t.type_id=i.item_type
         WHERE 1=1
-        <if test="course != null">
-            AND course=#{course}
-        </if>
-        <if test="item_type != null">
-            AND item_type=#{item_type}
-        </if>
+            <if test="course != null">
+               AND course=#{course}
+            </if>
+          <if test="item_type != null">
+           AND item_type=#{item_type}
+          </if>
     </select>
 
     <select id="checkOutItemsByCourseSet" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Item">
@@ -105,7 +105,7 @@
     </select>
 
 
-
+    
     <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score">
         insert into score (student,exam,s_score) values (${student},${exam},${s_score});
     </insert>

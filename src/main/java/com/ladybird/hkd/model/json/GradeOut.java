@@ -1,6 +1,6 @@
 package com.ladybird.hkd.model.json;
 
-import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.example.DepartmentExample;
 
 /**
  * @author Shen
@@ -11,7 +11,7 @@ public class GradeOut {
     private String g_id;
     private int g_year;
     private int g_class;
-    private Department dept;
+    private DepartmentExample dept;
 
     public String getG_id() {
         return g_id;
@@ -37,11 +37,11 @@ public class GradeOut {
         this.g_class = g_class;
     }
 
-    public Department getDept() {
+    public DepartmentExample getDept() {
         return dept;
     }
 
-    public void setDept(Department dept) {
+    public void setDept(DepartmentExample dept) {
         this.dept = dept;
     }
 }

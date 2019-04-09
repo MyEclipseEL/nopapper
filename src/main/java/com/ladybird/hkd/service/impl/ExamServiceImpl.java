@@ -75,7 +75,7 @@ public class ExamServiceImpl implements ExamService {
             } catch (NullPointerException ne) {
             }
         }
-        return examExamples;
+        return examJsonOuts;
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.ladybird.hkd.model.pojo;
 
 /**
  * @author Shen
- * @description: 专业实体
- * @create: 2019-03-13
+ * @description:
+ * @create: 2019-04-18
  */
 public class Department {
     private String dept_num;

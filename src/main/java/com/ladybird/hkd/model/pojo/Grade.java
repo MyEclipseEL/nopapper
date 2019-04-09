@@ -1,20 +1,18 @@
-package com.ladybird.hkd.model.pojo;
+package com.ladybird.hkd.model.example;
 
+
+import com.ladybird.hkd.model.pojo.Department;
 
 /**
  * @author Shen
- * @description: 年级实体
- * @create: 2019-03-13
+ * @description:
+ * @create: 2019-04-16
  */
 public class Grade {
     private String g_id;
     private Integer g_year;
     private Integer g_class;
     private String dept;
-
-    public Grade() {
-    }
-
 
     public String getG_id() {
         return g_id;

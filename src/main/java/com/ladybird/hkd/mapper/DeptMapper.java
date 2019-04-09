@@ -1,7 +1,6 @@
 package com.ladybird.hkd.mapper;
 
-
-
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
 import org.apache.ibatis.annotations.Param;
@@ -11,7 +10,19 @@ import java.util.List;
 
 @Component
 public interface DeptMapper {
+    /*
 
+    int delDept(@Param("dept_num") String dept_num);
+
+
+
+
+
+    DepartmentExample findDeptByName(String dept_name);
+
+
+    List<DepartmentExample> selByTeacher(@Param("t_num") String t_num) throws Exception;
+    DepartmentExample findDeptByNum(String dept_num);*/
     int addDept(Department department) throws Exception;
     List<Department> selectAllDept(Faculty faculty) throws Exception;
 
@@ -21,6 +32,7 @@ public interface DeptMapper {
 
 
     int selectDeptByPrimary(String dept_num) throws Exception;
-    List<Department> selByTeacher(@Param("t_num") String t_num) throws Exception;
+
+    List<DepartmentExample> selByTeacher(@Param("t_num") String t_num) throws Exception;
 
 }

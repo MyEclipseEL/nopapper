@@ -49,7 +49,7 @@
   KEY `stu_dept` (`stu_dept`),
   KEY `stu_faculty` (`stu_faculty`),
   CONSTRAINT `students_ibfk_1` FOREIGN KEY (`gradeExample`) REFERENCES `gradeExample` (`g_id`),
-  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`stu_dept`) REFERENCES `department` (`dept_num`),
+  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`stu_dept`) REFERENCES `departmentExample` (`dept_num`),
   CONSTRAINT `students_ibfk_3` FOREIGN KEY (`stu_faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
 </table>
@@ -118,15 +118,15 @@
   `dept` varchar(30) NOT NULL COMMENT '所属系别',
   PRIMARY KEY (`office_id`),
   KEY `dept` (`dept`),
-  CONSTRAINT `office_ibfk_1` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`)
+  CONSTRAINT `office_ibfk_1` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
 </table>
-<table name="department" view="colnames">
+<table name="departmentExample" view="colnames">
 <left>438</left>
 <top>447</top>
 <width>110</width>
 <height>112</height>
-<sql_create_table>CREATE TABLE `department` (
+<sql_create_table>CREATE TABLE `departmentExample` (
   `dept_num` varchar(30) NOT NULL COMMENT '专业代码',
   `dept_name` varchar(30) NOT NULL COMMENT '专业名称',
   PRIMARY KEY (`dept_num`)
