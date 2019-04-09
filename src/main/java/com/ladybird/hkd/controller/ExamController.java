@@ -6,6 +6,7 @@ import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.json.ResultJson;
+import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.*;
 import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.StudentService;
@@ -65,6 +66,28 @@ public class ExamController extends BaseController{
     }
 
 
+    //考试记录
+//    @ApiOperation( "获取考试场次")
+//    @CheckToken
+//    @ResponseBody
+//    @RequestMapping(value = "/exams",method = RequestMethod.GET)
+//    public Object findExams(NativeWebRequest request) throws Exception{
+//        //获取登陆教师的信息
+//        String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
+//        if (teacherJson == null) {
+//            return ResultJson.ServerException();
+//        }
+//        //转为对象
+//        TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
+//        //查找考试
+//        List<Course> courses = teacherService.checkOutCourseByNum(teacherJsonOut.getT_num());
+//        if (courses.size() == 0)
+//            return ResultJson.Success();
+//        //得到考试列表
+//        List<ExamExample> list = examService.checkOutByCourse(courses,grades);
+//
+//        return list;
+//    }
 
     @ApiOperation("提交试卷成绩")
     @ApiImplicitParams({

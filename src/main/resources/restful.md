@@ -177,6 +177,20 @@ POST /item/addItem      //x-www-form-urlencoded
 }
 ```
 
+###导入题目
+```
+POST  /item/upload          form-data
+```
+参数
+```
+{
+    "course"    :   ""
+    "item_type" :   "A"
+    "file"      :   "****.xls"
+}
+```
+
+
 ###查找所有的题型
 ```$xslt
 GET /item/checkOutTypes
@@ -289,7 +303,7 @@ null
             "c_id": 1,
             "c_name": "软件工程"
         },
-        "gradeExample": {
+        "grade": {
             "g_id": 1,
             "g_year": 2015,     //级
             "g_class": 1        //班

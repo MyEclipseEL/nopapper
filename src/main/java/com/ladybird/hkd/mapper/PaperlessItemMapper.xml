@@ -119,21 +119,41 @@
             </foreach>
     </update>
 
-    <insert id="checkInItems" parameterType="List">
-        INSERT INTO items (item_desc,item_valid,item_choice,item_type,course) VALUES
+    <insert id="checkInItems" parameterType="List" useGeneratedKeys="true" keyProperty="item_id">
+        INSERT INTO items (item_desc,item_valid,item_choice,item_type,course
+        <if test="tip!=null">
+            ,tip
+        </if>
+        ) VALUES
             <foreach collection="items" item="item" index="index" separator=",">
-                (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course})
+                (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course}
+                <if test="tip!=null">
+                    ,#{item.tip}
+                </if>
+                )
             </foreach>
     </insert>
 
     <insert id="checkInChecking" parameterType="List">
-        INSERT INTO items (item_desc,item_valid,item_type,course) VALUES
+        INSERT INTO items (item_desc,item_valid,item_type,course
+        <if test="tip!=null">
+            ,tip
+        </if>
+        ) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.item_desc},#{item.item_valid},#{item.item_type},#{item.course})
+            (#{item.item_desc},#{item.item_valid},#{item.item_type},#{item.course}
+            <if test="tip!=null">
+                ,#{item.tip}
+            </if>
+            )
         </foreach>
     </insert>
 
     <delete id="delItemById" parameterType="String">
         DELETE FROM items WHERE item_id=#{item_id}
     </delete>
+
+    <select id="checkInCOS" >
+        INSERT INTO items_cos VALUES (#{id},#{url},#{course})
+    </select>
 </mapper>

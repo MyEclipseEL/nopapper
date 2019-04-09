@@ -78,6 +78,7 @@ public class ExamServiceImpl implements ExamService {
         return examExamples;
     }
 
+
     @Override
     public void changeStateAndBegin(String[] exams,Integer state) throws Exception {
         Date date = new Date();

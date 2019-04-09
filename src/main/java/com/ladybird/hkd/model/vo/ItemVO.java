@@ -6,7 +6,9 @@ import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Item;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.beans.BeanUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +19,7 @@ import java.util.Set;
  * @create: 2019-03-18
  */
 @ApiModel
-public class ItemVO {
+public class ItemVO implements Serializable{
     @ApiModelProperty("题目编号")
     private String item_id;         //题目编号
     @ApiModelProperty("题目标题")
@@ -107,6 +109,34 @@ public class ItemVO {
                 result.setItem_valid(new String[]{item.getItem_valid()});
         }
         return result;
+    }
+
+    public static List<Item> itemVOList2ItemList(List<ItemVO> list) {
+        List<Item> items = new ArrayList<>();
+        for (ItemVO itemVO : list) {
+            Item item = new Item();
+            BeanUtils.copyProperties(itemVO, item);
+            if (!itemVO.getItem_type().equalsIgnoreCase("C")) {
+                List<String> choices = itemVO.getItem_choice();
+                String choice = "";
+                for (int i = 0; i < choices.size(); i++) {
+                    choice += choices.get(i);
+                    if (i < choices.size() - 1)
+                        choice += "|@|";
+                }
+                item.setItem_choice(choice);
+                String[] valid = itemVO.getItem_valid();
+                String v = "";
+                for (int i = 0;i < valid.length; i ++) {
+                    v += valid[i];
+                    if (i < valid.length - 1)
+                        v += ",";
+                }
+                item.setItem_valid(v);
+            }
+            items.add(item);
+        }
+        return items;
     }
 
     public String getItem_id() {

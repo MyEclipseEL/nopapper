@@ -76,6 +76,14 @@ public interface PaperlessItemMapper {
      */
     int checkInChecking(List<Item> items) throws Exception;
 
+    /**
+     * @param id String
+     *@param course String 课程号
+     *@param url String     cos地址
+     * @return: Date: 2019/4/9
+     */
+    Integer checkInCOS(@Param("id") String id,@Param("course") String course,@Param("url") String url) throws Exception;
+
     Item selItemById(@Param("item_id") Integer item_id) throws Exception;
 
     Integer changeItem(Item exist) throws Exception;

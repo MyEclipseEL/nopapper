@@ -7,20 +7,29 @@ import com.ladybird.hkd.mapper.ExamMapper;
 import com.ladybird.hkd.mapper.PaperlessItemMapper;
 import com.ladybird.hkd.model.example.ItemExample;
 import com.ladybird.hkd.model.example.PaperEditExample;
+import com.ladybird.hkd.model.json.ItemListOut;
 import com.ladybird.hkd.model.json.ItemsOut;
 import com.ladybird.hkd.model.pojo.Item;
 import com.ladybird.hkd.model.pojo.ItemType;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import com.ladybird.hkd.model.vo.ItemVO;
 import com.ladybird.hkd.service.ItemService;
+import com.ladybird.hkd.util.JsonUtil;
+import com.ladybird.hkd.util.TencentCOSFileUtils;
+import com.ladybird.hkd.util.UrlConf;
 import com.ladybird.hkd.util.excel.ReadItemExcel;
+import net.sf.jsqlparser.expression.operators.relational.ItemsList;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.spring.web.json.Json;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -136,22 +145,31 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Throwable.class)
-    public List<Item> addItems(MultipartFile file,String course,String item_type) throws Exception {
+    public List<ItemVO> addItems(MultipartFile file,String course,String item_type) throws Exception {
         //创建处理Excel的类
         ReadItemExcel readItemExcel = new ReadItemExcel();
         //解析excel
-        List<Item> items = null;
+        List<ItemVO> itemVOS = null;
         int insertResult = 0;   //记录插入数
-        items = readItemExcel.getExcelInfo(file,course,item_type);
+        itemVOS = readItemExcel.getExcelInfo(file,course,item_type);
         //TODO 放开注释
+        List<Item> items = ItemVO.itemVOList2ItemList(itemVOS);
         /*if (!item_type.equalsIgnoreCase("C"))
             insertResult = paperlessItemMapper.checkInItems(items);
         else
             insertResult = paperlessItemMapper.checkInChecking(items);
         if (insertResult < items.size())
             throw new BusinessException("插入出错！");*/
-        System.out.println(items);
-        return items;
+        //得到对象存储地址
+        String url = uploadItems(course);
+        //存到数据库
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
+        // 随即散列 待做
+        Integer result = paperlessItemMapper.checkInCOS(format.format(new Date()) + course, course, url);
+        if (result != 1)
+            throw new ParamException("url插入失败！");
+        System.out.println(url);
+        return itemVOS;
     }
 
     @Override
@@ -287,5 +305,77 @@ public class ItemServiceImpl implements ItemService {
         if (result != 1)
             throw new BusinessException("删除失败！");
         return result;
+    }
+
+    //将题目组装并上传到云存储当中
+    @Override
+    public String uploadItems(String course) throws Exception {
+
+        //组装数据
+        List<ItemExample> items = paperlessItemMapper.checkOutItems(course,null);
+        List<ItemType> itemTypes = paperlessItemMapper.checkOutItemTypes();
+        ItemType single = new ItemType() ;
+        ItemType multiple = new ItemType();
+        ItemType checking = new ItemType();
+        for (ItemType itemType : itemTypes) {
+            if ("单选题".equals(itemType.getType_name()))
+                single = itemType;
+            if ("多选题".equals(itemType.getType_name()))
+                multiple = itemType;
+            if ("判断题".equals(itemType.getType_name()))
+                checking = itemType;
+        }
+        List<ItemVO> singles = new ArrayList<>();
+        List<ItemVO> multiples = new ArrayList<>();
+        List<ItemVO> checkings = new ArrayList<>();
+        for (ItemExample item : items) {
+            List<String> choice = new ArrayList<>();
+            ItemVO itemVO = new ItemVO();
+            BeanUtils.copyProperties(item,itemVO);
+            String[] valids = item.getItem_valid().split(",");
+            for (String v:valids)
+                v.trim();
+            itemVO.setItem_valid(valids);
+            if (!item.getItem_type().getType_id().equalsIgnoreCase("C")) {
+                for (String s : item.getItem_choice().split("\\|\\@\\|"))
+                    choice.add(s);
+                itemVO.setItem_choice(choice);
+            }
+            if (item.getItem_type().getType_id().equals(single.getType_id())) {
+                itemVO.setItem_type(single.getType_name());
+                singles.add(itemVO);
+            }
+                if (item.getItem_type().getType_id().equals(multiple.getType_id())){
+                    itemVO.setItem_type(multiple.getType_name());
+                    multiples.add(itemVO);
+                }
+                if (item.getItem_type().getType_id().equals(checking.getType_id())){
+                    itemVO.setItem_type(checking.getType_name());
+                    checkings.add(itemVO);
+                }
+
+            }
+        List<ItemListOut> result = new ArrayList<>();
+        result.add(new ItemListOut(single, singles));
+        result.add(new ItemListOut(multiple, multiples));
+        result.add(new ItemListOut(checking, checkings));
+
+        String url = "";
+        try {
+//            outputStream = new FileOutputStream(UrlConf.LOCAL_UPLOAD_PATH + "/items.txt");
+            //TODO 放行服务器地址
+//            outputStream = new FileOutputStream(UrlConf.SERVER_UPLOAD_PATH + "/items.txt");
+            String in = JsonUtil.objectToJson(result);
+            File file = new File(UrlConf.LOCAL_UPLOAD_PATH + "/item.txt");
+            //将json数据写入文件
+            FileUtils.writeStringToFile(file,in,"UTF-8");
+            //将文件上传到对象存储
+            url = TencentCOSFileUtils.uploadFile(file.getName(),file);
+            //将url数据存到数据库
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return url;
     }
 }

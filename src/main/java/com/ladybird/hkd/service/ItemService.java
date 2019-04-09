@@ -28,7 +28,7 @@ public interface ItemService {
 
     void updateTypeScore(List<ItemType> itemTypes) throws Exception;
 
-    List<Item> addItems(MultipartFile multipartFile, String course, String item_type) throws Exception;
+    List<ItemVO> addItems(MultipartFile multipartFile, String course, String item_type) throws Exception;
 
     Item selItemById(@Param("item_id") Integer item_id) throws Exception;
 
@@ -37,4 +37,7 @@ public interface ItemService {
     ItemVO addItem(ItemVO item) throws Exception;
 
     Integer delItem(String item_id) throws Exception;
+
+    String uploadItems(String course) throws Exception;
+
 }

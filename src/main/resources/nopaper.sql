@@ -2,8 +2,7 @@
 SQLyog Ultimate v12.09 (64 bit)
 MySQL - 5.7.22-log : Database - nopaper
 *********************************************************************
-*/
-
+*/
 
 /*!40101 SET NAMES utf8 */;
 
@@ -14,6 +13,37 @@ MySQL - 5.7.22-log : Database - nopaper
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 USE `nopaper`;
+
+/*Table structure for table `admins` */
+
+DROP TABLE IF EXISTS `admins`;
+
+CREATE TABLE `admins` (
+  `id` varchar(15) NOT NULL,
+  `name` varchar(15) NOT NULL,
+  `pwd` varchar(15) NOT NULL,
+  `group_id` tinyint(2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `group_id` (`group_id`),
+  CONSTRAINT `admins_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `admins` */
+
+insert  into `admins`(`id`,`name`,`pwd`,`group_id`) values ('2016','1','1',1);
+
+/*Table structure for table `cos_items` */
+
+DROP TABLE IF EXISTS `cos_items`;
+
+CREATE TABLE `cos_items` (
+  `id` varchar(30) NOT NULL,
+  `url` varchar(50) NOT NULL,
+  `course` varchar(15) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `cos_items` */
 
 /*Table structure for table `course` */
 
@@ -28,13 +58,13 @@ CREATE TABLE `course` (
 
 /*Data for the table `course` */
 
-insert  into `course`(`c_id`,`c_name`,`tip`) values ('1','软件工程',NULL);
+insert  into `course`(`c_id`,`c_name`,`tip`) values ('1','软件工程',NULL),('2','马克思',NULL);
 
-/*Table structure for table `departmentExample` */
+/*Table structure for table `department` */
 
-DROP TABLE IF EXISTS `departmentExample`;
+DROP TABLE IF EXISTS `department`;
 
-CREATE TABLE `departmentExample` (
+CREATE TABLE `department` (
   `dept_num` varchar(30) NOT NULL COMMENT '专业代码',
   `dept_name` varchar(30) NOT NULL COMMENT '专业名称',
   `faculty` varchar(30) NOT NULL COMMENT '所属学院',
@@ -44,9 +74,9 @@ CREATE TABLE `departmentExample` (
   CONSTRAINT `department_ibfk_1` FOREIGN KEY (`faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `departmentExample` */
+/*Data for the table `department` */
 
-insert  into `departmentExample`(`dept_num`,`dept_name`,`faculty`,`tip`) values ('10001','软件工程','10001',NULL);
+insert  into `department`(`dept_num`,`dept_name`,`faculty`,`tip`) values ('10001','软件工程','10001',NULL),('10002','物联网','10001',NULL);
 
 /*Table structure for table `exam` */
 
@@ -55,23 +85,23 @@ DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
   `exam_id` varchar(50) NOT NULL COMMENT '考试号',
   `course` varchar(15) NOT NULL COMMENT '考试课程',
-  `gradeExample` varchar(15) NOT NULL COMMENT '考试班级',
-  `dept` varchar(30) NOT NULL COMMENT '考试专业',
-  `pre_time` datetime DEFAULT NULL COMMENT '考试预设时间',
-  `begin_time` datetime DEFAULT NULL COMMENT '开始时间',
+  `teacher` varchar(15) NOT NULL COMMENT '老师',
+  `grade` varchar(255) NOT NULL COMMENT '考试班级',
+  `dept` varchar(30) DEFAULT NULL COMMENT '考试专业',
+  `finish_time` datetime NOT NULL COMMENT '考试结束时间',
+  `begin_time` datetime NOT NULL COMMENT '开始时间',
   `duration` int(15) NOT NULL COMMENT '考试时长',
-  `state` int(2) NOT NULL DEFAULT '0' COMMENT '状态 默认0表示考试未开始',
+  `state` int(2) NOT NULL DEFAULT '1' COMMENT '状态 默认1表示考试开始',
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`exam_id`),
   KEY `coures` (`course`),
   KEY `dept` (`dept`),
-  KEY `gradeExample` (`gradeExample`),
-  CONSTRAINT `exam_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`)
+  KEY `grade` (`grade`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `exam` */
 
-insert  into `exam`(`exam_id`,`course`,`gradeExample`,`dept`,`pre_time`,`begin_time`,`duration`,`state`,`tip`) values ('1','1','1','10001','2019-03-14 13:30:00','2019-03-27 20:22:38',120,1,NULL),('2019031909410111','1','1','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('201903190941011100011','1','1','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('201903190941011100012','1','2','10001','2019-03-19 21:41:01',NULL,120,0,NULL),('2019031909410112','1','2','10001','2019-03-19 21:41:01',NULL,120,0,NULL);
+insert  into `exam`(`exam_id`,`course`,`teacher`,`grade`,`dept`,`finish_time`,`begin_time`,`duration`,`state`,`tip`) values ('2019040305502211','1','1','1,3',NULL,'2019-04-03 19:50:22','2019-04-03 17:50:22',120,1,NULL),('2019040705133511','1','1','4',NULL,'2019-04-07 19:13:35','2019-04-07 17:13:35',120,1,NULL),('2019040804464921','1','2','5,6',NULL,'2019-04-08 18:46:49','2019-04-08 16:46:49',120,1,NULL),('2019040904130511','1','1','7',NULL,'2019-04-09 18:13:06','2019-04-09 16:13:05',120,1,NULL);
 
 /*Table structure for table `faculty` */
 
@@ -88,11 +118,11 @@ CREATE TABLE `faculty` (
 
 insert  into `faculty`(`fac_num`,`fac_name`,`tip`) values ('10001','计算机与信息工程',NULL);
 
-/*Table structure for table `gradeExample` */
+/*Table structure for table `grade` */
 
-DROP TABLE IF EXISTS `gradeExample`;
+DROP TABLE IF EXISTS `grade`;
 
-CREATE TABLE `gradeExample` (
+CREATE TABLE `grade` (
   `g_id` varchar(15) NOT NULL COMMENT '年级id',
   `dept` varchar(30) NOT NULL,
   `g_year` int(4) NOT NULL,
@@ -101,24 +131,24 @@ CREATE TABLE `gradeExample` (
   PRIMARY KEY (`g_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `gradeExample` */
+/*Data for the table `grade` */
 
-insert  into `gradeExample`(`g_id`,`dept`,`g_year`,`g_class`,`tip`) values ('1','',2015,1,NULL),('2','',2015,2,NULL);
+insert  into `grade`(`g_id`,`dept`,`g_year`,`g_class`,`tip`) values ('1','10001',2015,1,NULL),('2','10001',2015,2,NULL),('3','10002',2016,1,NULL),('4','10002',2017,1,NULL),('5','10002',2017,2,NULL),('6','10002',2017,3,NULL),('7','10002',2017,4,NULL);
 
-/*Table structure for table `group` */
+/*Table structure for table `groups` */
 
-DROP TABLE IF EXISTS `group`;
+DROP TABLE IF EXISTS `groups`;
 
-CREATE TABLE `group` (
+CREATE TABLE `groups` (
   `group_id` tinyint(2) NOT NULL,
   `group_type` varchar(15) NOT NULL,
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*Data for the table `group` */
+/*Data for the table `groups` */
 
-insert  into `group`(`group_id`,`group_type`,`tip`) values (1,'管理员',NULL),(2,'教师',NULL);
+insert  into `groups`(`group_id`,`group_type`,`tip`) values (1,'管理员',NULL),(2,'教师',NULL);
 
 /*Table structure for table `item_type` */
 
@@ -145,20 +175,19 @@ CREATE TABLE `items` (
   `item_title` varchar(250) DEFAULT NULL COMMENT '题目标题',
   `item_desc` varchar(250) NOT NULL COMMENT '题目描述',
   `item_valid` varchar(250) NOT NULL COMMENT '题目正确答案',
-  `item_wrong` varchar(250) DEFAULT NULL COMMENT '题目错误答案',
+  `item_choice` varchar(250) DEFAULT NULL COMMENT '题目错误答案',
   `item_type` char(2) NOT NULL COMMENT '题目类型',
   `course` varchar(15) NOT NULL COMMENT '附属课程',
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`item_id`),
   KEY `course` (`course`),
   KEY `item_type` (`item_type`),
-  CONSTRAINT `items_ibfk_1` FOREIGN KEY (`course`) REFERENCES `course` (`c_id`),
   CONSTRAINT `items_ibfk_2` FOREIGN KEY (`item_type`) REFERENCES `item_type` (`type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
 /*Data for the table `items` */
 
-insert  into `items`(`item_id`,`item_title`,`item_desc`,`item_valid`,`item_wrong`,`item_type`,`course`,`tip`) values (1,NULL,'题目描述','正确答案','错误答案1 错误答案2 错误答案3','A','1',NULL),(2,NULL,'题目描述','正确答案1 正确答案2','错误答案1 错误答案2','B','1',NULL),(3,NULL,'题目描述','正确答案T','错误答案F','C','1',NULL),(4,NULL,'题目描述','正确答案1','错误答案1 错误答案2 错误答案3','A','1',NULL),(5,NULL,'dwadaw','sdwada','wewewe rrwqr wqqdsf','A','1',NULL),(6,NULL,'wefefe','wr312e','sfedfq wdrefa thtjykyh','A','1',NULL),(7,NULL,'rghjfa','dwfeda wqfad qwq','dasdwt','B','1',NULL),(8,NULL,'rtwqwe','dwwadw wqwgf','gfdtrr trfd','B','1',NULL),(9,NULL,'gydfghjk','qwert','kjvc','C','1',NULL),(10,NULL,'iuytr','mnbv','gds','C','1',NULL);
+insert  into `items`(`item_id`,`item_title`,`item_desc`,`item_valid`,`item_choice`,`item_type`,`course`,`tip`) values (1,NULL,'作为中国共产党和社会主义事业指导思想得马克思主义','D','指马克思恩格斯创立的基本理论、基本观点和学说得体系|@|是非正宗得马克思主义|@|是实用的马克思主义|@|是继承和发展了的马克思主义','A','1',NULL),(2,NULL,'题目描述','C,D','错误答案1|@|错误答案2|@|正确答案1|@|正确答案2|@|错误答案','B','1',NULL),(3,NULL,'题目描述','正确','','C','1',NULL),(4,NULL,'题目描述','D','错误答案1|@|错误答案2|@|错误答案3|@|正确答案1','A','1',NULL),(5,NULL,'dwadaw','A','wewewe|@|rrwqr|@|wqqdsf|@|sdwada','A','1',NULL),(6,NULL,'中国第一届领导人','B','刘少奇|@|毛泽东|@|周恩来|@|习近平','A','1',NULL),(7,NULL,'一下哪些是机动车','A,B','小轿车|@|卡车|@|滑板|@|自行车|@|电动车','B','1',NULL),(8,NULL,'rtwqwe','C,D','gfdtrr|@|trfd|@|dwwadw|@|wqwgf|@|sadwa','B','1',NULL),(9,NULL,'五四运动是1919年','正确','','C','1',NULL),(10,NULL,'iuytr','错误','','C','1',NULL),(11,NULL,'五四运动是哪一年','A','1919|@|1918|@|1920|@|1929','A','1',NULL),(12,NULL,'五四运动是哪一年','A','1919|@|1918|@|1920|@|1929','A','1',NULL),(13,NULL,'五四运动是哪一年','A','1919|@|1918|@|1920|@|1929','A','1',NULL),(14,NULL,'五四运动是哪一年','A','1919|@|1918|@|1920|@|1929','A','1',NULL),(15,NULL,'五四运动是哪一年','A','1919|@|1918|@|1920|@|1929','A','1',NULL),(16,NULL,'五四运动是哪一年','A','1919|@|1918|@|1920|@|1929','A','1',NULL),(17,NULL,'苹果是一种水果','正确',NULL,'C','1',NULL),(18,NULL,'马铃薯是水果','错误',NULL,'C','1',NULL),(27,NULL,'以下哪些是蔬菜','A,C','白菜|@|苹果 |@|黄瓜|@|马铃薯|@|草莓','B','1',NULL),(28,NULL,'以下哪些是蔬菜','A','白菜 |@|苹果|@| 香蕉|@| 菠萝|@|草莓','B','1',NULL),(29,NULL,'以下哪些是蔬菜','A,C,D','白菜 |@|苹果|@|马铃薯 |@|番茄|@|草莓','B','1',NULL),(30,NULL,'以下哪些是蔬菜','A,B,C,D','白菜 |@|马铃薯 |@|番茄 |@|黄瓜|@|草莓','B','1',NULL),(32,NULL,'中国第一届领导人','B','刘少奇|@|毛泽东|@|周恩来|@|习近平','A','1',NULL),(33,NULL,'中国第一届领导人是毛泽东吗','正确',NULL,'C','1',NULL),(37,NULL,'下面哪些不是我国的主席','C','刘少奇|@|毛泽东|@|周恩来|@|习近平','A','1',NULL),(38,NULL,'下面哪些不是我国的主席','C','刘少奇|@|毛泽东|@|周恩来|@|习近平','A','1',NULL),(39,NULL,'下面哪些不是我国的主席','C','刘少奇|@|毛泽东|@|周恩来|@|习近平','A','1',NULL);
 
 /*Table structure for table `office` */
 
@@ -182,7 +211,7 @@ insert  into `office`(`office_id`,`office_name`,`dept`,`tip`) values ('1001','�
 DROP TABLE IF EXISTS `paper_edit`;
 
 CREATE TABLE `paper_edit` (
-  `id` int(2) NOT NULL,
+  `id` varchar(15) NOT NULL,
   `course` varchar(15) NOT NULL COMMENT '课程',
   `single_count` int(10) NOT NULL COMMENT '单选个数',
   `single_score` int(10) DEFAULT NULL,
@@ -190,15 +219,15 @@ CREATE TABLE `paper_edit` (
   `multiple_score` int(10) DEFAULT NULL,
   `checking_count` int(10) NOT NULL COMMENT '判断题个数',
   `checking_score` int(10) DEFAULT NULL,
+  `duration` int(15) NOT NULL,
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
-  KEY `course` (`course`),
-  CONSTRAINT `paper_edit_ibfk_1` FOREIGN KEY (`course`) REFERENCES `course` (`c_id`)
+  KEY `course` (`course`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `paper_edit` */
 
-insert  into `paper_edit`(`id`,`course`,`single_count`,`single_score`,`multiple_count`,`multiple_score`,`checking_count`,`checking_score`,`tip`) values (1,'1',3,15,3,15,3,15,NULL);
+insert  into `paper_edit`(`id`,`course`,`single_count`,`single_score`,`multiple_count`,`multiple_score`,`checking_count`,`checking_score`,`duration`,`tip`) values ('1','1',4,5,5,8,4,10,120,NULL);
 
 /*Table structure for table `score` */
 
@@ -217,7 +246,7 @@ CREATE TABLE `score` (
 
 /*Data for the table `score` */
 
-insert  into `score`(`student`,`exam`,`s_score`,`tip`) values ('1','1','1.00',NULL);
+insert  into `score`(`student`,`exam`,`s_score`,`tip`) values ('1','2019040305502211','20.00',NULL),('2','2019040705133511','18.00',NULL),('4','2019040804464921','35.00',NULL);
 
 /*Table structure for table `students` */
 
@@ -229,20 +258,20 @@ CREATE TABLE `students` (
   `stu_name` varchar(15) NOT NULL COMMENT '学生姓名',
   `stu_faculty` varchar(30) NOT NULL COMMENT '学院',
   `dept` varchar(30) NOT NULL COMMENT '专业',
-  `gradeExample` varchar(15) NOT NULL COMMENT '班级',
+  `grade` varchar(15) NOT NULL COMMENT '班级',
   `stu_pwd` varchar(18) NOT NULL DEFAULT '1' COMMENT '登陆密码',
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`stu_num`),
-  KEY `gradeExample` (`gradeExample`),
+  KEY `grade` (`grade`),
   KEY `stu_dept` (`dept`),
   KEY `stu_faculty` (`stu_faculty`),
-  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`),
+  CONSTRAINT `students_ibfk_2` FOREIGN KEY (`dept`) REFERENCES `department` (`dept_num`),
   CONSTRAINT `students_ibfk_3` FOREIGN KEY (`stu_faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `students` */
 
-insert  into `students`(`stu_num`,`stu_ID`,`stu_name`,`stu_faculty`,`dept`,`gradeExample`,`stu_pwd`,`tip`) values ('1','1','aa','10001','10001','1','1',NULL),('2016034400','555555555555555555','bb','10001','10001','2','123456',NULL);
+insert  into `students`(`stu_num`,`stu_ID`,`stu_name`,`stu_faculty`,`dept`,`grade`,`stu_pwd`,`tip`) values ('1','1','aa','10001','10001','1','1',NULL),('2','2','2','10001','10002','4','1',NULL),('2016034400','555555555555555555','bb','10001','10001','2','123456',NULL),('3','3','3','10001','10001','3','3',NULL),('4','4','4','10001','10002','5','4',NULL),('5','5','5','10001','10002','7','5',NULL);
 
 /*Table structure for table `teach` */
 
@@ -252,20 +281,20 @@ CREATE TABLE `teach` (
   `teach_id` varchar(10) NOT NULL,
   `teacher` varchar(15) NOT NULL COMMENT '教师工号',
   `course` varchar(15) NOT NULL COMMENT '课程',
-  `dept` varchar(30) NOT NULL COMMENT '专业',
-  `gradeExample` varchar(255) NOT NULL COMMENT '班级',
+  `dept` varchar(30) DEFAULT NULL COMMENT '专业',
+  `grade` varchar(255) NOT NULL COMMENT '班级',
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`teach_id`),
   KEY `teacher` (`teacher`),
-  KEY `course` (`course`),
   KEY `dept` (`dept`),
+  KEY `course` (`course`),
   CONSTRAINT `teach_ibfk_1` FOREIGN KEY (`teacher`) REFERENCES `teachers` (`t_num`),
-  CONSTRAINT `teach_ibfk_3` FOREIGN KEY (`dept`) REFERENCES `departmentExample` (`dept_num`)
+  CONSTRAINT `teach_ibfk_2` FOREIGN KEY (`course`) REFERENCES `course` (`c_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `teach` */
 
-insert  into `teach`(`teach_id`,`teacher`,`course`,`dept`,`gradeExample`,`tip`) values ('1','1','1','10001','1 2',NULL);
+insert  into `teach`(`teach_id`,`teacher`,`course`,`dept`,`grade`,`tip`) values ('1','1','1','10001','1,2,3,4,7',NULL),('2','1','2',NULL,'1,2,7',NULL),('3','2','1',NULL,'4,5,6',NULL);
 
 /*Table structure for table `teachers` */
 
@@ -281,18 +310,18 @@ CREATE TABLE `teachers` (
   `group_id` tinyint(2) NOT NULL COMMENT '权限',
   `tip` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`t_num`),
-  KEY `group_id` (`group_id`),
   KEY `t_office` (`t_office`),
   KEY `t_faculty` (`t_faculty`),
   KEY `t_dept` (`t_dept`),
-  CONSTRAINT `teachers_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`group_id`),
+  KEY `group_id` (`group_id`),
   CONSTRAINT `teachers_ibfk_3` FOREIGN KEY (`t_faculty`) REFERENCES `faculty` (`fac_num`),
-  CONSTRAINT `teachers_ibfk_4` FOREIGN KEY (`t_dept`) REFERENCES `departmentExample` (`dept_num`)
+  CONSTRAINT `teachers_ibfk_4` FOREIGN KEY (`t_dept`) REFERENCES `department` (`dept_num`),
+  CONSTRAINT `teachers_ibfk_5` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `teachers` */
 
-insert  into `teachers`(`t_num`,`t_name`,`t_faculty`,`t_dept`,`t_office`,`t_pwd`,`group_id`,`tip`) values ('1','1','10001','10001','1001','1',2,NULL),('1001','admin','10001','10001','1001','123456',2,NULL);
+insert  into `teachers`(`t_num`,`t_name`,`t_faculty`,`t_dept`,`t_office`,`t_pwd`,`group_id`,`tip`) values ('1','1','10001','10001','1001','1',2,NULL),('1001','admin','10001','10001','1001','123456',2,NULL),('2','2','10001','10001',NULL,'2',2,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
