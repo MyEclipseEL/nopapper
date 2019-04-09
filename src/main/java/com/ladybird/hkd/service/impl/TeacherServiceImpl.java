@@ -31,10 +31,9 @@ public class TeacherServiceImpl implements TeacherService{
 
     @Override
     public TeacherJsonOut login(Teacher teacher) throws Exception {
-        TeacherJsonOut teacherJsonOut = teacherMapper.validNumPwd(teacher);
-        if (teacherJsonOut == null)
-            throw new ParamException("用户名密码错误！");
-        return teacherJsonOut;
+//        if (teacherJsonOut == null)
+//            throw new ParamException("用户名密码错误！");
+        return teacherMapper.validNumPwd(teacher);
     }
 
     @Override

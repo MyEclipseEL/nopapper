@@ -4,18 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.ExamMapper" >
 
-    <resultMap id="examOut" type="com.ladybird.hkd.model.json.ExamJsonOut">
+    <resultMap id="examOut" type="com.ladybird.hkd.model.example.ExamExample">
         <id column="exam_id" property="exam_id" jdbcType="VARCHAR"/>
         <result column="finish_time" property="finish_time"  />
         <result column="begin_time" property="begin_time" />
         <result column="duration" property="duration" />
         <result column="state" property="state"/>
         <result column="grade" property="grade"/>
-        <association property="dept" javaType="com.ladybird.hkd.model.pojo.Department">
+        <association property="dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">
             <id column="dept_num" property="dept_num"/>
             <result column="dept_name" property="dept_name"/>
         </association>
-        <!--<association property="grade" javaType="com.ladybird.hkd.model.pojo.Grade">
+        <!--<association propergradeExamplerade" javaTycom.ladybird.hkd.model.example.Graderade">
             <id column="g_id" property="g_id"/>
             <result column="g_year" property="g_year"/>
             <result column="g_class" property="g_class"/>
@@ -42,13 +42,13 @@
         </association>
     </resultMap>
 
-   <!-- <select id="selectExamByCourseStuNum" resultMap="examOut">
-        SELECT * FROM exam e
-         LEFT JOIN course c ON e.course=c.c_id
-        LEFT JOIN grade g ON e.grade=g.g_id
-        WHERE grade=(SELECT grade FROM students WHERE stu_num=${stu_num} )
-              AND course=${course}
-    </select>-->
+    <!-- <select id="selectExamByCourseStuNum" resultMap="examOut">
+         SELECT * FROM exam e
+          LEFT JOIN course c ON e.course=c.c_id
+         LEFT JgradeExamplerade g OgradeExamplerade=g.g_id
+         WHgradeExamplerade=(SELgradeExamplerade FROM students WHERE stu_num=${stu_num} )
+               AND course=${course}
+     </select>-->
     <select id="checkOutPaperEditExm" resultMap="paperEditMap">
         SELECT * FROM paper_edit WHERE course=${course}
     </select>
@@ -78,11 +78,11 @@
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
         LEFT JOIN department d ON d.dept_num=e.dept
-#         LEFT JOIN grade g ON e.grade=g.g_id
+        #         LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
         WHERE finish_time &gt; now() AND
         e.grade LIKE CONCAT('%',#{grade},'%')
-        <!--<foreach collection="grades" open="(" close=")" separator=","  item="grade">-->
-            <!--${grade}-->
+        <!--<foreach collectigradeExamplesades" open="(" close=")" separator=","  itgradeExamplerade">-->
+        <!--gradeExamplerade}-->
         <!--</foreach>-->
     </select>
 
@@ -90,7 +90,7 @@
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
             LEFT JOIN department d ON d.dept_num=e.dept
-        #             LEFT JOIN grade g ON e.grade=g.g_id
+        #             LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
         WHERE exam_id=${exam_id}
     </select>
 
@@ -98,7 +98,7 @@
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
         LEFT JOIN department d ON d.dept_num=e.dept
-#         LEFT JOIN grade g ON e.grade=g.g_id
+        #         LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
         WHERE exam_id IN
         <foreach collection="ids" open="(" close=")" separator=","  item="id">
             ${id}
@@ -111,13 +111,13 @@
 
     <select id="checkOutByCourseGradesDept" resultMap="examOut">
         SELECT * FROM exam e
-            LEFT JOIN course c ON e.course=c.c_id
-            LEFT JOIN department d ON e.dept=d.dept_num
-#             LEFT JOIN grade g ON e.grade=g.g_id
+        LEFT JOIN course c ON e.course=c.c_id
+        LEFT JOIN department d ON e.dept=d.dept_num
+        #             LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
         WHERE course=${course} AND e.dept=${dept} AND NOT state=-1
         AND e.grade IN
-        <foreach collection="grades" open="(" close=")" separator=","  item="grade">
-            ${grade}
+        <foreach collection="gradeExamples" open="(" close=")" separator=","  item="gradeExample">
+            ${gradeExample}
         </foreach>
 
     </select>
@@ -149,9 +149,8 @@
     </sql>
 
     <!--<insert id="addExam" parameterType="com.ladybird.hkd.model.pojo.Exam">
-            INSERT INTO exam(exam_id,course,grade,pre_time,duration,state) VALUES (${exam_id},
-            ${course},${grade},${dept},#{pre_time,jdbcType=TIMESTAMP},${duration},${state});
-
+            INSERT INTO exam(exam_id,cougradeExamplerade,pre_time,duration,state) VALUES (${exam_id},
+            ${coursegradeExamplerade},${dept},#{pre_time,jdbcType=TIMESTAMP},${duration},${state});
     </insert>-->
 
     <insert id="addExams" parameterType="com.ladybird.hkd.model.pojo.Exam">
@@ -168,5 +167,9 @@
 
     <select id="selGradesByTC" resultType="String">
         SELECT grade FROM exam WHERE teacher=#{t_num} AND course=#{course} AND begin_time &gt;  #{begin_date}
+    </select>
+
+    <select id="selCourseById" resultType="String">
+        SELECT course FROM exam WHERE exam_id=#{exam_id}
     </select>
 </mapper>

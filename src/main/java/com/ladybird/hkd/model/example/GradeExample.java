@@ -1,28 +1,26 @@
 package com.ladybird.hkd.model.example;
 
 
-import com.ladybird.hkd.model.pojo.Department;
-
 /**
  * @author Shen
  * @description: 年级实体
  * @create: 2019-03-13
  */
-public class Grade {
+public class GradeExample {
     private String g_id;
     private Integer g_year;
     private Integer g_class;
-    private Department dept;
+    private DepartmentExample dept;
 
-    public Grade() {
+    public GradeExample() {
     }
 
 
-    public Department getDept() {
+    public DepartmentExample getDept() {
         return dept;
     }
 
-    public void setDept(Department dept) {
+    public void setDept(DepartmentExample dept) {
         this.dept = dept;
     }
 

@@ -45,19 +45,22 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemVO> checkOutItems(String course,String item_type) throws Exception {
-        List<Item> items = paperlessItemMapper.checkOutItemsByCourse(course,item_type);
-
-        if (items.size() <= 0)
-            throw new ParamException("课程号没有对应的课程！");
+//        if (items.size() <= 0)
+//            throw new ParamException("课程号没有对应的课程！");
+        if (course == null || "".equals(course.trim()))
+            course = null;
+        if (item_type == null || "".equals(item_type.trim()))
+            item_type = null;
+        List<ItemExample> items = paperlessItemMapper.checkOutItems(course,item_type);
         List<ItemVO> vos = new ArrayList<>();
-        for (Item item : items) {
+        for (ItemExample item : items) {
             vos.add(ItemVO.Item2VOConveter(item));
         }
         return vos;
     }
 
     @Override
-        public List<ItemsOut> getPaper(String course) throws Exception{
+    public List<ItemsOut> getPaper(String course) throws Exception{
         Set<Item> items = paperlessItemMapper.checkOutItemsByCourseSet(course);
         PaperEditExample paperEdit =examMapper .checkOutPaperEditExm(course);
         List<ItemType> itemTypes = paperlessItemMapper.checkOutItemTypes();
@@ -233,7 +236,7 @@ public class ItemServiceImpl implements ItemService {
         //为判断题
         item.setItem_desc(itemVO.getItem_desc());
         item.setItem_type(itemVO.getItem_type());
-        item.setCourse(itemVO.getCourse());
+        item.setCourse(itemVO.getCourse().getC_id());
         if (itemVO.getItem_type().equals("C")) {
             if (itemVO.getItem_valid().length > 1)
                 throw new ParamException("题型不匹配！");

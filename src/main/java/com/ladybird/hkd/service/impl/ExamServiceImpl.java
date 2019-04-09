@@ -6,13 +6,13 @@ import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.mapper.CourseMapper;
 import com.ladybird.hkd.mapper.ExamMapper;
 import com.ladybird.hkd.mapper.PaperlessItemMapper;
+import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.json.ExamJsonIn;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.pojo.*;
-import com.ladybird.hkd.service.BasicService;
 import com.ladybird.hkd.service.ExamService;
-import org.springframework.beans.BeanUtils;
+import com.ladybird.hkd.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -40,16 +40,15 @@ public class ExamServiceImpl implements ExamService {
     @Autowired
     private CourseMapper courseMapper;
     @Autowired
-    private BasicService basicService;
-
+    private MessageService messageService;
     @Override
-    public List<ExamJsonOut> selectExamByStu(Student student) throws Exception {
-        List<ExamJsonOut> examJsonOuts = examMapper.selectExamByStu(student);
-        for (ExamJsonOut examJsonOut:examJsonOuts) {
-            examJsonOut.setFinish_time(new Date(examJsonOut.getFinish_time().getTime() / 1000));
-            examJsonOut.setBegin_time(new Date(examJsonOut.getBegin_time().getTime() / 1000));
+    public List<ExamExample> selectExamByStu(Student student) throws Exception {
+        List<ExamExample> examExamples = examMapper.selectExamByStu(student);
+        for (ExamExample examExample : examExamples) {
+            examExample.setFinish_time(new Date(examExample.getFinish_time().getTime() / 1000));
+            examExample.setBegin_time(new Date(examExample.getBegin_time().getTime() / 1000));
         }
-        return examJsonOuts;
+        return examExamples;
     }
 
     @Override
@@ -58,25 +57,25 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamJsonOut checkOutExamById(String exam) throws Exception {
-        ExamJsonOut examJsonOut = examMapper.checkOutExamById(exam);
-        if (examJsonOut == null) {
+    public ExamExample checkOutExamById(String exam) throws Exception {
+        ExamExample examExample = examMapper.checkOutExamById(exam);
+        if (examExample == null) {
             throw new Exception();
         }
-        return examJsonOut;
+        return examExample;
     }
 
     @Override
-    public List<ExamJsonOut> checkOutByTeach(Teach teach) throws Exception {
+    public List<ExamExample> checkOutByTeach(Teach teach) throws Exception {
         String[] grades = teach.getGrade().split("\\ ");
-        List<ExamJsonOut> examJsonOuts = examMapper.checkOutByCourseGradesDept(teach.getCourse(), grades,teach.getDept());
-        for (ExamJsonOut e : examJsonOuts) {
+        List<ExamExample> examExamples = examMapper.checkOutByCourseGradesDept(teach.getCourse(), grades,teach.getDept());
+        for (ExamExample e : examExamples) {
             try {
                 e.setBegin_time(new Date(e.getBegin_time().getTime() / 1000));
             } catch (NullPointerException ne) {
             }
         }
-        return examJsonOuts;
+        return examExamples;
     }
 
     @Override
@@ -88,7 +87,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public PaperEdit updatePaper(PaperEdit paperEdit) throws Exception {
         //判断id是否存在 不存在则是新增
-            //判断课程是否存在记录
+        //判断课程是否存在记录
         Course course = courseMapper.selCourseById(paperEdit.getCourse());
         if (course == null)
             throw new ParamException("课程不存在！");
@@ -96,7 +95,7 @@ public class ExamServiceImpl implements ExamService {
         paperEdit.setId(paperEdit.getCourse());
         int result = -1;
         if (exist == null) {
-             result = examMapper.checkInPaperEdit(paperEdit);
+            result = examMapper.checkInPaperEdit(paperEdit);
             System.out.println(result);
         }else {
             examMapper.changePaperEdit(paperEdit);
@@ -110,7 +109,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public List<ExamJsonOut> addExams(ExamJsonIn exam) throws Exception {
+    public List<ExamExample> addExams(ExamJsonIn exam) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
         String exam_id = format.format(new Date()) + exam.getCourse() + exam.getDept();
         List<String> ids = new ArrayList<>();
@@ -133,10 +132,10 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public ExamJsonOut beginExam(String t_num, String[] grades, String course) throws Exception {
+    public ExamExample beginExam(String t_num, String[] grades, String course) throws Exception {
         String grade = "";
         //判断考试班级是否已经存在
-        List<Grade> gradeList = basicService.gradesNotInExam(t_num, course);
+        List<GradeExample> gradeExampleList = messageService.gradesNotInExam(t_num, course);
         for (int i = 0 ;i < grades.length; i++) {
             grade += grades[i];
             if (i<grades.length-1)
@@ -150,6 +149,12 @@ public class ExamServiceImpl implements ExamService {
                 paperEdit.getDuration(), ExamStateEnum.BEGIN.getCode());
         examMapper.addExam(exam);
         return examMapper.checkOutExamById(exam_id);
+    }
+
+    @Override
+    public PaperEditExample checkOutPaperByCourse(String exam) throws Exception{
+        String course = examMapper.selCourseById(exam);
+        return examMapper.checkOutPaperEditExm(course);
     }
 
 }

@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.PaperlessItemMapper" >
-    
+
 
 
     <resultMap id="itemExampleMap" type="com.ladybird.hkd.model.example.ItemExample">
@@ -58,18 +58,17 @@
         )
     </insert>
 
-    <select id="checkOutItemsByCourse" parameterType="java.lang.String" resultMap="itemExampleMap">
-        SELECT * from items
-        <if test="(course!=null)||(item_type!=null)">
-        WHERE
-            <if test="course != null">
-                course=#{course},
-            </if>
-          <if test="item_type != null">
-            item_type=#{item_type}
-          </if>
+    <select id="checkOutItems" parameterType="java.lang.String" resultMap="itemExampleMap">
+        SELECT * from items i
+        LEFT JOIN course c ON c.c_id=i.course
+        LEFT JOIN item_type t ON t.type_id=i.item_type
+        WHERE 1=1
+        <if test="course != null">
+            AND course=#{course}
         </if>
-
+        <if test="item_type != null">
+            AND item_type=#{item_type}
+        </if>
     </select>
 
     <select id="checkOutItemsByCourseSet" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Item">
@@ -106,7 +105,7 @@
     </select>
 
 
-    
+
     <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score">
         insert into score (student,exam,s_score) values (${student},${exam},${s_score});
     </insert>
@@ -114,17 +113,17 @@
 
     <update id="updateTypeScore" parameterType="List">
 
-            <foreach collection="list" item="type" index="index">
-                UPDATE item_type SET  type_score = ${type.type_score}
-                WHERE type_id="${type.type_id}";
-            </foreach>
+        <foreach collection="list" item="type" index="index">
+            UPDATE item_type SET  type_score = ${type.type_score}
+            WHERE type_id="${type.type_id}";
+        </foreach>
     </update>
 
     <insert id="checkInItems" parameterType="List">
         INSERT INTO items (item_desc,item_valid,item_choice,item_type,course) VALUES
-            <foreach collection="items" item="item" index="index" separator=",">
-                (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course})
-            </foreach>
+        <foreach collection="items" item="item" index="index" separator=",">
+            (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course})
+        </foreach>
     </insert>
 
     <insert id="checkInChecking" parameterType="List">

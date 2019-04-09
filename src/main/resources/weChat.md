@@ -98,7 +98,7 @@ POST /teacher/begin
 {
 "course"    : 1
 "duration"  : 120 (分钟数)
-"grades"    : 3,4
+"gradeExamples"    : 3,4
 }
 ```
 返回
@@ -113,7 +113,7 @@ POST /teacher/begin
             "c_name": "软件工程",
             "tip": null
         },
-        "grade": "3,4",
+        "gradeExample": "3,4",
         "dept": null,
         "begin_time": 1554001243000,(毫秒数，除1000使用)
         "duration": 120,
@@ -208,7 +208,7 @@ GET /exam/exam
         "c_id": 1,
         "c_name": "软件工程"
     },
-    "grade": {
+    "gradeExample": {
         "g_id": 1,
         "g_year": 2015,
         "g_class": 1

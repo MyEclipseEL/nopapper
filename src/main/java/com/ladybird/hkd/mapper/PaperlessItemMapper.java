@@ -33,7 +33,7 @@ public interface PaperlessItemMapper {
     /**
      * 检出数据库的题目
      */
-    List<Item> checkOutItemsByCourse(@Param("course") String course,@Param("item_type")String item_type) throws Exception;
+    List<ItemExample> checkOutItems(@Param("course") String course,@Param("item_type")String item_type) throws Exception;
 
 
     /**

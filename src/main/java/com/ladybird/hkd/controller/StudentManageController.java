@@ -18,7 +18,7 @@ public class StudentManageController {
 
     @Autowired
     private StudentManageService studentManageService;
-    @RequestMapping(value = "/selectAllGrade",method = RequestMethod.GET)
+   /* @RequestMapping(value = "/selectAllGrade",method = RequestMethod.GET)
     @ResponseBody
     public ResultJson selectAllGrade()throws Exception{
         Calendar cal = Calendar.getInstance();
@@ -33,7 +33,7 @@ public class StudentManageController {
             return studentManageService.selectAllGrade(gradelow);
         }
 
-    }
+    }*/
     @RequestMapping(value = "/selectStudent",method = RequestMethod.GET)
     @ResponseBody
     public ResultJson selectStudent(Student student) throws Exception{

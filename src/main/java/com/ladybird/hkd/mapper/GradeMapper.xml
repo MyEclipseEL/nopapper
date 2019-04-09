@@ -3,19 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.GradeMapper" >
-<insert id="addGrade" parameterType="com.ladybird.hkd.model.example.Grade" >
-    INSERT INTO grade (g_year, g_class) VALUES (#{g_year}, #{g_class});
+<insert id="addGrade" parameterType="com.ladybird.hkd.model.example.GradeExample" >
+    INSERT INTO gradeExample (g_year, g_class) VALUES (#{g_year}, #{g_class});
 </insert>
 
  <delete id="delGrade" parameterType="Integer">
-     DELETE FROM grade WHERE g_id = #{g_id};
+     DELETE FROM gradeExample WHERE g_id = #{g_id};
  </delete>
 
-    <update id="updateGrade" parameterType="com.ladybird.hkd.model.example.Grade">
-        UPDATE grade SET g_year=#{g_year},g_class=#{g_class} where g_id=#{g_id}
+    <update id="updateGrade" parameterType="com.ladybird.hkd.model.example.GradeExample">
+        UPDATE gradeExample SET g_year=#{g_year},g_class=#{g_class} where g_id=#{g_id}
 
     </update>
-    <select id="findGrade" parameterType="com.ladybird.hkd.model.example.Grade" resultType="com.ladybird.hkd.model.example.Grade">
+    <select id="findGrade" parameterType="com.ladybird.hkd.model.example.GradeExample" resultType="com.ladybird.hkd.model.example.GradeExample">
         SELECT * FROM Grade
         <where>
 
@@ -32,7 +32,7 @@
         </where>
     </select>
 
-    <select id="findGradeByYandC" parameterType="com.ladybird.hkd.model.example.Grade" resultType="com.ladybird.hkd.model.example.Grade">
+    <select id="findGradeByYandC" parameterType="com.ladybird.hkd.model.example.GradeExample" resultType="com.ladybird.hkd.model.example.GradeExample">
         SELECT * FROM Grade where g_year = #{g_year} and  g_class = #{g_class}
     </select>
 
@@ -50,7 +50,7 @@
         </association>
     </resultMap>
     <select id="selGradesNotInExam" resultMap="gradeMap">
-        SELECT * FROM grade
+        SELECT * FROM gradeExample
             LEFT JOIN department d ON d.dept_num=dept
             LEFT JOIN faculty f ON d.faculty=f.fac_num
         WHERE g_id 
@@ -60,12 +60,12 @@
             )
         </if>
         AND g_id IN
-        <foreach collection="grades" separator="," item="grade" open="(" close=")">
-            ${grade}
+        <foreach collection="gradeExamples" separator="," item="gradeExample" open="(" close=")">
+            ${gradeExample}
         </foreach>
     </select>
 
-    <!--/*SELECT grade FROM exam e-->
+    <!--/*SELECT gradeExample FROM exam e-->
     <!--WHERE e.teacher=${t_num} AND e.course=${course}-->
     <!--AND e.begin_time &gt;  #{begin_date}*/-->
 </mapper>

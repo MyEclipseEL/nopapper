@@ -42,23 +42,23 @@
   `stu_name` varchar(15) NOT NULL COMMENT '学生姓名',
   `stu_faculty` varchar(30) NOT NULL COMMENT '学院',
   `stu_dept` varchar(30) NOT NULL COMMENT '专业',
-  `grade` int(15) NOT NULL COMMENT '班级',
+  `gradeExample` int(15) NOT NULL COMMENT '班级',
   `stu_pwd` varchar(18) NOT NULL COMMENT '登陆密码',
   PRIMARY KEY (`stu_num`),
-  KEY `grade` (`grade`),
+  KEY `gradeExample` (`gradeExample`),
   KEY `stu_dept` (`stu_dept`),
   KEY `stu_faculty` (`stu_faculty`),
-  CONSTRAINT `students_ibfk_1` FOREIGN KEY (`grade`) REFERENCES `grade` (`g_id`),
+  CONSTRAINT `students_ibfk_1` FOREIGN KEY (`gradeExample`) REFERENCES `gradeExample` (`g_id`),
   CONSTRAINT `students_ibfk_2` FOREIGN KEY (`stu_dept`) REFERENCES `department` (`dept_num`),
   CONSTRAINT `students_ibfk_3` FOREIGN KEY (`stu_faculty`) REFERENCES `faculty` (`fac_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
 </table>
-<table name="grade" view="colnames">
+<table name="gradeExample" view="colnames">
 <left>924</left>
 <top>218</top>
 <width>88</width>
 <height>129</height>
-<sql_create_table>CREATE TABLE `grade` (
+<sql_create_table>CREATE TABLE `gradeExample` (
   `g_id` int(15) NOT NULL AUTO_INCREMENT COMMENT '年级id',
   `g_year` year(4) NOT NULL,
   `g_class` int(3) NOT NULL,

@@ -289,7 +289,7 @@ null
             "c_id": 1,
             "c_name": "软件工程"
         },
-        "grade": {
+        "gradeExample": {
             "g_id": 1,
             "g_year": 2015,     //级
             "g_class": 1        //班

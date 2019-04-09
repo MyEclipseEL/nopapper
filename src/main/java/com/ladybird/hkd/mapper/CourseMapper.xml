@@ -31,5 +31,11 @@
         </where>
     </select>
 
+    <select id="selByTeacher" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Course">
+        SELECT * from course WHERE c_id IN (SELECT course FROM teach WHERE teacher=${t_num})
+    </select>
 
+    <select id="selCourseById" resultType="com.ladybird.hkd.model.pojo.Course">
+        SELECT * FROM course WHERE c_id=#{c_id}
+    </select>
 </mapper>

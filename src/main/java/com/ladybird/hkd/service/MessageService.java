@@ -2,10 +2,12 @@ package com.ladybird.hkd.service;
 
 
 
-import com.ladybird.hkd.model.example.Grade;
+import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.pojo.Grade;
+import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
 
 import java.util.List;
@@ -38,5 +40,5 @@ public interface MessageService {
     ResultJson findCourse(Course course) throws Exception;
 
 
-    List<Grade> gradesNotInExam(String t_num, String course) throws Exception;
+    List<GradeExample> gradesNotInExam(String t_num, String course) throws Exception;
 }

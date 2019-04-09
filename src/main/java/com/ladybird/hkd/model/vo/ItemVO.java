@@ -1,6 +1,8 @@
 package com.ladybird.hkd.model.vo;
 
 import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.example.ItemExample;
+import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Item;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -29,7 +31,7 @@ public class ItemVO {
     @ApiModelProperty("题型")
     private String item_type;       //题型
     @ApiModelProperty("科目")
-    private String course;          //科目
+    private Course course;          //科目
     private String tip;
 
     public static void validItem(ItemVO item) throws Exception{
@@ -66,7 +68,7 @@ public class ItemVO {
     }
 
     //将Item转为ItemVO
-    public static ItemVO Item2VOConveter(Item item) throws Exception{
+    public static ItemVO Item2VOConveter(ItemExample item) throws Exception{
         ItemVO result = new ItemVO();
         if (item.getItem_id() != null)
             result.setItem_id(item.getItem_id());
@@ -74,21 +76,21 @@ public class ItemVO {
             result.setItem_title(item.getItem_title());
         if (item.getTip() != null && !"".equals(item.getTip().trim()))
             result.setTip(item.getTip());
-        if (item.getItem_desc() == null || "".equals(item.getItem_desc().trim()))
-            throw new ParamException("题目为空！");
+//        if (item.getItem_desc() == null || "".equals(item.getItem_desc().trim()))
+//            throw new ParamException("题目为空！");
         result.setItem_desc(item.getItem_desc());
-        if (item.getCourse() == null || "".equals(item.getCourse().trim()))
+        if (item.getCourse() == null)
             throw new ParamException("课程为空！");
         result.setCourse(item.getCourse());
-        if (item.getItem_type() == null || "".equals(item.getItem_title().trim()))
+        if (item.getItem_type() == null )
             throw new ParamException("题型为空！");
-        if (item.getItem_type().equalsIgnoreCase("C")) {
-            result.setItem_type(item.getItem_type());
+        if (item.getItem_type().getType_id().equalsIgnoreCase("C")) {
+            result.setItem_type(item.getItem_type().getType_id());
             if (!item.getItem_valid().trim().equals("正确") && !item.getItem_valid().trim().equals("错误"))
                 throw new ParamException("判断题答案只允许为‘正确’‘错误’");
             result.setItem_valid(new String[]{item.getItem_valid()});
         } else {
-            result.setItem_type(item.getItem_type());
+            result.setItem_type(item.getItem_type().getType_id());
             if (item.getItem_choice() == null || "".equals(item.getItem_choice()))
                 throw new ParamException("选项为空！");
             List<String> choices = new ArrayList<>();
@@ -155,11 +157,11 @@ public class ItemVO {
         this.item_type = item_type;
     }
 
-    public String getCourse() {
+    public Course getCourse() {
         return course;
     }
 
-    public void setCourse(String course) {
+    public void setCourse(Course course) {
         this.course = course;
     }
 

@@ -1,24 +1,23 @@
 package com.ladybird.hkd.mapper;
 
-import com.ladybird.hkd.model.example.Grade;
+import com.ladybird.hkd.model.example.GradeExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 @Component
 public interface GradeMapper {
 
-    int addGrade(Grade grade);
+    int addGrade(GradeExample gradeExample);
 
     int delGrade(Integer g_id);
 
-    int updateGrade(Grade grade);
+    int updateGrade(GradeExample gradeExample);
 
-    Grade findGrade(Grade grade);
+    GradeExample findGrade(GradeExample gradeExample);
 
-    Grade findGradeByYandC(Grade grade);
+    GradeExample findGradeByYandC(GradeExample gradeExample);
 
-    List<Grade> selGradesNotInExam(@Param("t_num") String t_num,@Param("course") String course,
-                                   @Param("grades") String[] grades, @Param("already") String already) throws Exception;
+    List<GradeExample> selGradesNotInExam(@Param("t_num") String t_num, @Param("course") String course,
+                                          @Param("grades") String[] grades, @Param("already") String already) throws Exception;
 }
