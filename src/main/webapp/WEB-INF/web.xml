@@ -20,7 +20,28 @@
     <param-name>log4jConfigLocation</param-name>
     <param-value>classpath:log4j.properties</param-value>
   </context-param>
-  
+
+  <filter>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+    <init-param>
+      <param-name>exclusions</param-name>
+      <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+    </init-param>
+    <!-- 下面的所有的init－param可以不用配置，使用默认值即可，如果你有处女座情结，删除即可 -->
+    <!-- 缺省sessionStatMaxCount是1000个。你可以按需要进行配置 -->
+    <init-param>
+      <param-name>sessionStatMaxCount</param-name>
+      <param-value>1000</param-value>
+    </init-param>
+    <!-- druid 0.2.7版本开始支持profile，配置profileEnable能够监控单个url调用的sql列表 -->
+    <init-param>
+      <param-name>profileEnable</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -34,6 +55,10 @@
     </init-param>
   </filter>
 
+  <filter-mapping>
+    <filter-name>DruidWebStatFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>

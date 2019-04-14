@@ -1,6 +1,8 @@
 package com.ladybird.hkd.model.pojo;
 
-public class Faculty {
+import java.io.Serializable;
+
+public class Faculty implements Serializable{
     private String fac_num;
     private String fac_name;
     private String tip;

@@ -11,15 +11,19 @@
         <result column="duration" property="duration" />
         <result column="state" property="state"/>
         <result column="grade" property="grade"/>
-        <association property="dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">
-            <id column="dept_num" property="dept_num"/>
-            <result column="dept_name" property="dept_name"/>
+        <association property="teacher" javaType="com.ladybird.hkd.model.pojo.Teacher">
+            <id column="t_num" property="t_num" jdbcType="VARCHAR"/>
+            <result column="t_name" property="t_name" jdbcType="VARCHAR"/>
         </association>
-        <!--<association propergradeExamplerade" javaTycom.ladybird.hkd.model.example.Graderade">
-            <id column="g_id" property="g_id"/>
-            <result column="g_year" property="g_year"/>
-            <result column="g_class" property="g_class"/>
-        </association>-->
+        <!--<association property="dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">-->
+            <!--<id column="dept_num" property="dept_num"/>-->
+            <!--<result column="dept_name" property="dept_name"/>-->
+        <!--</association>-->
+       <!--<association property="grade" javaType="com.ladybird.hkd.model.example.GradeExample">-->
+            <!--<id column="g_id" property="g_id"/>-->
+            <!--<result column="g_year" property="g_year"/>-->
+            <!--<result column="g_class" property="g_class"/>-->
+        <!--</association>-->
         <association property="course" javaType="com.ladybird.hkd.model.pojo.Course">
             <id column="c_id" property="c_id" />
             <result column="c_name" property="c_name" jdbcType="VARCHAR"/>
@@ -50,7 +54,8 @@
               AND course=${course}
     </select>-->
     <select id="checkOutPaperEditExm" resultMap="paperEditMap">
-        SELECT * FROM paper_edit WHERE course=${course}
+        SELECT * FROM paper_edit p
+        LEFT JOIN course c ON c.c_id=p.course
     </select>
 
     <select id="checkOutPaperEdit" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
@@ -71,14 +76,15 @@
     </insert>
 
     <select id="checkOutPaperEditExs" resultMap="paperEditMap">
-        SELECT * FROM paper_edit
+        SELECT * FROM paper_edit p LEFT JOIN course c ON p.course=c.c_id
     </select>
 
     <select id="selectExamByStu" resultMap="examOut" parameterType="com.ladybird.hkd.model.pojo.Student">
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
-        LEFT JOIN department d ON d.dept_num=e.dept
+#         LEFT JOIN department d ON d.dept_num=e.dept
 #         LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+        LEFT JOIN teachers t ON e.teacher=t.t_num
         WHERE finish_time &gt; now() AND
         e.grade LIKE CONCAT('%',#{grade},'%')
         <!--<foreach collectigradeExamplesades" open="(" close=")" separator=","  itgradeExamplerade">-->
@@ -89,16 +95,18 @@
     <select id="checkOutExamById" resultMap="examOut">
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
-            LEFT JOIN department d ON d.dept_num=e.dept
+#             LEFT JOIN department d ON d.dept_num=e.dept
         #             LEFT JOIN grade g ON e.grade=g.g_id
+            LEFT JOIN teachers t ON e.teacher=t.t_num
         WHERE exam_id=${exam_id}
     </select>
 
     <select id="checkOutExamByIds" resultMap="examOut">
         SELECT * FROM exam e
         LEFT JOIN course c ON e.course=c.c_id
-        LEFT JOIN department d ON d.dept_num=e.dept
+#         LEFT JOIN department d ON d.dept_num=e.dept
 #         LEFT JOIN grade g ON e.grade=g.g_id
+        LEFT JOIN teachers t ON e.teacher=t.t_num
         WHERE exam_id IN
         <foreach collection="ids" open="(" close=")" separator=","  item="id">
             ${id}
@@ -109,11 +117,12 @@
         SELECT state from exam WHERE exam_id=#{exam_id}
     </select>
 
-    <select id="checkOutByCourseGradesDept" resultMap="examOut">
+    <select id="checkOutByCourseGrade" resultMap="examOut">
         SELECT * FROM exam e
             LEFT JOIN course c ON e.course=c.c_id
-            LEFT JOIN department d ON e.dept=d.dept_num
-#             LEFT JOIN gradeExample g ON e.gradeExample=g.g_id
+#             LEFT JOIN department d ON e.dept=d.dept_num
+#             LEFT JOIN grade g ON e.grade=g.g_id
+        LEFT JOIN teachers t ON e.teacher=t.t_num
         WHERE course=${course} AND e.dept=${dept} AND NOT state=-1
         AND e.grade IN
         <foreach collection="gradeExamples" open="(" close=")" separator=","  item="gradeExample">
@@ -156,8 +165,8 @@
 
     <insert id="addExams" parameterType="com.ladybird.hkd.model.pojo.Exam">
         <foreach collection="exams" item="e" separator=";">
-            INSERT INTO exam(exam_id,course,grade,dept,pre_time,duration,state) VALUES (${e.exam_id},
-            ${e.course},${e.grade},${e.dept},#{e.pre_time,jdbcType=TIMESTAMP},${e.duration},${state})
+            INSERT INTO exam(exam_id,course,grade,pre_time,duration,state) VALUES (${e.exam_id},
+            ${e.course},${e.grade},#{e.pre_time,jdbcType=TIMESTAMP},${e.duration},${state})
         </foreach>
     </insert>
 
@@ -169,4 +178,40 @@
     <select id="selGradesByTC" resultType="String">
         SELECT grade FROM exam WHERE teacher=#{t_num} AND course=#{course} AND begin_time &gt;  #{begin_date}
     </select>
+
+    <resultMap id="chapterMap" type="com.ladybird.hkd.model.example.ChapterEditExm">
+        <result property="numbers" column="numbers"/>
+        <association property="course" javaType="com.ladybird.hkd.model.pojo.Course">
+            <id property="c_id" column="c_id"/>
+            <result column="c_name" property="c_name"/>
+            <result column="chapter" property="chapter"/>
+        </association>
+    </resultMap>
+
+    <select id="selChapterByCourse" resultType="String" parameterType="String">
+        SELECT numbers FROM paper_chapter WHERE course=#{course}
+    </select>
+
+    <select id="checkOutChapter" parameterType="String" resultMap="chapterMap">
+        SELECT * FROM paper_chapter WHERE 1=1
+        <if test="course != null">
+            AND course=#{course}
+        </if>
+    </select>
+
+    <insert id="checkInChapter" >
+        INSERT INTO paper_chapter (course,numbers
+            <if test="tip != null">
+                ,tip
+            </if>
+        ) VALUES (#{course},#{numbers}
+        <if test="tip!=null">
+            ,#{tip}
+        </if>
+        )
+    </insert>
+
+    <delete id="delChapterByCourse" parameterType="String">
+        DELETE FROM paper_chapter WHERE course = #{course}
+    </delete>
 </mapper>

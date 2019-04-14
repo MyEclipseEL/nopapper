@@ -1,5 +1,6 @@
 package com.ladybird.hkd.model.pojo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
  * @description:
  * @create: 2019-03-21
  */
-public class Score {
+public class Score implements Serializable {
     private String student;
     private String exam;
     private BigDecimal s_score;

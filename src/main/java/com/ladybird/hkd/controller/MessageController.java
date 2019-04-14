@@ -100,28 +100,6 @@ public class MessageController extends BaseController {
         return messageService.findCourse(course);
     }
 
-    //查询教师教授的课程
-    @ResponseBody
-    @RequestMapping(value = "/teaches")
-    public Object teaches(NativeWebRequest request,String t_num) throws Exception{
-        //获取登陆教师的信息
-        String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-        String adminJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-        List<Course> courses = new ArrayList<>();
-        if (teacherJson != null) {
-            //转为对象
-            TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
-            try {
-                t_num = teacherJsonOut.getT_num();
-            } catch (NullPointerException npe) {
-                throw new BusinessException("token中没有用户信息！");
-            }
-            courses = teacherService.checkOutCourseByNum(t_num);
-        }else {
 
-        }
-
-        return ResultJson.Success(courses);
-    }
 
 }

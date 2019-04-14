@@ -2,12 +2,14 @@ package com.ladybird.hkd.model.json;
 
 import com.ladybird.hkd.model.example.DepartmentExample;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-03-20
  */
-public class GradeOut {
+public class GradeOut implements Serializable {
     private String g_id;
     private int g_year;
     private int g_class;

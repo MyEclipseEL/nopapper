@@ -1,11 +1,13 @@
 package com.ladybird.hkd.model.pojo;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description: 权限组
  * @create: 2019-03-13
  */
-public class Group {
+public class Group implements Serializable{
     private String group_id;
     private String group_type;
 

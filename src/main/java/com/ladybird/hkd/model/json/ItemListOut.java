@@ -5,6 +5,7 @@ import com.ladybird.hkd.model.vo.ItemVO;
 import io.swagger.annotations.ApiModelProperty;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
  * @description:
  * @create: 2019-04-16
  */
-public class ItemListOut {
+public class ItemListOut implements Serializable{
     @ApiModelProperty("题型")
     private ItemType itemType;
     @ApiModelProperty("题目")

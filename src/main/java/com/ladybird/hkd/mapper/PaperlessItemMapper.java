@@ -9,6 +9,7 @@ import com.ladybird.hkd.model.pojo.Score;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -31,9 +32,21 @@ public interface PaperlessItemMapper {
     void createItemBank(@Param("tableName") String tableName);
 
     /**
+     * 查询题目数量
+     * */
+    Integer itemCount(@Param("item_type")String item_type,@Param("course") String course) throws Exception;
+
+    /**
      * 检出数据库的题目
      */
     List<ItemExample> checkOutItems(@Param("course") String course,@Param("item_type")String item_type) throws Exception;
+
+    /**
+     * 检出数据库的题目（分页）
+     */
+    List<ItemExample> checkOutItemsPage(@Param("course") String course,@Param("item_type")String item_type
+            ,@Param("current") Integer curPage,@Param("pageCount") Integer pageCount) throws Exception;
+
 
 
     /**
@@ -80,15 +93,24 @@ public interface PaperlessItemMapper {
      * @param id String
      *@param course String 课程号
      *@param url String     cos地址
-     * @return: Date: 2019/4/9
+     * @return int
      */
-    Integer checkInCOS(@Param("id") String id,@Param("course") String course,@Param("url") String url) throws Exception;
+    int checkInCOS(@Param("id") String id,@Param("course") String course,@Param("url") String url) throws Exception;
+
+    int delCOSByCourse(@Param("course") String course) throws Exception;
 
     Item selItemById(@Param("item_id") Integer item_id) throws Exception;
 
     Integer changeItem(Item exist) throws Exception;
 
+    List<String> checkOutUrl(@Param("course") String course) throws Exception;
+
     Integer addItem(Item item) throws Exception;
 
     int delItemById(int item_id) throws Exception;
+
+    int selTotalType(String course) throws Exception;
+
+    List<ItemExample> checkOutRandItems(@Param("course") String course
+            ,@Param("item_type") String item_type,@Param("curChap") String curChap,@Param("i") int i);
 }

@@ -2,12 +2,14 @@ package com.ladybird.hkd.model.pojo;
 
 import com.ladybird.hkd.exception.ParamException;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description: 组卷
  * @create: 2019-03-14
  */
-public class PaperEdit {
+public class PaperEdit implements Serializable{
     private String id;                 //id
     private String course;              //课程
     private Integer single_count;      //单选题个数

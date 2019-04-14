@@ -1,8 +1,10 @@
 package com.ladybird.hkd.controller;
 
+import com.ladybird.hkd.annotation.CheckGroup;
 import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.example.ChapterEditExm;
 import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.json.ResultJson;
@@ -46,14 +48,15 @@ public class ExamController extends BaseController{
 
 
 
+    @CheckGroup
     @CheckToken
     @ApiOperation(value = "修改试卷",notes= "修改试卷题型分配")
     @ResponseBody
     @RequestMapping(value = "/editPaper",method = {RequestMethod.POST}, consumes="application/json", produces="application/json")
     public Object editPaper(@RequestBody PaperEdit paperEdit) throws Exception{
         PaperEdit.checkParams(paperEdit);
-        examService.updatePaper(paperEdit);
-        return ResultJson.Success(paperEdit);
+        PaperEditExample paperEditExample = examService.updatePaper(paperEdit);
+        return ResultJson.Success(paperEditExample);
     }
 
     @ApiOperation("请求试卷当前配置信息")
@@ -65,6 +68,28 @@ public class ExamController extends BaseController{
         return ResultJson.Success(paperEdits);
     }
 
+    //查找试卷的章节题目配置
+    @CheckToken
+    @CheckGroup
+    @ResponseBody
+    @RequestMapping(value = "/chapter")
+    public Object checkOutChapter(String course) throws Exception{
+        List<ChapterEditExm> chapterEditExms = examService.checkOutChapter(course);
+        return ResultJson.Success(chapterEditExms);
+    }
+
+    @CheckToken
+    @CheckGroup
+    @ResponseBody
+    @RequestMapping(value = "/checkInChapter")
+    public Object checkInChapter(String course, Integer[][] number, String tip) throws Exception{
+        if (course == null || "".equals(course.trim()))
+            throw new ParamException("课程出错！");
+        if (number == null)
+            throw new ParamException("参数错误！");
+        ChapterEditExm chapterEditExm = examService.checkInChapter(course, number, tip);
+        return ResultJson.Success(chapterEditExm);
+    }
 
     //考试记录
 //    @ApiOperation( "获取考试场次")

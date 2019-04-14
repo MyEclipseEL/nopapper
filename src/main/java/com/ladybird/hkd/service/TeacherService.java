@@ -1,9 +1,11 @@
 package com.ladybird.hkd.service;
 
+import com.ladybird.hkd.model.example.TeachExample;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,7 +15,17 @@ import java.util.List;
 public interface TeacherService {
     TeacherJsonOut login(Teacher teacher) throws Exception;
 
-    Teach checkOutTeaches(String t_num) throws Exception;
+    List<Teach> checkOutTeaches(String t_num) throws Exception;
 
     List<Course> checkOutCourseByNum(String t_num) throws Exception;
+
+    List<TeachExample> checkOutTeachExms(String teacher, String course) throws Exception;
+
+    TeachExample checkInTeach(TeachExample teach) throws Exception;
+
+    TeachExample changeGrade(String teach_id, String[] grade) throws Exception;
+
+    void delTeach(String teach_id) throws Exception;
+
+    List<TeachExample> uploadTeaches(MultipartFile multipartFile);
 }

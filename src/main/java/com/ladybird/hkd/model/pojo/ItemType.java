@@ -2,15 +2,17 @@ package com.ladybird.hkd.model.pojo;
 
 import com.ladybird.hkd.exception.ParamException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by 和泉纱雾 on 2019/3/3.
  */
-public class ItemType {
+public class ItemType implements Serializable{
     private String type_id;
     private String type_name;
     private Integer type_score;
+    private String tip;
 
     public ItemType() {
     }
@@ -48,5 +50,13 @@ public class ItemType {
 
     public void setType_score(Integer type_score) {
         this.type_score = type_score;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
     }
 }

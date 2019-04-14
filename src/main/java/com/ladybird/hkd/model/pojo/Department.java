@@ -1,11 +1,13 @@
 package com.ladybird.hkd.model.pojo;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-04-18
  */
-public class Department {
+public class Department implements Serializable{
     private String dept_num;
     private String dept_name;
     private String faculty;

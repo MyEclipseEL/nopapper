@@ -4,6 +4,7 @@ import com.ladybird.hkd.model.pojo.ItemType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Set;
  * @create: 2019-03-13
  */
 @ApiModel("组装数据")
-public class ItemsOut<ItemVO> {
+public class ItemsOut<ItemVO> implements Serializable{
     @ApiModelProperty("题型")
     private ItemType itemType;
     @ApiModelProperty("题目")

@@ -2,6 +2,7 @@ package com.ladybird.hkd.model.example;
 
 import com.ladybird.hkd.model.pojo.Student;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
  * @description:
  * @create: 2019-04-16
  */
-public class ScoreExample {
+public class ScoreExample implements Serializable {
     private StudentExample student;
     private ExamExample exam;
     private BigDecimal s_score;

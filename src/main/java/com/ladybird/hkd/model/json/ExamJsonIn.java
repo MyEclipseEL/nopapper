@@ -2,6 +2,7 @@ package com.ladybird.hkd.model.json;
 
 import com.ladybird.hkd.exception.ParamException;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  * @description:
  * @create: 2019-03-17
  */
-public class ExamJsonIn {
+public class ExamJsonIn implements Serializable {
     private String exam_id;     //考试号
     private Integer course;     //考试课程
     private int[] grades;       //考试班级

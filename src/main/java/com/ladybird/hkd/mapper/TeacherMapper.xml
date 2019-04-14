@@ -12,10 +12,10 @@
             <id column="fac_num" property="fac_num" jdbcType="VARCHAR"/>
             <result column="fac_name" property="fac_name" jdbcType="VARCHAR"/>
         </association>
-        <association property="t_dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">
+       <!-- <association property="t_dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">
             <id column="dept_num" property="dept_num" jdbcType="VARCHAR"/>
             <result column="dept_name" property="dept_name" jdbcType="VARCHAR"/>
-        </association>
+        </association>-->
         <!--<association property="t_office" javaType="com.ladybird.hkd.model.pojo.Office">
             <id column="office_id" property="office_id" jdbcType="VARCHAR"/>
             <result column="office_name" property="office_name" jdbcType="VARCHAR"/>
@@ -26,9 +26,26 @@
             <result column="tip" property="tip"/>
         </association>
     </resultMap>
+
+    <resultMap id="teachExm" type="com.ladybird.hkd.model.example.TeachExample">
+        <id property="teach_id" column="teach_id"/>
+        <result column="grade" property="grade"/>
+        <association property="teacher" column="teacher" javaType="com.ladybird.hkd.model.pojo.Teacher">
+            <id column="t_num" property="t_num" jdbcType="VARCHAR"/>
+            <result column="t_name" property="t_name" jdbcType="VARCHAR"/>
+        </association>
+        <association property="course" javaType="com.ladybird.hkd.model.pojo.Course">
+            <id column="c_id" property="c_id"/>
+            <result column="c_name" property="c_name"/>
+        </association>
+        <association property="dept" javaType="com.ladybird.hkd.model.example.DepartmentExample">
+            <id column="dept_num" property="dept_num"/>
+            <result property="dept_name" column="dept_name"/>
+        </association>
+    </resultMap>
     <select id="validNumPwd" parameterType="com.ladybird.hkd.model.pojo.Teacher" resultMap="queryTeacherJsonOut">
         SELECT * FROM teachers t left JOIN faculty f ON t.t_faculty=f.fac_num
-            LEFT JOIN department d ON t.t_dept=d.dept_num
+#             LEFT JOIN department d ON t.t_dept=d.dept_num
 #             LEFT JOIN office o ON t.t_office=o.office_id
             LEFT JOIN groups g ON t.group_id=g.group_id
         WHERE t_num=${t_num} AND t_pwd=${t_pwd}
@@ -38,12 +55,54 @@
         SELECT * FROM teach WHERE teacher=${teacher}
     </select>
 
+    <select id="checkOutTeachesExm" resultMap="teachExm">
+        SELECT * FROM teach t
+        LEFT JOIN teachers te ON t.teacher=te.t_num
+        LEFT JOIN course c ON c.c_id=t.course
+        LEFT JOIN department d ON d.dept_num= t.dept
+      WHERE 1=1
+        <if test="teacher!=null">
+            AND teacher=#{teacher}
+        </if>
+        <if test="course != null">
+            AND course=#{course}
+        </if>
+        <if test="dept != null">
+            AND dept=#{dept}
+        </if>
+    </select>
+
+    <select id="checkOutById" parameterType="String" resultMap="teachExm">
+        SELECT * FROM teach t
+            LEFT JOIN teachers te ON t.teacher=te.t_num
+            LEFT JOIN course c ON c.c_id=t.course
+            LEFT JOIN department d ON d.dept_num= t.dept
+        WHERE teach_id=#{teach_id}
+    </select>
+
+    <select id="teachIsExist" resultType="Integer" parameterType="String">
+        SELECT COUNT(*) FROM teach WHERE teach_id=#{teach_id}
+    </select>
+
+    <insert id="checkInTeaches" parameterType="com.ladybird.hkd.model.pojo.Teach">
+        INSERT INTO teach (teach_id,teacher,course,dept,grade)
+        VALUES (#{teach_id},#{teacher},#{course},#{dept},#{grade})
+    </insert>
+
+    <update id="changeTeachGrades" >
+        UPDATE teach SET grade=#{grades} WHERE teach_id=#{teach_id}
+    </update>
+
+    <delete id="delTeachById" parameterType="String">
+        DELETE FROM teach WHERE teach_id=#{teach_id}
+    </delete>
+
     <select id="selGradesByDeptCourse" resultType="String">
-        SELECT gradeExample FROM teach WHERE teacher=${t_num} AND course=${c_id} AND dept=${dept_num}
+        SELECT grade FROM teach WHERE teacher=${t_num} AND course=${c_id}
     </select>
 
     <select id="selGradesByCourse" resultType="String">
-        SELECT gradeExample FROM teach WHERE teacher=${t_num} AND course=${c_id}
+        SELECT grade FROM teach WHERE teacher=${t_num} AND course=${c_id}
     </select>
 
     <select id="checkOutCourseByNum" resultType="com.ladybird.hkd.model.pojo.Course">
@@ -51,5 +110,9 @@
     </select>
     <select id="selectTeacher" parameterType="com.ladybird.hkd.model.pojo.Teacher" resultType="com.ladybird.hkd.model.pojo.Teacher">
 
+    </select>
+
+    <select id="selTeacherByNum" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Teacher">
+        SELECT * FROM teachers WHERE t_num=#{t_num}
     </select>
 </mapper>

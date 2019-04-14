@@ -1,9 +1,11 @@
 package com.ladybird.hkd.model.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by 和泉纱雾 on 2019/3/4.
  */
-public class Student {
+public class Student implements Serializable {
     private String stu_num;  //学号
     private String stu_ID;   //身份证号
     private String stu_name; //姓名

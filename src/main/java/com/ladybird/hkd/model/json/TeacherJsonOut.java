@@ -5,12 +5,14 @@ import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Group;
 import com.ladybird.hkd.model.pojo.Office;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-03-13
  */
-public class TeacherJsonOut {
+public class TeacherJsonOut implements Serializable {
     private String t_num;        //教师工号
     private String t_name;       //教师姓名
     private Faculty t_faculty;    //所属学院

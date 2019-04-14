@@ -3,12 +3,14 @@ package com.ladybird.hkd.model.example;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.ItemType;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-04-21
  */
-public class ItemExample {
+public class ItemExample implements Serializable{
     private String item_id;         //题目编号
     private String item_title;      //题目标题
     private String item_desc;       //题目描述

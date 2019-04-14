@@ -1,5 +1,7 @@
 package com.ladybird.hkd.controller;
 
+import com.ladybird.hkd.annotation.CheckGroup;
+import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.manager.TokenManager;
@@ -74,6 +76,8 @@ public class StudentController extends BaseController{
     }
 
     //TODO 导出成绩
+    @CheckGroup
+    @CheckToken
     @ResponseBody
     @RequestMapping(value = "/checkOutScores")
 //    教师导出自己教授的学生的成绩

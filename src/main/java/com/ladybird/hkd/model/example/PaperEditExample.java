@@ -2,12 +2,14 @@ package com.ladybird.hkd.model.example;
 
 import com.ladybird.hkd.model.pojo.Course;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-04-20
  */
-public class PaperEditExample {
+public class PaperEditExample implements Serializable {
     private String id;
     private Course course;
     private Integer single_count;

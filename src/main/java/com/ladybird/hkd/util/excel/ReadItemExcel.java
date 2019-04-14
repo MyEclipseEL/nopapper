@@ -142,7 +142,7 @@ public class ReadItemExcel {
                         choice.add(cell.getStringCellValue());
                         break;
                     case 6:
-                        char v = cell.getStringCellValue().charAt(0);
+                        char v = cell.getStringCellValue().trim().charAt(0);
                         String value = v + "";
 
                         if (value == null || value.length() < 1)
@@ -197,42 +197,46 @@ public class ReadItemExcel {
                 if (cell == null)
                     continue;
                 switch (c) {
-                    case 0:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("题目为空！");
                         item.setItem_desc(cell.getStringCellValue());
                         break;
-                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项A为空！");
                         choice.add(cell.getStringCellValue());
                         break;
-                    case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项B为空！");
                         choice.add(cell.getStringCellValue());
                         break;
-                    case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 4:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项C为空！");
                         choice.add(cell.getStringCellValue());
                         break;
-                    case 4:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 5:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项D为空！");
                         choice.add(cell.getStringCellValue());
                         break;
-                    case 5:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 6:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项E为空！");
                         choice.add(cell.getStringCellValue());
-                    case 6:String value = cell.getStringCellValue();
+                        break;
+                    case 7:String value = cell.getStringCellValue();
                         if (value == null || value.length() < 1)
                             throw new ExcelImportException("没有正确选项！");
-                        if (!value.equalsIgnoreCase("A")&&!value.equalsIgnoreCase("B")
-                                &&!value.equalsIgnoreCase("C")&&!value.equalsIgnoreCase("D")
-                                &&!value.equalsIgnoreCase("E"))
-                            throw new ParamException("选项必须是A,B,C,D,E");
                         String valid = cell.getStringCellValue().replaceAll("\\ ","");
                         valid.replaceAll("，", ",");
+                        for (String s : value.split(",")) {
+                            if (!s.equalsIgnoreCase("A") && !s.equalsIgnoreCase("B")
+                                    && !s.equalsIgnoreCase("C") && !s.equalsIgnoreCase("D")
+                                    && !s.equalsIgnoreCase("E"))
+                                throw new ParamException("选项必须是A,B,C,D,E");
+                        }
                         item.setItem_valid(valid.toUpperCase().split(","));
                         break;
-                    case 7:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        item.setTip(null);
+                    case 8:
+                        if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                            item.setTip(null);
                         item.setTip(cell.getStringCellValue());
                         break;
                 }
@@ -283,10 +287,11 @@ public class ReadItemExcel {
                         if (!cell.getStringCellValue().trim().equals("正确") && !cell.getStringCellValue().trim().equals("错误")
                                 && !cell.getStringCellValue().trim().equals("对")&& !cell.getStringCellValue().trim().equals("错")  )
                             throw new ParamException("判断题答案只允许为‘正确’‘错误’");
-                        if (cell.getStringCellValue().equals("对"))
+                        if (cell.getStringCellValue().trim().equals("对"))
                             item.setItem_valid(new String[]{cell.getStringCellValue().replaceAll("对","正确")});
-                        if (cell.getStringCellValue().equals("错"))
+                        else if (cell.getStringCellValue().trim().equals("错"))
                             item.setItem_valid(new String[]{cell.getStringCellValue().replaceAll("错","错误")});
+                        else item.setItem_valid(new String[]{cell.getStringCellValue().trim()});
                         break;
                     case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         item.setTip(null);

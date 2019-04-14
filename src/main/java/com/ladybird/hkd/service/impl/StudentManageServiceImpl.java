@@ -3,7 +3,6 @@ package com.ladybird.hkd.service.impl;
 import com.ladybird.hkd.mapper.DeptMapper;
 import com.ladybird.hkd.mapper.FacultyMapper;
 import com.ladybird.hkd.mapper.StudentManageMapper;
-import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;

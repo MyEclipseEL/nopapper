@@ -1,6 +1,8 @@
 package com.ladybird.hkd.model.vo;
 
-public class StudentVo {
+import java.io.Serializable;
+
+public class StudentVo implements Serializable {
 
     private String stu_name; //姓名
     private String stu_num;  //学号
