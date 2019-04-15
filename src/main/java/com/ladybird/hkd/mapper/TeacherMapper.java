@@ -1,9 +1,11 @@
 package com.ladybird.hkd.mapper;
 
+import com.ladybird.hkd.model.example.TeacherExample;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
+import com.ladybird.hkd.model.vo.Teaching;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -24,4 +26,16 @@ public interface TeacherMapper {
 
 
     List<Course> checkOutCourseByNum(@Param("t_num") String t_num) throws Exception;
+
+
+
+    List<TeacherExample> selectTeacher(@Param("teacher")Teacher teacher,@Param("fy") String faculty) throws Exception;
+
+    int addTeacher(Teacher teacher) throws Exception;
+
+    int updateTeacher(Teacher teacher) throws Exception;
+
+    int deleteTeacher(@Param("t_num") String t_num) throws Exception;
+
+    List<Teaching> selectTeaching(@Param("t_num") String t_num) throws Exception;
 }

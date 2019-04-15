@@ -1,6 +1,6 @@
 package com.ladybird.hkd.mapper;
 
-import com.ladybird.hkd.model.pojo.Grade;
+
 import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.model.vo.StudentVo;
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +13,7 @@ public interface StudentManageMapper {
 
     List<StudentVo> selectStudent(Student student) throws Exception;
 
-    List<Student> selectAllStudent(Student student) throws Exception;
+
     int addStudent(Student student) throws Exception;
 
     int deleteStudent(String stu_num) throws Exception;

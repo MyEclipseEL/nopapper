@@ -36,6 +36,10 @@
         SELECT * FROM Grade where g_year = #{g_year} and  g_class = #{g_class}
     </select>
 
+    <select id="findGradeByDept" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Grade">
+        SELECT * FROM Grade where dept = #{dept}
+    </select>
+
     <resultMap id="gradeMap" type="com.ladybird.hkd.model.json.GradeOut">
         <id property="g_id" column="g_id"/>
         <result property="g_year" column="g_year"/>
@@ -64,7 +68,9 @@
             ${gradeExample}
         </foreach>
     </select>
-
+    <select id="findGradeById" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Grade">
+        select * from grade where g_id = #{g_id}
+    </select>
     <!--/*SELECT grade FROM exam e-->
     <!--WHERE e.teacher=${t_num} AND e.course=${course}-->
     <!--AND e.begin_time &gt;  #{begin_date}*/-->

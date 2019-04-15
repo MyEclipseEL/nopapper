@@ -4,6 +4,7 @@ public class StudentVo {
 
     private String stu_name; //姓名
     private String stu_num;  //学号
+    private String fac_name;
     private String dept_name; //就读专业
     private Integer g_year;
     private Integer g_class;
@@ -56,5 +57,13 @@ public class StudentVo {
 
     public void setStu_ID(String stu_ID) {
         this.stu_ID = stu_ID;
+    }
+
+    public String getFac_name() {
+        return fac_name;
+    }
+
+    public void setFac_name(String fac_name) {
+        this.fac_name = fac_name;
     }
 }

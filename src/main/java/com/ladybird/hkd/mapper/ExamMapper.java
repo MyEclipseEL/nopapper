@@ -1,7 +1,8 @@
 package com.ladybird.hkd.mapper;
 
+import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.example.PaperEditExample;
-import com.ladybird.hkd.model.json.ExamJsonOut;
+
 import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import com.ladybird.hkd.model.pojo.Student;

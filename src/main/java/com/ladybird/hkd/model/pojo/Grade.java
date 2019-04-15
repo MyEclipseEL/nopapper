@@ -1,4 +1,4 @@
-package com.ladybird.hkd.model.example;
+package com.ladybird.hkd.model.pojo;
 
 
 import com.ladybird.hkd.model.pojo.Department;

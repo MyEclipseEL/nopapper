@@ -1,4 +1,100 @@
 ##StudentManageController 学生信息管理类
+###学院下拉框
+```$xslt
+GET /studentManage/backFaculty
+```
+参数
+```$xslt
+body:{
+	null
+}
+```
+success:{
+    
+        "message": "success",
+        "code": 0,
+        "data": [
+            {
+                "fac_num": "10001",
+                "fac_name": "计算机与信息工程",
+                "tip": null
+            }
+        ]
+     
+   	}
+error:{
+          'code'  : 1003,1004...,
+          'msg'   : '失败原因',
+          'data'  : null
+      }
+```
+###专业下拉框
+```$xslt
+GET /studentManage/backDepartment
+```
+参数
+```$xslt
+body:{
+	"fac_num": "10001",
+}
+```
+success:{
+            "message": "success",
+            "code": 0,
+            "data": [
+                {
+                    "dept_num": "10001",
+                    "dept_name": "软件工程",
+                    "faculty": null,
+                    "tip": null
+                },
+                {
+                    "dept_num": "10002",
+                    "dept_name": "物联网",
+                    "faculty": null,
+                    "tip": null
+                }
+            ]
+        }
+error:{
+          'code'  : 1003,1004...,
+          'msg'   : '失败原因',
+          'data'  : null
+      }
+```
+###班级下拉框
+```$xslt
+GET /studentManage/backGrade
+```
+参数
+```$xslt
+body:{
+	"dept_num": "10001",
+}
+```
+success:{
+            "message": "success",
+            "code": 0,
+            "data": [
+                {
+                    "g_id": "1",
+                    "g_year": 2015,
+                    "g_class": 1,
+                    "dept": "10001"
+                },
+                {
+                    "g_id": "2",
+                    "g_year": 2015,
+                    "g_class": 2,
+                    "dept": "10001"
+                }
+            ]
+        }
+error:{
+          'code'  : 1003,1004...,
+          'msg'   : '失败原因',
+          'data'  : null
+      }
 ```
 ###添加学生
 ```$xslt

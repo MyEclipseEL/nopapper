@@ -6,11 +6,11 @@ import com.ladybird.hkd.mapper.*;
 
 import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.pojo.Department;
-import com.ladybird.hkd.model.pojo.Grade;
+
 import com.ladybird.hkd.model.json.ResultJson;
 
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.example.DepartmentExample;
+
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.service.MessageService;
 
@@ -178,7 +178,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findCourse(Course course) throws Exception {
-        if(!StringUtils.isNotBlank(course.getC_id())&&!StringUtils.isNotBlank(course.getC_name())){
+        if(!StringUtils.isNotBlank(course.getC_id())||!StringUtils.isNotBlank(course.getC_name())){
             return ResultJson.Forbidden("请输入有效查询条件");
         }
         Course course1 = courseMapper.findCourse(course);
@@ -218,6 +218,17 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    @Override
+    public ResultJson findDeptByFac(String fac_num) throws Exception {
+        if (!StringUtils.isNotBlank(fac_num)){
+            return ResultJson.Forbidden("请选择学院");
+        }
+        List<Department> departments = deptMapper.findDeptByFac(fac_num);
+        if(departments == null||departments.isEmpty()){
+            return ResultJson.Forbidden("查询失败");
+        }
+        return ResultJson.Success(departments);
+    }
 
 
 
