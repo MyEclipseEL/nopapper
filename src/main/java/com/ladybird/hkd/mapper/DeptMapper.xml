@@ -56,4 +56,8 @@
     <select id="selByTeacher" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Department">
         SELECT * FROM department WHERE dept_num IN (SELECT dept FROM teach WHERE teacher=${t_num})
     </select>
+
+    <select id="dept_name" parameterType="String" resultType="String">
+        SELECT dept_num FROM department WHERE dept_name=#{dept_name}
+    </select>
 </mapper>

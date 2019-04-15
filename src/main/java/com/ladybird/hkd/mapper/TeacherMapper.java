@@ -49,7 +49,15 @@ public interface TeacherMapper {
      *@return:
      *Date: 2019/4/14
      */
-    Integer checkInTeaches(Teach t) throws Exception;
+    Integer checkInTeach(Teach t) throws Exception;
+
+    /**
+     * 批量添加授课
+     *@param
+     *@return:
+     *Date: 2019/4/15
+     */
+    Integer checkInTeaches(@Param("list") List<Teach> list) throws Exception;
 
     /**
      * 通过id查找授课记录

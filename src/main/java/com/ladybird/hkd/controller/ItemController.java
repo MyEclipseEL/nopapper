@@ -19,6 +19,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -177,7 +178,9 @@ public class ItemController extends BaseController{
             throw new ParamException("请选择上传的文件！");
         }
         //调用service
-        return ResultJson.Success(itemService.addItems(multipartFile,course,item_type));
+        List<ItemVO> result = itemService.addItems(multipartFile,course,item_type);
+        FileUtils.deleteQuietly(file);
+        return ResultJson.Success(result);
     }
 
     @CheckGroup

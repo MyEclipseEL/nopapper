@@ -13,6 +13,16 @@ public class Course implements Serializable{
     private Integer chapter;    //改课的章节数
     private String tip;
 
+    public Course() {
+    }
+
+    public Course(String c_id, String c_name, Integer chapter, String tip) {
+        this.c_id = c_id;
+        this.c_name = c_name;
+        this.chapter = chapter;
+        this.tip = tip;
+    }
+
     public String getC_id() {
         return c_id;
     }

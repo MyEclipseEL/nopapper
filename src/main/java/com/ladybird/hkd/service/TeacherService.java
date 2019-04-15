@@ -27,5 +27,5 @@ public interface TeacherService {
 
     void delTeach(String teach_id) throws Exception;
 
-    List<TeachExample> uploadTeaches(MultipartFile multipartFile);
+    List<TeachExample> uploadTeaches(MultipartFile multipartFile) throws Exception;
 }

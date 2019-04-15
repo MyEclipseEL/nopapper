@@ -33,4 +33,5 @@ public interface CourseMapper {
     Course findCourse(Course course) throws Exception;
 
     List<Course> selByTeacher(@Param("t_num") String t_num) throws Exception;
+
 }

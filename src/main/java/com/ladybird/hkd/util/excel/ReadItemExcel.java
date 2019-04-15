@@ -23,11 +23,11 @@ import java.util.List;
  */
 public class ReadItemExcel {
     //总行数
-    private int totalRows = 0;
+    protected int totalRows = 0;
     //总列数
-    private int totalCells = 0;
+    protected int totalCells = 0;
     //错误信息
-    private String errorMsg;
+    protected String errorMsg;
 
     public ReadItemExcel() {
 

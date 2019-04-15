@@ -93,8 +93,16 @@ public class TeacherController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/afterLogin")
     public Object afterLogin(NativeWebRequest request) throws Exception{
+        //教师信息
         TeacherJsonOut teacherJsonOut = getTeacher(request);
+        if (teacherJsonOut == null) {
+            String adminJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
+            AdminExample admin = JsonUtil.jsonToPojo(adminJson,AdminExample.class);
+            return ResultJson.Success(admin);
+        }
         return ResultJson.Success(teacherJsonOut);
+
+        //超级管理员
     }
 
     @ApiOperation( "获取考试场次")
