@@ -30,6 +30,23 @@ error:{
           'data'  : null
       }
 ```
+##Student
+###请求学生分数
+```
+GET  /student/checkOutScores
+```
+参数
+```
+{
+    "t_num":""      //老师工号
+    "course":       //课程号
+    "faculty":       //学院
+    "dept"  :       //专业
+    "year"  :       //年级
+    "clazz" :       //班级
+}
+```
+
 
 ##ItemController 题目管理类
 ###请求所有题目  
@@ -187,6 +204,7 @@ POST  /item/upload          form-data
     "course"    :   ""
     "item_type" :   "A"
     "file"      :   "****.xls"
+    
 }
 ```
 
@@ -283,6 +301,29 @@ GET /exam/checkOutPaper
         "checking_score":15
         "duration"      :120 时长 （分钟）
     }
+}
+```
+
+###配置题型章节分布
+```
+POST  /exam/checkInChapter
+```
+参数
+```
+{
+    "course"    :   ""
+    "number"    :   [[1,1,1],[2,2,2]...]
+    "tip"       :   ""      //可不传
+}
+```
+###获取章节
+```
+GET  /exam/chapter
+```
+参数
+```
+{
+    "course"    :   ""
 }
 ```
 

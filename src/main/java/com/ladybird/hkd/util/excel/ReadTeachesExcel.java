@@ -79,32 +79,32 @@ public class ReadTeachesExcel extends ReadItemExcel{
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入授课：课程为空！");
                         Course course = new Course();
-                        course.setC_name(cell.getStringCellValue());
+                        course.setC_name(cell.getStringCellValue().trim());
                         teach.setCourse(course);
                         break;
                     case 2 :
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入授课：教师工号为空！");
                         Teacher teacher = new Teacher();
-                        teacher.setT_num(cell.getStringCellValue());
+                        teacher.setT_num(cell.getStringCellValue().trim());
                         teach.setTeacher(teacher);
                         break;
                     case 3 :
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入授课：专业为空！");
                         DepartmentExample dept = new DepartmentExample();
-                        dept.setDept_name(cell.getStringCellValue());
+                        dept.setDept_name(cell.getStringCellValue().trim());
                         teach.setDept(dept);
                         break;
                     case 4 :
                         if (cell.getStringCellValue() == null ||"".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入授课：年级为空！");
-                        year = cell.getStringCellValue();
+                        year = cell.getStringCellValue().trim();
                         break;
                     case 5 :
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入授课：班级列为空！");
-                        clazz = cell.getStringCellValue();
+                        clazz = cell.getStringCellValue().trim();
                         break;
                 }
             }
