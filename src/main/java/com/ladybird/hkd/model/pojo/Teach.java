@@ -1,11 +1,13 @@
 package com.ladybird.hkd.model.pojo;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description: 教课实体
  * @create: 2019-03-19
  */
-public class Teach {
+public class Teach implements Serializable {
     private String teach_id;        //标记
     private String teacher;         //教课老师
     private String dept;            //授课专业

@@ -1,9 +1,13 @@
 package com.ladybird.hkd.interceptor;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.ladybird.hkd.annotation.CheckGroup;
 import com.ladybird.hkd.annotation.CheckToken;
+import com.ladybird.hkd.exception.AuthorizationException;
 import com.ladybird.hkd.manager.TokenManager;
 import com.ladybird.hkd.model.json.ResultJson;
+import com.ladybird.hkd.model.pojo.Group;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JWTUtils;
 import com.ladybird.hkd.util.JsonUtil;
@@ -11,6 +15,8 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,12 +52,25 @@ public class JWTInterceptor implements HandlerInterceptor {
                 String tokenKey = getBearerToken(httpServletRequest);
                 if (tokenKey == null || "".equals(tokenKey.trim())) {
 
-                    return returnResponseMsg(httpServletResponse, HttpServletResponse.SC_FORBIDDEN, "无法正常获取token");
+                    return returnResponseMsg(httpServletResponse, HttpServletResponse.SC_FORBIDDEN, "check your token!");
                 }
 
                 String checkMsg = lognRequired(tokenKey, httpServletRequest);
                 if ("OK".equals(checkMsg)) {
-                    return true;
+                    if (method.getAnnotation(CheckGroup.class) != null) {
+                        String str = manager.checkToken(tokenKey);
+                        JSONObject jsonObject = JSONObject.parseObject(str);
+                        //转为对象
+                        String g = jsonObject.get("group_id").toString();
+                        JSONObject jsonObject1 = JSONObject.parseObject(g);
+                        String group = jsonObject1.get("group_id").toString();
+                        //校验管理员权限
+                        if (group == null || !group.equals("1"))
+                            return returnResponseMsg(httpServletResponse,
+                                    HttpServletResponse.SC_FORBIDDEN, "Authorization failed! You are not the administrator!");
+                        else
+                            return true;
+                    }
                 } else {
                     return returnResponseMsg(httpServletResponse, HttpServletResponse.SC_FORBIDDEN, checkMsg);
                 }
@@ -123,14 +142,14 @@ public class JWTInterceptor implements HandlerInterceptor {
             //验证token，只验证存在redis中
             String tokenValue = manager.checkToken(keyToken);
             if (tokenValue == null || "".equals(tokenValue.trim())) {
-                return "权限过期请重新登陆";
+                return "ERROR! Login again!";
             }
             //如果token验证成功，将token对应的用户uid存在request中，便于之后注入
             request.setAttribute(ConstConfig.CURRENT_OBJECT, tokenValue);
             return "OK";
         } catch (Exception e) {
             e.printStackTrace();
-            return "出现异常，请联系管理员";
+            return "ERROR! please call your  administrator!";
         }
     }
 

@@ -3,9 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.PaperlessItemMapper" >
+    <cache/>
     
-
-
     <resultMap id="itemExampleMap" type="com.ladybird.hkd.model.example.ItemExample">
         <id property="item_id" column="item_id"/>
         <result property="item_title" column="item_title"/>
@@ -16,12 +15,12 @@
         <association property="item_type" column="item_type" javaType="com.ladybird.hkd.model.pojo.ItemType">
             <id property="type_id" column="type_id"/>
             <result property="type_name" column="type_name"/>
-            <result property="tip" column="tip"/>
+            <!--<result property="tip" column="tip"/>-->
         </association>
         <association property="course" column="course" javaType="com.ladybird.hkd.model.pojo.Course">
             <id property="c_id" column="c_id"/>
             <result property="c_name" column="c_name"/>
-            <result property="tip" column="tip"/>
+            <!--<result property="tip" column="tip"/>-->
         </association>
     </resultMap>
 
@@ -58,6 +57,17 @@
         )
     </insert>
 
+    <select id="itemCount" resultType="Integer">
+        SELECT count(*) FROM items
+        WHERE 1=1
+        <if test="course != null">
+            AND course=#{course}
+        </if>
+        <if test="item_type != null">
+            AND item_type=#{item_type}
+        </if>
+    </select>
+
     <select id="checkOutItems" parameterType="java.lang.String" resultMap="itemExampleMap">
         SELECT * from items i
         LEFT JOIN course c ON c.c_id=i.course
@@ -71,11 +81,43 @@
           </if>
     </select>
 
+    <select id="checkOutItemsPage" parameterType="java.lang.String" resultMap="itemExampleMap">
+        SELECT * from items i
+        LEFT JOIN course c ON c.c_id=i.course
+        LEFT JOIN item_type t ON t.type_id=i.item_type
+        WHERE 1=1
+        <if test="course != null">
+            AND course=#{course}
+        </if>
+        <if test="item_type != null">
+            AND item_type=#{item_type}
+        </if>
+        LIMIT #{current} , #{pageCount}
+    </select>
+
     <select id="checkOutItemsByCourseSet" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Item">
         SELECT * from items WHERE course=${course}
     </select>
 
-    <select id="selItemById" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Item">
+    <select id="--checkOutRandItems" resultMap="itemExampleMap">
+        SELECT * FROM items it
+            LEFT JOIN course c ON c.c_id=it.course
+            LEFT JOIN item_type t ON t.type_id=it.item_type
+        WHERE item_id>=(SELECT FLOOR(MAX(item_id )* RAND()) FROM items
+        WHERE course=#{course} AND item_type LIKE CONCAT("%",#{item_type},"%")
+          AND tip LIKE CONCAT("%",#{curChap},"%")
+        ) ORDER BY item_id LIMIT #{i}
+    </select>
+
+    <select id="checkOutRandItems" resultMap="itemExampleMap">
+        SELECT * FROM items it
+            LEFT JOIN course c ON c.c_id=it.course
+            LEFT JOIN item_type t ON t.type_id=it.item_type
+            WHERE  item_type LIKE CONCAT("%",#{item_type},"%")
+                   AND it.tip LIKE CONCAT("%",#{curChap},"%") order by rand() limit #{i}
+    </select>
+
+    <select id="selItemById" parameterType="Integer" resultType="com.ladybird.hkd.model.pojo.Item">
         SELECT * FROM items WHERE item_id=#{item_id}
     </select>
 
@@ -104,6 +146,10 @@
         SELECT * from item_type
     </select>
 
+    <select id="selTotalType" parameterType="String" resultType="Integer">
+        SELECT count(DISTINCT item_type) FROM items
+    </select>
+
 
     
     <insert id="checkInScore" parameterType="com.ladybird.hkd.model.pojo.Score">
@@ -113,27 +159,78 @@
 
     <update id="updateTypeScore" parameterType="List">
 
-        <foreach collection="list" item="type" index="index">
-            UPDATE item_type SET  type_score = ${type.type_score}
-            WHERE type_id="${type.type_id}";
-        </foreach>
+            <foreach collection="list" item="type" index="index">
+                UPDATE item_type SET  type_score = ${type.type_score}
+                WHERE type_id="${type.type_id}";
+            </foreach>
     </update>
 
-    <insert id="checkInItems" parameterType="List">
-        INSERT INTO items (item_desc,item_valid,item_choice,item_type,course) VALUES
+    <insert id="checkInItems1" parameterType="List" useGeneratedKeys="true">
+        <foreach collection="items" item="item" index="index" separator=";">
+        INSERT INTO items (item_desc,item_valid,item_choice,item_type,course
+        <if test="item.tip!=null">
+            ,tip
+        </if>
+        ) VALUES
+        (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course}
+            <if test="item.tip!=null">
+                  ,#{item.tip}
+            </if>
+                )
+            </foreach>
+    </insert>
+
+    <insert id="checkInItems" parameterType="List" useGeneratedKeys="true">
+            INSERT INTO items (item_desc,item_valid,item_choice,item_type,course
+                ,tip
+            ) VALUES
         <foreach collection="items" item="item" index="index" separator=",">
-            (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course})
+
+        (#{item.item_desc},#{item.item_valid},#{item.item_choice},#{item.item_type},#{item.course}
+                ,#{item.tip}
+            )
         </foreach>
     </insert>
 
     <insert id="checkInChecking" parameterType="List">
-        INSERT INTO items (item_desc,item_valid,item_type,course) VALUES
+        INSERT INTO items (item_desc,item_valid,item_type,course
+            ,tip
+        ) VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.item_desc},#{item.item_valid},#{item.item_type},#{item.course})
+            (#{item.item_desc},#{item.item_valid},#{item.item_type},#{item.course}
+                ,#{item.tip}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="checkInChecking1" parameterType="List">
+        INSERT INTO items (item_desc,item_valid,item_type,course
+        <if test="tip!=null">
+            ,tip
+        </if>
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.item_desc},#{item.item_valid},#{item.item_type},#{item.course}
+            <if test="tip!=null">
+                ,#{item.tip}
+            </if>
+            )
         </foreach>
     </insert>
 
     <delete id="delItemById" parameterType="String">
         DELETE FROM items WHERE item_id=#{item_id}
+    </delete>
+
+    <select id="checkOutUrl" parameterType="String" resultType="String">
+        SELECT url FROM items_cos WHERE course=#{course}
+    </select>
+
+    <insert id="checkInCOS" parameterType="String">
+        INSERT INTO items_cos  (id,url,course)VALUES (#{id},#{url},#{course})
+    </insert>
+
+    <delete id="delCOSByCourse">
+        DELETE FROM items_cos WHERE course=#{course}
     </delete>
 </mapper>

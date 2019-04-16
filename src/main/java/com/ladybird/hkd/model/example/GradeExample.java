@@ -1,12 +1,14 @@
 package com.ladybird.hkd.model.example;
 
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description: 年级实体
  * @create: 2019-03-13
  */
-public class GradeExample {
+public class GradeExample implements Serializable {
     private String g_id;
     private Integer g_year;
     private Integer g_class;

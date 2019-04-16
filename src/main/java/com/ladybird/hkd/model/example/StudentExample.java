@@ -1,13 +1,13 @@
 package com.ladybird.hkd.model.example;
 
-
+import com.ladybird.hkd.model.pojo.Grade;
 
 /**
  * @author Shen
  * @description:
  * @create: 2019-04-16
  */
-public class StudentExample {
+public class StudentExample implements Serializable {
     private String stu_num;  //学号
     private String stu_ID;   //身份证号
     private String stu_name; //姓名

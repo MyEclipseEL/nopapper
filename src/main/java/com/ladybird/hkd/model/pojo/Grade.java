@@ -3,12 +3,14 @@ package com.ladybird.hkd.model.pojo;
 
 import com.ladybird.hkd.model.pojo.Department;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-04-16
  */
-public class Grade {
+public class Grade implements Serializable{
     private String g_id;
     private Integer g_year;
     private Integer g_class;

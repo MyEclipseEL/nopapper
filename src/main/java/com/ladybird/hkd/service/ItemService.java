@@ -1,6 +1,7 @@
 package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.model.json.ItemsOut;
+import com.ladybird.hkd.model.json.PageBean;
 import com.ladybird.hkd.model.pojo.Item;
 import com.ladybird.hkd.model.pojo.ItemType;
 import com.ladybird.hkd.model.vo.ItemVO;
@@ -20,7 +21,7 @@ public interface ItemService {
      */
     void addItemType(String typeName);
 
-    List<ItemVO> checkOutItems(String course, String item_type) throws Exception;
+    PageBean checkOutItems(String course, String item_type, Integer curPage, Integer pageCount) throws Exception;
 
     List<ItemsOut> getPaper(String course) throws Exception;
 
@@ -28,7 +29,7 @@ public interface ItemService {
 
     void updateTypeScore(List<ItemType> itemTypes) throws Exception;
 
-    List<Item> addItems(MultipartFile multipartFile, String course, String item_type) throws Exception;
+    List<ItemVO> addItems(MultipartFile multipartFile, String course, String item_type) throws Exception;
 
     Item selItemById(@Param("item_id") Integer item_id) throws Exception;
 
@@ -37,4 +38,8 @@ public interface ItemService {
     ItemVO addItem(ItemVO item) throws Exception;
 
     Integer delItem(String item_id) throws Exception;
+
+//    boolean synchronizedItems(String course) throws Exception;
+
+    List<String> getPaperUrl(String c_id) throws Exception;
 }

@@ -1,8 +1,7 @@
 package com.ladybird.hkd.mapper;
 
-
-import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.pojo.Grade;
+import com.ladybird.hkd.model.example.GradeExample;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +22,16 @@ public interface GradeMapper {
 
     List<GradeExample> selGradesNotInExam(@Param("t_num") String t_num, @Param("course") String course,
                                           @Param("grades") String[] grades, @Param("already") String already) throws Exception;
+
+    GradeExample selGradeById(@Param("g_id") String grade) throws Exception;
+
+    /**
+     * 查询数据库中 包含传参中的几个
+     *@param
+     *@return:
+     *Date: 2019/4/14
+     */
+    Integer selCountGrade(@Param("grades") String[] grade) throws Exception;
 
     List<Grade> findGradeByDept(@Param("dept") String dept);
 

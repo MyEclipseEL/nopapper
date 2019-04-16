@@ -2,6 +2,7 @@ package com.ladybird.hkd.model.example;
 
 import com.ladybird.hkd.model.pojo.Course;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Date;
  * @description: 考试输出类
  * @create: 2019-03-20
  */
-public class ExamExample {
+public class ExamExample implements Serializable {
     private String exam_id;     //考试号
     private Course course;     //考试课程
     private String grade;        //考试班级

@@ -1,5 +1,6 @@
 package com.ladybird.hkd.service;
 
+import com.ladybird.hkd.model.example.ChapterEditExm;
 import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.json.ExamJsonIn;
 import com.ladybird.hkd.model.example.ExamExample;
@@ -25,7 +26,7 @@ public interface ExamService {
 
     void changeStateAndBegin(String[] exams,Integer state) throws Exception;
 
-    PaperEdit updatePaper(PaperEdit paperEdit) throws Exception;
+    PaperEditExample updatePaper(PaperEdit paperEdit) throws Exception;
 
     List<PaperEditExample> checkOutPaper() throws Exception;
 
@@ -34,4 +35,8 @@ public interface ExamService {
     ExamExample beginExam(String t_num, String[] grades, String course) throws Exception;
 
     PaperEditExample checkOutPaperByCourse(String exam) throws Exception;
+
+    List<ChapterEditExm> checkOutChapter(String course) throws Exception;
+
+    ChapterEditExm checkInChapter(String course, Integer[][] numbers, String tip) throws Exception;
 }

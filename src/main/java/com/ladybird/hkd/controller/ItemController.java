@@ -1,5 +1,6 @@
 package com.ladybird.hkd.controller;
 
+import com.ladybird.hkd.annotation.CheckGroup;
 import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.enums.ExamStateEnum;
 import com.ladybird.hkd.exception.BusinessException;
@@ -8,6 +9,7 @@ import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.json.ItemsOut;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.ItemType;
+import com.ladybird.hkd.model.vo.ItemVO;
 import com.ladybird.hkd.service.ExamService;
 import com.ladybird.hkd.service.ItemService;
 import com.ladybird.hkd.util.JsonUtil;
@@ -50,6 +52,7 @@ public class ItemController extends BaseController{
     @Autowired
     private ExamService examService;
 
+    @CheckGroup
     @CheckToken
     @ResponseBody
     @RequestMapping(value = "/items",method = RequestMethod.GET)
@@ -58,11 +61,23 @@ public class ItemController extends BaseController{
             @ApiImplicitParam(name = "course",value = "课程编号"),
             @ApiImplicitParam(name = "authorization",value = "token",required = true,paramType = "header")
     })
-    public Object getItems(String course,String item_type) throws Exception{
+    public Object getItems(String course,String item_type,
+                           @RequestParam(required = false,defaultValue = "1") Integer curPage,
+                           @RequestParam(required = false,defaultValue = "10") Integer pageCount) throws Exception{
+
 //        if (course == null || "".equals(course.trim())) {
 //            throw new ParamException("查找哪一科的题目呢？");
 //        }
-        return  Success(itemService.checkOutItems(course,item_type));
+        return  Success(itemService.checkOutItems(course,item_type,curPage,pageCount));
+    }
+
+    @CheckGroup
+    @CheckToken
+    @ResponseBody
+    @RequestMapping(value = "/addItem")
+    public Object addItem(@RequestBody ItemVO itemVO) throws Exception {
+        ItemVO.validItem(itemVO);
+        return ResultJson.Success(itemService.addItem(itemVO));
     }
 
     @CheckToken
@@ -91,9 +106,9 @@ public class ItemController extends BaseController{
         if (date.getTime() - examExample.getBegin_time().getTime() > 0.5 * 3600 * 1000){
             throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
         }
-        List<ItemsOut> outList = itemService.getPaper(examExample.getCourse().getC_id());
-
-        return ResultJson.Success(outList);
+//        List<ItemsOut> outList = itemService.getPaper(examExample.getCourse().getC_id());
+        List<String> url = itemService.getPaperUrl(examExample.getCourse().getC_id());
+        return ResultJson.Success(url);
     }
 
     /*@ApiOperation("配置考试题型分数")
@@ -107,6 +122,7 @@ public class ItemController extends BaseController{
         return ResultJson.Success(itemService.checkOutTypes());
     }*/
 
+    @CheckGroup
     @ApiOperation("查找所有题型")
     @CheckToken
     @ResponseBody
@@ -118,6 +134,7 @@ public class ItemController extends BaseController{
         return ResultJson.Success(types);
     }
 
+    @CheckGroup
     @CheckToken
     @ResponseBody
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
@@ -163,6 +180,7 @@ public class ItemController extends BaseController{
         return ResultJson.Success(itemService.addItems(multipartFile,course,item_type));
     }
 
+    @CheckGroup
     @CheckToken
     @ResponseBody
     @RequestMapping(value = "/delItem")
@@ -171,6 +189,14 @@ public class ItemController extends BaseController{
             throw new ParamException("选择删除的题！");
         itemService.delItem(item_id);
         return ResultJson.Success();
+    }
+
+    @CheckGroup
+    @CheckToken
+    @ResponseBody
+    @RequestMapping(value = "/changeItem")
+    public Object changeItem(@RequestBody ItemVO itemVO) throws Exception{
+        return ResultJson.Success(itemService.changeItem(itemVO));
     }
 
 

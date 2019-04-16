@@ -5,7 +5,7 @@ package com.ladybird.hkd.exception;
  * @description: Token异常类
  * @create: 2019-03-20
  */
-public class TokenException extends Exception{
+public class TokenException extends RuntimeException{
     public TokenException(String message) {
         super(message);
     }

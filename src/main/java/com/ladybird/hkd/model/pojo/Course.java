@@ -1,13 +1,16 @@
 package com.ladybird.hkd.model.pojo;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-03-20
  */
-public class Course {
+public class Course implements Serializable{
     private String c_id;
     private String c_name;
+    private Integer chapter;    //改课的章节数
     private String tip;
 
     public String getC_id() {
@@ -32,5 +35,13 @@ public class Course {
 
     public void setTip(String tip) {
         this.tip = tip;
+    }
+
+    public Integer getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(Integer chapter) {
+        this.chapter = chapter;
     }
 }

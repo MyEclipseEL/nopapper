@@ -6,7 +6,9 @@ import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Item;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.beans.BeanUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +19,7 @@ import java.util.Set;
  * @create: 2019-03-18
  */
 @ApiModel
-public class ItemVO {
+public class ItemVO implements Serializable{
     @ApiModelProperty("题目编号")
     private String item_id;         //题目编号
     @ApiModelProperty("题目标题")
@@ -107,6 +109,83 @@ public class ItemVO {
                 result.setItem_valid(new String[]{item.getItem_valid()});
         }
         return result;
+    }
+
+    //将Item转为ItemVO
+    public static List<ItemVO> Item2VOConveter(List<ItemExample> items) throws Exception{
+        List<ItemVO> results = new ArrayList<>();
+        for (ItemExample item : items) {
+            ItemVO result = new ItemVO();
+            if (item.getItem_id() != null)
+                result.setItem_id(item.getItem_id());
+            if (item.getItem_title() != null && !"".equals(item.getItem_title().trim()))
+                result.setItem_title(item.getItem_title());
+            if (item.getTip() != null && !"".equals(item.getTip().trim()))
+                result.setTip(item.getTip());
+//        if (item.getItem_desc() == null || "".equals(item.getItem_desc().trim()))
+//            throw new ParamException("题目为空！");
+            result.setItem_desc(item.getItem_desc());
+            if (item.getCourse() == null)
+                throw new ParamException("课程为空！");
+            result.setCourse(item.getCourse());
+            if (item.getItem_type() == null)
+                throw new ParamException("题型为空！");
+            if (item.getItem_type().getType_id().equalsIgnoreCase("C")) {
+                result.setItem_type(item.getItem_type().getType_id());
+                if (!item.getItem_valid().trim().equals("正确") && !item.getItem_valid().trim().equals("错误"))
+                    throw new ParamException("判断题答案只允许为‘正确’‘错误’");
+                result.setItem_valid(new String[]{item.getItem_valid()});
+            } else {
+                result.setItem_type(item.getItem_type().getType_id());
+                if (item.getItem_choice() == null || "".equals(item.getItem_choice()))
+                    throw new ParamException("选项为空！");
+                List<String> choices = new ArrayList<>();
+                String[] c = item.getItem_choice().split("\\|\\@\\|");
+                for (String s : c)
+                    choices.add(s);
+                result.setItem_choice(choices);
+                if (item.getItem_type().equals("B")) {
+                    String[] v = item.getItem_valid().split(",");
+                    for (int i = 0; i < v.length; i++)
+                        v[i] = v[i].trim();
+                    result.setItem_valid(v);
+                } else
+                    result.setItem_valid(new String[]{item.getItem_valid()});
+            }
+            results.add(result);
+        }
+        return results;
+    }
+
+    public static List<Item> itemVOList2ItemList(List<ItemVO> list) {
+        List<Item> items = new ArrayList<>();
+        for (ItemVO itemVO : list) {
+            Item item = new Item();
+            BeanUtils.copyProperties(itemVO, item);
+            item.setCourse(itemVO.getCourse().getC_id());
+            if (!itemVO.getItem_type().equalsIgnoreCase("C")) {
+                List<String> choices = itemVO.getItem_choice();
+                String choice = "";
+                for (int i = 0; i < choices.size(); i++) {
+                    choice += choices.get(i);
+                    if (i < choices.size() - 1)
+                        choice += "|@|";
+                }
+                item.setItem_choice(choice);
+                String[] valid = itemVO.getItem_valid();
+                String v = "";
+                for (int i = 0;i < valid.length; i ++) {
+                    v += valid[i];
+                    if (i < valid.length - 1)
+                        v += ",";
+                }
+                item.setItem_valid(v);
+            }else {
+                item.setItem_valid(itemVO.getItem_valid()[0]);
+            }
+            items.add(item);
+        }
+        return items;
     }
 
     public String getItem_id() {

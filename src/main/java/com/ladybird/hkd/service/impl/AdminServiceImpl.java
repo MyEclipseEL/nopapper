@@ -5,6 +5,7 @@ import com.ladybird.hkd.model.example.AdminExample;
 import com.ladybird.hkd.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Shen
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
  * @create: 2019-04-16
  */
 @Service
+@Transactional
 public class AdminServiceImpl implements AdminService {
     @Autowired
     private AdminMapper adminMapper;

@@ -1,25 +1,26 @@
 package com.ladybird.hkd.model.json;
 
 import com.ladybird.hkd.model.pojo.ItemType;
-import io.swagger.annotations.ApiModel;
+import com.ladybird.hkd.model.vo.ItemVO;
 import io.swagger.annotations.ApiModelProperty;
+import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author Shen
- * @description: 题目json输出给前端
- * @create: 2019-03-13
+ * @description:
+ * @create: 2019-04-16
  */
-@ApiModel("组装数据")
-public class ItemsOut<ItemVO> implements Serializable{
+public class ItemListOut implements Serializable{
     @ApiModelProperty("题型")
     private ItemType itemType;
     @ApiModelProperty("题目")
-    private Set<ItemVO> items;
+    private List<ItemVO> items;
 
-    public ItemsOut(ItemType itemType, Set<ItemVO> items) {
+    public ItemListOut(ItemType itemType, List<ItemVO> items) {
         this.itemType = itemType;
         this.items = items;
     }
@@ -32,11 +33,11 @@ public class ItemsOut<ItemVO> implements Serializable{
         this.itemType = itemType;
     }
 
-    public Set<ItemVO> getItems() {
+    public List<ItemVO> getItems() {
         return items;
     }
 
-    public void setItems(Set<ItemVO> items) {
+    public void setItems(List<ItemVO> items) {
         this.items = items;
     }
 }

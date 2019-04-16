@@ -40,7 +40,8 @@
         SELECT * FROM Grade where dept = #{dept}
     </select>
 
-    <resultMap id="gradeMap" type="com.ladybird.hkd.model.json.GradeOut">
+
+    <resultMap id="gradeMap" type="com.ladybird.hkd.model.example.GradeExample">
         <id property="g_id" column="g_id"/>
         <result property="g_year" column="g_year"/>
         <result property="g_class" column="g_class"/>
@@ -68,6 +69,22 @@
             ${gradeExample}
         </foreach>
     </select>
+
+    <select id="selGradeById" parameterType="String" resultMap="gradeMap">
+        SELECT * FROM grade
+            LEFT JOIN department d ON d.dept_num=dept
+            LEFT JOIN faculty f ON d.faculty=f.fac_num
+        WHERE g_id=#{g_id}
+    </select>
+
+    <select id="selCountGrade" resultType="Integer">
+        SELECT COUNT(*) FROM grade
+          WHERE g_id IN
+        <foreach collection="grades" separator="," open="(" close=")" item="grade">
+            #{grade}
+        </foreach>
+    </select>
+
     <select id="findGradeById" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Grade">
         select * from grade where g_id = #{g_id}
     </select>

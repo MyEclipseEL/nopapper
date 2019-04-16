@@ -2,8 +2,10 @@ package com.ladybird.hkd.util.excel;
 
 import com.ladybird.hkd.exception.ExcelImportException;
 import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.Item;
+import com.ladybird.hkd.model.vo.ItemVO;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -46,9 +48,9 @@ public class ReadItemExcel {
 
 
 
-    public List<Item> getExcelInfo(MultipartFile multipartFile,String course,String item_type) throws ExcelImportException{
+    public List<ItemVO> getExcelInfo(MultipartFile multipartFile,String course,String item_type) throws ExcelImportException{
         String fileName = multipartFile.getOriginalFilename();    //获取文件名
-        List<Item> items = new ArrayList<>();
+        List<ItemVO> items = new ArrayList<>();
         try {
             if (validateExcel(fileName))
                 return null;
@@ -69,8 +71,8 @@ public class ReadItemExcel {
      * @param isExcel2003 excel是2003还是2007版本
      * @throws IOException
      */
-    public List<Item> createExcel(InputStream is, boolean isExcel2003,String course,String item_type) throws Exception{
-        List<Item> items = new ArrayList<>();
+    public List<ItemVO> createExcel(InputStream is, boolean isExcel2003,String course,String item_type) throws Exception{
+        List<ItemVO> items = new ArrayList<>();
         try {
             Workbook workbook = null;
             if (isExcel2003) {
@@ -91,7 +93,7 @@ public class ReadItemExcel {
     }
 
 
-    private List<Item> readSingleChoice(Workbook workbook,String course,String item_type) throws Exception{
+    private List<ItemVO> readSingleChoice(Workbook workbook,String course,String item_type) throws Exception{
         //得到第一个shell
         Sheet sheet = workbook.getSheetAt(0);
         //得到Excel的行数
@@ -100,48 +102,62 @@ public class ReadItemExcel {
         if (totalRows>1 && sheet.getRow(1)!=null) {
             this.totalCells = sheet.getRow(1).getPhysicalNumberOfCells();
         }
-        List<Item> items = new ArrayList<>();
+        List<ItemVO> items = new ArrayList<>();
         //读取Excel，循环行列
         for (int r = 1 ; r < totalRows;r ++) {
             Row row = sheet.getRow(r);
             if (row == null)
                 continue;
-            Item item = new Item();
-            item.setCourse(course);
+            ItemVO item = new ItemVO();
+            Course course1 = new Course();
+            course1.setC_id(course);
+            item.setCourse(course1);
             item.setItem_type(item_type);
             //循环Excel的列
-            String choice = "";
-            for (int c = 0;c < this.totalCells;c++) {
+            List<String> choice = new ArrayList<>();
+            for (int c = 1;c < this.totalCells;c++) {
                 Cell cell = row.getCell(c);
                 cell.setCellType(CellType.STRING);
                 if (cell == null)
                     continue;
                 switch (c) {
-                    case 0:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("题目为空！");
                         item.setItem_desc(cell.getStringCellValue());
                         break;
-                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项A为空！");
-                        choice += cell.getStringCellValue();
-                        break;
                     case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项B为空！");
-                        choice = choice + "|@|" + cell.getStringCellValue();
+                        throw new ExcelImportException("选项A为空！");
+                        choice.add(cell.getStringCellValue());
                         break;
                     case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项C为空！");
-                        choice = choice + "|@|" + cell.getStringCellValue();
+                        throw new ExcelImportException("选项B为空！");
+                        choice.add(cell.getStringCellValue());
                         break;
                     case 4:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项A为空！");
-                        choice = choice + "|@|" + cell.getStringCellValue();
+                        throw new ExcelImportException("选项C为空！");
+                        choice.add(cell.getStringCellValue());
                         break;
-                    case 5:if (cell.getStringCellValue()==null || cell.getStringCellValue().length()<1)
-                        throw new ExcelImportException("没有正确选项！");
-                    if (cell.getStringCellValue().length()>1)
-                        throw new ExcelImportException("单选题有多个选项！");
-                        item.setItem_valid(cell.getStringCellValue());
+                    case 5:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                        throw new ExcelImportException("选项D为空！");
+                        choice.add(cell.getStringCellValue());
+                        break;
+                    case 6:
+                        char v = cell.getStringCellValue().trim().charAt(0);
+                        String value = v + "";
+
+                        if (value == null || value.length() < 1)
+                            throw new ExcelImportException("没有正确选项！");
+//                        if (value.length()>1)
+//                            throw new ExcelImportException("单选题有多个选项！");
+
+                        if (!value.equalsIgnoreCase("A")&&!value.equalsIgnoreCase("B")
+                                &&!value.equalsIgnoreCase("C")&&!value.equalsIgnoreCase("D"))
+                            throw new ExcelImportException("单选题选项必须为A,B,C,D选项必须为");
+                        item.setItem_valid(new String[]{value.toUpperCase()});
+                        break;
+                    case 7:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                        item.setTip(null);
+                        item.setTip(cell.getStringCellValue());
                         break;
                 }
             }
@@ -153,7 +169,7 @@ public class ReadItemExcel {
     }
 
 
-    private List<Item> readMultipleChoice(Workbook workbook,String course,String item_type) throws Exception{
+    private List<ItemVO> readMultipleChoice(Workbook workbook,String course,String item_type) throws Exception{
         //得到第一个shell
         Sheet sheet = workbook.getSheetAt(0);
         //得到Excel的行数
@@ -162,50 +178,66 @@ public class ReadItemExcel {
         if (totalRows>1 && sheet.getRow(1)!=null) {
             this.totalCells = sheet.getRow(1).getPhysicalNumberOfCells();
         }
-        List<Item> items = new ArrayList<>();
+        List<ItemVO> items = new ArrayList<>();
         //读取Excel，循环行列
         for (int r = 1 ; r < totalRows;r ++) {
             Row row = sheet.getRow(r);
             if (row == null)
                 continue;
-            Item item = new Item();
-            item.setCourse(course);
+            ItemVO item = new ItemVO();
+            Course course1 = new Course();
+            course1.setC_id(course);
+            item.setCourse(course1);
             item.setItem_type(item_type);
             //循环Excel的列
-            String choice = "";
-            for (int c = 0;c < this.totalCells;c++) {
+            List<String> choice = new ArrayList<>();
+            for (int c = 1;c < this.totalCells;c++) {
                 Cell cell = row.getCell(c);
                 cell.setCellType(CellType.STRING);
                 if (cell == null)
                     continue;
                 switch (c) {
-                    case 0:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("题目为空！");
                         item.setItem_desc(cell.getStringCellValue());
                         break;
-                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项A为空！");
-                        choice += cell.getStringCellValue();
-                        break;
                     case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项B为空！");
-                        choice = choice + "|@|" + cell.getStringCellValue();
+                        throw new ExcelImportException("选项A为空！");
+                        choice.add(cell.getStringCellValue());
                         break;
                     case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项C为空！");
-                        choice = choice + "|@|" + cell.getStringCellValue();
+                        throw new ExcelImportException("选项B为空！");
+                        choice.add(cell.getStringCellValue());
                         break;
                     case 4:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("选项D为空！");
-                        choice = choice + "|@|" + cell.getStringCellValue();
+                        throw new ExcelImportException("选项C为空！");
+                        choice.add(cell.getStringCellValue());
                         break;
                     case 5:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                        throw new ExcelImportException("选项D为空！");
+                        choice.add(cell.getStringCellValue());
+                        break;
+                    case 6:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项E为空！");
-                        choice = choice + "|@|" + cell.getStringCellValue();
-                    case 6:if (cell.getStringCellValue().length()<1)
-                        throw new ExcelImportException("没有正确选项！");
+                        choice.add(cell.getStringCellValue());
+                        break;
+                    case 7:String value = cell.getStringCellValue();
+                        if (value == null || value.length() < 1)
+                            throw new ExcelImportException("没有正确选项！");
                         String valid = cell.getStringCellValue().replaceAll("\\ ","");
                         valid.replaceAll("，", ",");
+                        for (String s : value.split(",")) {
+                            if (!s.equalsIgnoreCase("A") && !s.equalsIgnoreCase("B")
+                                    && !s.equalsIgnoreCase("C") && !s.equalsIgnoreCase("D")
+                                    && !s.equalsIgnoreCase("E"))
+                                throw new ParamException("选项必须是A,B,C,D,E");
+                        }
+                        item.setItem_valid(valid.toUpperCase().split(","));
+                        break;
+                    case 8:
+                        if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                            item.setTip(null);
+                        item.setTip(cell.getStringCellValue());
                         break;
                 }
 
@@ -219,7 +251,7 @@ public class ReadItemExcel {
         return items;
     }
 
-    private List<Item> readCheckings(Workbook workbook,String course,String item_type) throws Exception{
+    private List<ItemVO> readCheckings(Workbook workbook,String course,String item_type) throws Exception{
         //得到第一个shell
         Sheet sheet = workbook.getSheetAt(0);
         //得到Excel的行数
@@ -228,34 +260,45 @@ public class ReadItemExcel {
         if (totalRows>1 && sheet.getRow(1)!=null) {
             this.totalCells = sheet.getRow(1).getPhysicalNumberOfCells();
         }
-        List<Item> items = new ArrayList<>();
+        List<ItemVO> items = new ArrayList<>();
         //读取Excel，循环行列
         for (int r = 1 ; r < totalRows;r ++) {
             Row row = sheet.getRow(r);
             if (row == null)
                 continue;
-            Item item = new Item();
-            item.setCourse(course);
+            ItemVO item = new ItemVO();
+            Course course1 = new Course();
+            course1.setC_id(course);
+            item.setCourse(course1);
             item.setItem_type(item_type);
             //循环Excel的列
-            String choice = "";
-            for (int c = 0;c < this.totalCells;c++) {
+            for (int c = 1;c < this.totalCells;c++) {
                 Cell cell = row.getCell(c);
                 cell.setCellType(CellType.STRING);
                 if (cell == null)
                     continue;
                 switch (c) {
-                    case 0:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("题目为空！");
                         item.setItem_desc(cell.getStringCellValue());
                         break;
-                    case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
-                        throw new ExcelImportException("答案为空！");
-                        item.setItem_valid(cell.getStringCellValue());
+                    case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                            throw new ExcelImportException("答案为空！");
+                        if (!cell.getStringCellValue().trim().equals("正确") && !cell.getStringCellValue().trim().equals("错误")
+                                && !cell.getStringCellValue().trim().equals("对")&& !cell.getStringCellValue().trim().equals("错")  )
+                            throw new ParamException("判断题答案只允许为‘正确’‘错误’");
+                        if (cell.getStringCellValue().trim().equals("对"))
+                            item.setItem_valid(new String[]{cell.getStringCellValue().replaceAll("对","正确")});
+                        else if (cell.getStringCellValue().trim().equals("错"))
+                            item.setItem_valid(new String[]{cell.getStringCellValue().replaceAll("错","错误")});
+                        else item.setItem_valid(new String[]{cell.getStringCellValue().trim()});
+                        break;
+                    case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
+                        item.setTip(null);
+                        item.setTip(cell.getStringCellValue());
                         break;
                 }
             }
-            item.setItem_choice(choice);
             if (item.getItem_desc() != null)
                 items.add(item);
         }

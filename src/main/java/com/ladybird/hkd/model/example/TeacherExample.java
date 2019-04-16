@@ -3,12 +3,14 @@ package com.ladybird.hkd.model.example;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Group;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-04-12
  */
-public class TeacherExample {
+public class TeacherExample implements Serializable {
     private String t_num;        //教师工号
     private String t_name;       //教师姓名
     private Faculty t_faculty;    //所属学院

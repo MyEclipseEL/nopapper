@@ -4,7 +4,6 @@ import com.ladybird.hkd.mapper.DeptMapper;
 import com.ladybird.hkd.mapper.FacultyMapper;
 import com.ladybird.hkd.mapper.GradeMapper;
 import com.ladybird.hkd.mapper.StudentManageMapper;
-
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
@@ -13,7 +12,6 @@ import com.ladybird.hkd.model.pojo.Student;
 import com.ladybird.hkd.model.vo.StudentVo;
 import com.ladybird.hkd.service.StudentManageService;
 import com.ladybird.hkd.util.excel.PeopleExcel;
-import com.ladybird.hkd.util.excel.StudentExcel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +27,6 @@ public class StudentManageServiceImpl implements StudentManageService {
     private FacultyMapper facultyMapper;
     @Autowired
     private DeptMapper deptMapper;
-    @Autowired
-    private GradeMapper gradeMapper;
     public ResultJson selectAllGrade(int gradelow) throws Exception {
         List<Integer> grades = studentManageMapper.selectAllGrade(gradelow);
         if(grades == null || grades.isEmpty()){

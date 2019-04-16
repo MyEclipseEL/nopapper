@@ -1,12 +1,14 @@
 package com.ladybird.hkd.model.pojo;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description: 题目实体
  * @create: 2019-03-22
  */
-public class Item {
-    private String item_id;         //题目编号
+public class Item implements Serializable{
+    private Integer item_id;         //题目编号
     private String item_title;      //题目标题
     private String item_desc;       //题目描述
     private String item_valid;      //题目正确答案
@@ -16,11 +18,11 @@ public class Item {
     private String tip;             //备注
 
 
-    public String getItem_id() {
+    public Integer getItem_id() {
         return item_id;
     }
 
-    public void setItem_id(String item_id) {
+    public void setItem_id(Integer item_id) {
         this.item_id = item_id;
     }
 

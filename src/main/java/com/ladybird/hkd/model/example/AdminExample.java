@@ -2,12 +2,14 @@ package com.ladybird.hkd.model.example;
 
 import com.ladybird.hkd.model.pojo.Group;
 
+import java.io.Serializable;
+
 /**
  * @author Shen
  * @description:
  * @create: 2019-04-14
  */
-public class AdminExample {
+public class AdminExample implements Serializable {
     private String id;
     private String name;
     private String pwd;

@@ -80,6 +80,17 @@ public class TeacherController extends BaseController {
 
     @CheckToken
     @ResponseBody
+    @RequestMapping(value = "/logout")
+    public Object logout(NativeWebRequest request) throws Exception {
+        String tokenKey = request.getHeader(ConstConfig.AUTHORIZATION);
+        String refreshTokenKey = request.getHeader(ConstConfig.AUTHORIZATION_RE);
+        manager.deleteToken(tokenKey.split("\\ ")[1]);
+        manager.deleteToken(refreshTokenKey);
+        return ResultJson.Success();
+    }
+
+    @CheckToken
+    @ResponseBody
     @RequestMapping(value = "/afterLogin")
     public Object afterLogin(NativeWebRequest request) throws Exception{
         TeacherJsonOut teacherJsonOut = getTeacher(request);
@@ -92,7 +103,7 @@ public class TeacherController extends BaseController {
     @RequestMapping(value = "/exams",method = RequestMethod.GET)
     public Object checkOutTeaches(NativeWebRequest request) throws Exception{
         TeacherJsonOut teacherJsonOut = getTeacher(request);
-        Teach teach = null;
+        List<Teach> teach = null;
         try {
             //查找考试
             teach = teacherService.checkOutTeaches(teacherJsonOut.getT_num());
@@ -100,16 +111,22 @@ public class TeacherController extends BaseController {
             return ResultJson.BusinessErrorException("token中无用户信息！",null);
         }
 
-        if (teach == null)
+        if (teach == null || teach.size() == 0)
             throw new BusinessException("没有您的授课记录！");
-        String[] grades = teach.getGrade().split("\\ ");
-        if (grades.length == 0) {
-            throw new Exception();
+        String grade = "";
+        Teach teach1 = teach.get(0);
+        if (teach.size()>1) {
+            for (int i = 0; i < teach.size(); i++) {
+                grade += teach.get(i).getGrade();
+                if (i < teach.size() - 1)
+                    grade += " ";
+            }
+            teach1.setCourse(grade);
         }
         //TODO 课程，专业班级
 
         //得到考试列表
-        List<ExamExample> list = examService.checkOutByTeach(teach);
+        List<ExamExample> list = examService.checkOutByTeach(teach1);
 
         return list;
     }
@@ -195,6 +212,8 @@ public class TeacherController extends BaseController {
         }
         return ResultJson.Success(examExample);
     }
+
+
 
     private TeacherJsonOut getTeacher(NativeWebRequest request) throws Exception{
         //获取登陆教师的信息

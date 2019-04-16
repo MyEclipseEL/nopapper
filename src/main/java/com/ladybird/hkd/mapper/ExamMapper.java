@@ -1,8 +1,8 @@
 package com.ladybird.hkd.mapper;
 
+import com.ladybird.hkd.model.example.ChapterEditExm;
 import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.example.PaperEditExample;
-
 import com.ladybird.hkd.model.pojo.Exam;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import com.ladybird.hkd.model.pojo.Student;
@@ -25,7 +25,7 @@ public interface ExamMapper {
 
     List<ExamExample> checkOutExamByIds(@Param("ids") List<String> ids) throws Exception;
 
-    List<ExamExample> checkOutByCourseGradesDept(@Param("course") String course, @Param("grades") String[] grades, @Param("dept") String dept) throws Exception;
+    List<ExamExample> checkOutByCourseGrades(@Param("course") String course, @Param("grades") String[] grades) throws Exception;
 
     void changeStateAndBegin(String[] ids, @Param("begin_time") Date date, @Param("state") Integer state) throws Exception;
 
@@ -75,4 +75,14 @@ public interface ExamMapper {
     List<String> selGradesByTC(@Param("t_num") String t_num,@Param("course") String course, @Param("begin_date") Date begin_date);
 
     String selCourseById(@Param("exam_id") String exam) throws Exception;
+
+    String selChapterByCourse(@Param("course") String course) throws Exception;
+
+    List<ChapterEditExm> checkOutChapter(@Param("course") String course) throws Exception;
+
+    Integer checkInChapter(@Param("course") String course,@Param("numbers") String numbers,@Param("tip") String tip) throws Exception;
+
+    Integer delChapterByCourse(@Param("course") String course) throws Exception;
+
+
 }

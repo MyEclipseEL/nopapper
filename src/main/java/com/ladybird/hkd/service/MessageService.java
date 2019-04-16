@@ -3,14 +3,11 @@ package com.ladybird.hkd.service;
 
 
 import com.ladybird.hkd.model.pojo.Department;
-
 import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
-
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
-import org.apache.ibatis.annotations.Param;
-
 
 import java.util.List;
 

@@ -6,11 +6,10 @@ import com.ladybird.hkd.mapper.*;
 
 import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.pojo.Department;
-
 import com.ladybird.hkd.model.json.ResultJson;
 
 import com.ladybird.hkd.model.pojo.Course;
-
+import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.service.MessageService;
 

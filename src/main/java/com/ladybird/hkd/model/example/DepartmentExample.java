@@ -4,7 +4,9 @@ package com.ladybird.hkd.model.example;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
 
-public class DepartmentExample  {
+import java.io.Serializable;
+
+public class DepartmentExample  implements Serializable {
     private String dept_num;
     private String dept_name;
     private Faculty faculty;
