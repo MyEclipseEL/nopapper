@@ -17,7 +17,7 @@ public interface TeacherManageService {
     ResultJson deleteTeacher(String t_num) throws Exception;
 
     ResultJson teaching(String t_num) throws Exception;
-    ResultJson selectTeacher(Teacher teacher);
+
 
     List<TeacherExample> addTeachers(MultipartFile multipartFile) throws Exception;
 }
