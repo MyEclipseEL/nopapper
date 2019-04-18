@@ -1,16 +1,33 @@
 package com.ladybird.hkd.controller;
 
+import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Teacher;
 import com.ladybird.hkd.service.MessageService;
 import com.ladybird.hkd.service.TeacherManageService;
+import com.ladybird.hkd.util.UrlConf;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/teacherManage")
@@ -22,8 +39,8 @@ public class TeacherManageController extends BaseController {
     private MessageService messageService;
     @RequestMapping("/selectTeacher")
     @ResponseBody
-    public ResultJson selectTeacher(Teacher teacher,String faculty) throws Exception{
-        return teacherManageService.selectTeacher(teacher,faculty);
+    public ResultJson selectTeacher(Teacher teacher, String faculty, @RequestParam(value = "pageNum" ,defaultValue = "1")int pageNum,@RequestParam(value = "pageSize") int pageSize) throws Exception{
+        return teacherManageService.selectTeacher(teacher,faculty,pageNum,pageSize);
     }
     @RequestMapping(value = "/backFaculty", method = RequestMethod.GET)
     @ResponseBody
@@ -32,8 +49,8 @@ public class TeacherManageController extends BaseController {
     }
     @RequestMapping(value = "/backDepartment",method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson backDepartment(Faculty faculty) throws Exception{
-        return messageService.selectAllDept(faculty);
+    public ResultJson backDepartment(String fac_num) throws Exception{
+        return messageService.findDeptByFac(fac_num);
     }
     @RequestMapping(value = "/addTeacher",method = RequestMethod.GET)
     @ResponseBody
@@ -50,5 +67,6 @@ public class TeacherManageController extends BaseController {
     public ResultJson deleteTeacher(String t_num) throws Exception{
         return teacherManageService.deleteTeacher(t_num);
     }
+
 
 }

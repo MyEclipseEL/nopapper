@@ -75,7 +75,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findFaculty(Faculty faculty) throws Exception {
-        if(!StringUtils.isNotBlank(faculty.getFac_num())&&!StringUtils.isNotBlank(faculty.getFac_name())){
+        if(!StringUtils.isNotBlank(faculty.getFac_num())||!StringUtils.isNotBlank(faculty.getFac_name())){
             return ResultJson.ParameterError();
         }
         Faculty faculty1 = facultyMapper.findFaculty(faculty);
@@ -84,6 +84,8 @@ public class MessageServiceImpl implements MessageService {
         }
         return ResultJson.Success(faculty1);
     }
+
+
 
 
     public ResultJson selectAllDept(Faculty faculty) throws Exception {

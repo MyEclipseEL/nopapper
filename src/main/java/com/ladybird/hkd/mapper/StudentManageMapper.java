@@ -21,4 +21,6 @@ public interface StudentManageMapper {
     int updateStudent(Student student) throws Exception;
 
     Student findStudent(Student student) throws Exception;
+
+
 }

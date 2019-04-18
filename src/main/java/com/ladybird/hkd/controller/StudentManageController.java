@@ -1,6 +1,8 @@
 package com.ladybird.hkd.controller;
 
 
+import com.ladybird.hkd.annotation.CheckGroup;
+import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Faculty;
@@ -12,6 +14,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,15 +74,50 @@ public class StudentManageController extends BaseController{
 
     @RequestMapping(value = "/selectStudent", method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson selectStudent(Student student) throws Exception{
-        return studentManageService.selectStudent(student);
-    }
-    @RequestMapping(value = "/uploadStudent",method = RequestMethod.POST)
-    @ResponseBody
-    public Object uploadStudent(MultipartFile multipartFile) throws Exception{
-        return studentManageService.uploadStudent(multipartFile);
+    public ResultJson selectStudent(Student student, @RequestParam(value = "pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize") int pageSize) throws Exception{
+        return studentManageService.selectStudent(student,pageNum,pageSize);
     }
 
+    @CheckGroup
+    @CheckToken
+    @RequestMapping(value="/uploadStudent",method=RequestMethod.POST)
+    @ResponseBody
+    public Object uploadStudent(HttpServletRequest request) throws Exception {
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setSizeMax(4*1024*1024);
+
+        List<FileItem> fileItems = new ArrayList<>();
+        try {
+            fileItems = upload.parseRequest(request);
+        } catch (FileUploadException fe) {
+            fe.printStackTrace();
+        }
+        File file = new File("");
+        MultipartFile multipartFile = null;
+        for (FileItem item : fileItems) {
+
+            try {
+                File fullFile = new File(item.getName());
+//                file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
+//            file = new File(UrlConf.SERVER_UPLOAD_PATH);
+                file = new File(UrlConf.PEI_UPLOAD_PATH, fullFile.getName());
+                item.write(file);
+            } catch (NullPointerException npe) {
+                throw new ParamException("请选择上传到文件！");
+            }
+        }
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            multipartFile = new MockMultipartFile(file.getName(), file.getName(),
+                    ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+        } catch (FileNotFoundException fe) {
+            throw new ParamException("请选择上传的文件！");
+        }
+        //调用service
+        FileUtils.deleteQuietly(file);
+        return ResultJson.Success(studentManageService.uploadStudent(multipartFile));
+    }
 
    /* @RequestMapping(value = "/selectAllGrade",method = RequestMethod.GET)
     @ResponseBody

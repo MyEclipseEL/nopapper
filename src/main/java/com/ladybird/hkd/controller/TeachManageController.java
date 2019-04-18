@@ -16,7 +16,7 @@ public class TeachManageController extends BaseController{
     @RequestMapping(value = "/selectTeacher",method = RequestMethod.GET)
     @ResponseBody
     public ResultJson selectTeacher() throws Exception {
-        return teacherManageService.selectTeacher(null,null);
+        return teacherManageService.selectTeacher(null,null, pageNum, pageSize);
     }
     @RequestMapping(value = "teaching",method = RequestMethod.GET)
     @ResponseBody

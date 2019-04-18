@@ -51,27 +51,23 @@
 
 
     <insert id="addStudent" parameterType="com.ladybird.hkd.model.pojo.Student">
-        INSERT INTO `nopaper`.`students` (
-          `stu_num`,
-          `stu_ID`,
-          `stu_name`,
-          `stu_faculty`,
-          `dept`,
-          `grade`,
-          `stu_pwd`,
-          `tip`
+        INSERT INTO students (
+          stu_num,
+          stu_ID,
+          stu_name,
+          stu_faculty,
+          dept,
+          grade
         )
         VALUES
           (
-            'stu_num' = #{stu_num},
-            'stu_ID' = #{stu_ID},
-            'stu_name' = #{stu_name},
-            'stu_faculty' = #{stu_faculty},
-            'dept' = #{dept},
-            'grade' = #{grade},
-            'stu_pwd' = #{stu_pwd},
-            'tip' = #{tip}
-          ) ;
+          #{stu_num},
+            #{stu_ID},
+            #{stu_name},
+           #{stu_faculty},
+            #{dept},
+           #{grade}
+          )
     </insert>
     <delete id="deleteStudent" parameterType="string">
         DELETE
@@ -89,9 +85,7 @@
           stu_name = #{stu_name},
           stu_faculty = #{stu_faculty},
           dept = #{dept},
-          gradeExample = #{gradeExample},
-          stu_pwd = #{stu_pwd},
-          tip = #{tip}
+          grade = #{grade}
         WHERE stu_num = #{stu_num} ;
     </update>
     <select id="findStudent" parameterType="com.ladybird.hkd.model.pojo.Student" resultType="com.ladybird.hkd.model.pojo.Student">

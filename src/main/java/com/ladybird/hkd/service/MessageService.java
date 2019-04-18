@@ -22,6 +22,8 @@ public interface MessageService {
 
     ResultJson findFaculty(Faculty faculty) throws Exception;
 
+
+
     ResultJson selectAllDept(Faculty faculty) throws Exception;
 
     ResultJson addDept(Department department) throws Exception;

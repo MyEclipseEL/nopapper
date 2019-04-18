@@ -18,7 +18,6 @@
     <select id="findGrade" parameterType="com.ladybird.hkd.model.pojo.Grade" resultType="com.ladybird.hkd.model.pojo.Grade">
         SELECT * FROM Grade
         <where>
-
             <if test="g_id != null">
                 and g_id = #{g_id}
             </if>
@@ -26,7 +25,6 @@
                 and g_year = #{g_year}
             </if>
             <if test="g_class != null">
-
                 and g_class = #{g_class}
             </if>
             <if test="dept != null">

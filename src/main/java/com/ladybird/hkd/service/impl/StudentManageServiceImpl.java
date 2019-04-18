@@ -1,9 +1,9 @@
 package com.ladybird.hkd.service.impl;
 
-import com.ladybird.hkd.mapper.DeptMapper;
-import com.ladybird.hkd.mapper.FacultyMapper;
-import com.ladybird.hkd.mapper.GradeMapper;
-import com.ladybird.hkd.mapper.StudentManageMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.ladybird.hkd.mapper.*;
+import com.ladybird.hkd.model.example.StudentExample;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
@@ -24,9 +24,13 @@ public class StudentManageServiceImpl implements StudentManageService {
     @Autowired
     private StudentManageMapper studentManageMapper;
     @Autowired
+    private StudentMapper studentMapper;
+    @Autowired
     private FacultyMapper facultyMapper;
     @Autowired
     private DeptMapper deptMapper;
+    @Autowired
+    private GradeMapper gradeMapper;
     public ResultJson selectAllGrade(int gradelow) throws Exception {
         List<Integer> grades = studentManageMapper.selectAllGrade(gradelow);
         if(grades == null || grades.isEmpty()){
@@ -36,7 +40,7 @@ public class StudentManageServiceImpl implements StudentManageService {
     }
 
 
-    public ResultJson selectStudent(Student student) throws Exception {
+    public ResultJson selectStudent(Student student, int pageNum, int pageSize) throws Exception {
         if(StringUtils.isNotBlank(student.getStu_faculty())){
             Faculty faculty = new Faculty();
             faculty.setFac_name(student.getStu_faculty());
@@ -49,23 +53,33 @@ public class StudentManageServiceImpl implements StudentManageService {
             Department dept = deptMapper.findDept(department);
             student.setDept(dept.getDept_num());
         }
+       //startPage--start
+        //填充自己的sql查询逻辑
+        //pageHelper--收尾
+        PageHelper.startPage(pageNum,pageSize);
         List<StudentVo> studentVos = studentManageMapper.selectStudent(student);
         if(studentVos==null||studentVos.isEmpty()){
             return ResultJson.Forbidden("查询失败");
         }
-
-        return ResultJson.Success(studentVos);
+        PageInfo pageResult = new PageInfo(studentVos);
+        return ResultJson.Success(pageResult);
     }
 
 
     public ResultJson addStudent(Student student) throws Exception {
-        if(!StringUtils.isNotBlank(student.getStu_num())||!StringUtils.isNotBlank(student.getStu_ID())||!StringUtils.isNotBlank(student.getStu_name())||!StringUtils.isNotBlank(student.getStu_faculty())||!StringUtils.isNotBlank(student.getDept())||!StringUtils.isNotBlank(student.getGrade())||!StringUtils.isNotBlank(student.getStu_pwd())){
+        if(!StringUtils.isNotBlank(student.getStu_num())
+                ||!StringUtils.isNotBlank(student.getStu_ID())
+                ||!StringUtils.isNotBlank(student.getStu_name())
+                ||!StringUtils.isNotBlank(student.getStu_faculty())
+                ||!StringUtils.isNotBlank(student.getDept())
+                ||!StringUtils.isNotBlank(student.getGrade())){
             return ResultJson.ParameterError();
         }
-        Student s = new Student();
-        s.setStu_num(student.getStu_num());
-        List<StudentVo> studentVos = studentManageMapper.selectStudent(s);
-        if(studentVos != null || studentVos.isEmpty()){
+
+        Student s = studentMapper.findByNum(student.getStu_num());
+
+
+        if(s != null){
             return this.updateStudent(student);
         }
         int resultCount = studentManageMapper.addStudent(student);
@@ -90,7 +104,7 @@ public class StudentManageServiceImpl implements StudentManageService {
 
     @Override
     public ResultJson updateStudent(Student student) throws Exception {
-        if(!StringUtils.isNotBlank(student.getStu_num())||!StringUtils.isNotBlank(student.getStu_ID())||!StringUtils.isNotBlank(student.getStu_name())||!StringUtils.isNotBlank(student.getStu_faculty())||!StringUtils.isNotBlank(student.getDept())||!StringUtils.isNotBlank(student.getGrade())||!StringUtils.isNotBlank(student.getStu_pwd())){
+        if(!StringUtils.isNotBlank(student.getStu_num())||!StringUtils.isNotBlank(student.getStu_ID())||!StringUtils.isNotBlank(student.getStu_name())||!StringUtils.isNotBlank(student.getStu_faculty())||!StringUtils.isNotBlank(student.getDept())||!StringUtils.isNotBlank(student.getGrade())){
             return ResultJson.ParameterError();
         }
         int resultCount = studentManageMapper.updateStudent(student);
@@ -121,13 +135,30 @@ public class StudentManageServiceImpl implements StudentManageService {
         return ResultJson.Success(gradeByDept);
     }
 
-
-    public List<Student> uploadStudent(MultipartFile multipartFile)throws Exception{
-        String fileName = multipartFile.getOriginalFilename();    //获取文件名
+    public List<StudentExample> uploadStudent(MultipartFile multipartFile)throws Exception{
+        //创建处理Excel的类
         PeopleExcel peopleExcel = new PeopleExcel();
-       List<Student> students = peopleExcel.batchInputStudent(fileName, multipartFile);
-        for (Student student : students) {
-            studentManageMapper.addStudent(student);
+        List<StudentExample> students = peopleExcel.getExcelInfo(multipartFile);
+        for (StudentExample student : students) {
+            Student s = new Student();
+            s.setStu_num(student.getStu_num());
+            s.setStu_name(student.getStu_name());
+            s.setStu_ID(student.getStu_ID());
+            Faculty faculty = new Faculty();
+            faculty.setFac_name(student.getFaculty().getFac_name());
+            Faculty faculty1 = facultyMapper.findFaculty(faculty);
+            s.setStu_faculty(faculty1.getFac_num());
+            Department department = new Department();
+            department.setDept_name(student.getDepartment().getDept_name());
+            Department dept = deptMapper.findDept(department);
+            s.setDept(dept.getDept_num());
+            Grade grade = new Grade();
+            grade.setDept(dept.getDept_num());
+            grade.setG_year(student.getGrade().getG_year());
+            grade.setG_class(student.getGrade().getG_class());
+            Grade grade1 = gradeMapper.findGrade(grade);
+            s.setGrade(grade1.getG_id());
+            studentManageMapper.addStudent(s);
         }
         return students;
     }

@@ -1,19 +1,20 @@
 package com.ladybird.hkd.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.ladybird.hkd.mapper.FacultyMapper;
 import com.ladybird.hkd.mapper.GradeMapper;
 import com.ladybird.hkd.mapper.TeacherMapper;
 import com.ladybird.hkd.model.example.TeacherExample;
 import com.ladybird.hkd.model.json.ResultJson;
-import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.model.pojo.Teacher;
+import com.ladybird.hkd.model.vo.StudentVo;
 import com.ladybird.hkd.model.vo.Teaching;
 import com.ladybird.hkd.service.TeacherManageService;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -28,12 +29,17 @@ public class TeacherManageServiceImpl implements TeacherManageService {
     @Autowired
     private GradeMapper gradeMapper;
     @Override
-    public ResultJson selectTeacher(Teacher teacher,String faculty) throws Exception{
+    public ResultJson selectTeacher(Teacher teacher, String faculty, int pageNum, int pageSize) throws Exception{
+        //startPage--start
+        //填充自己的sql查询逻辑
+        //pageHelper--收尾
+        PageHelper.startPage(pageNum,pageSize);
         List<TeacherExample> teacherExamples = teacherMapper.selectTeacher(teacher,faculty);
         if(teacherExamples == null || teacherExamples.isEmpty()){
             return ResultJson.Forbidden("查询错误");
         }
-        return ResultJson.Success(teacherExamples);
+        PageInfo pageResult = new PageInfo(teacherExamples);
+        return ResultJson.Success(pageResult);
     }
 
     @Override

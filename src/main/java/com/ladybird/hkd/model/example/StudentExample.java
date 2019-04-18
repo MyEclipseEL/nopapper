@@ -1,6 +1,10 @@
 package com.ladybird.hkd.model.example;
 
+import com.ladybird.hkd.model.pojo.Department;
+import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Grade;
+
+import java.io.Serializable;
 
 /**
  * @author Shen
@@ -11,8 +15,26 @@ public class StudentExample implements Serializable {
     private String stu_num;  //学号
     private String stu_ID;   //身份证号
     private String stu_name; //姓名
+    private Faculty faculty;
+    private Department department;
     private GradeExample grade;      //就读班级
     private String stu_pwd;  //登录密码
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
     public String getStu_num() {
         return stu_num;
