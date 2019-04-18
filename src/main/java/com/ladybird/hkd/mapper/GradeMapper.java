@@ -32,4 +32,17 @@ public interface GradeMapper {
      *Date: 2019/4/14
      */
     Integer selCountGrade(@Param("grades") String[] grade) throws Exception;
+
+    /**
+     * 查找没有在授课表中得班级
+     *@param
+     *@return:
+     *Date: 2019/4/17
+     */
+    List<GradeExample> selGradesNotTeach(@Param("grade") String grade,@Param("g_year") String g_year,
+                                         @Param("dept") String dept) throws Exception;
+
+    Integer addGrades(@Param("grades") List<GradeExample> results) throws Exception;
+
+    String biggestId() throws Exception;
 }

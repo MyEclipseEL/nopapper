@@ -88,6 +88,8 @@ public class ExamServiceImpl implements ExamService {
         examMapper.changeStateAndBegin(exams,date,state);
     }
 
+
+    //更新试卷配置
     @Override
     public PaperEditExample updatePaper(PaperEdit paperEdit) throws Exception {
         PaperEditExample editExample = new PaperEditExample();
@@ -138,6 +140,8 @@ public class ExamServiceImpl implements ExamService {
         return examMapper.checkOutExamByIds(ids);
     }
 
+
+    //开始考试
     @Override
     public ExamExample beginExam(String t_num, String[] grades, String course) throws Exception {
         String grade = "";
@@ -158,12 +162,14 @@ public class ExamServiceImpl implements ExamService {
         return examMapper.checkOutExamById(exam_id);
     }
 
+    //查找试卷配置
     @Override
     public PaperEditExample checkOutPaperByCourse(String exam) throws Exception{
         String course = examMapper.selCourseById(exam);
         return examMapper.checkOutPaperEditExm(course);
     }
 
+    //查找题目章节题目配置
     @Override
     public List<ChapterEditExm> checkOutChapter(String course) throws Exception {
         return examMapper.checkOutChapter(course);

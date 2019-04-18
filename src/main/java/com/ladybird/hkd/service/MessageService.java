@@ -8,6 +8,7 @@ import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,4 +41,8 @@ public interface MessageService {
 
 
     List<GradeExample> gradesNotInExam(String t_num, String course) throws Exception;
+
+    List<GradeExample> selGradesNotTeach(String course, String teacher, String dept,String year) throws Exception;
+
+    List<GradeExample> addGrades(MultipartFile multipartFile) throws Exception;
 }

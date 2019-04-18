@@ -358,6 +358,87 @@ null
 ```
 
 
+##授课管理
+###查询授课信息
+```
+GET  /teach/teaches
+```
+参数
+```
+{
+    “t_num"     ：  ""
+    "course"    :   ""
+}
+```
+
+###添加授课信息
+```
+POST  /teach/teachIn
+```
+参数
+```
+{
+    "course"    :{"c_id":   }
+    "teacher"   :{"t_num":  }
+    "gradeIn"   :["",""]            //请求没有授课的班级    
+    "dept"      :{"dept_num":"" }
+}
+```
+
+请求没有授课的班级
+```
+POST & GET  /message/gradeNotTeach
+```
+参数
+```
+{
+    "course"    :
+    "teacher"   :
+    "dept"      :
+    "year"      :   //年级
+
+}
+```
+
+
+###修改授课信息
+```
+POST  /teach/teachChange
+```
+参数
+```
+{
+    ”teach_id"  :   (required)
+    "grade"     :   ["1","2"]
+    "teacher"   :
+    "dept"      :   
+    "course"    :   
+}
+```
+
+###删除授课
+```
+GET  /teach/teachDel
+```
+参数
+```
+{
+    "teach_id"  :
+}
+```
+
+###导入授课信息
+```
+POST  /teach/upload
+```
+参数
+```
+{
+    "file" : (文件)
+}
+```
+
+
 
 
 

@@ -1,6 +1,7 @@
 package com.ladybird.hkd.service.impl;
 
 
+import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.mapper.*;
 
@@ -13,9 +14,11 @@ import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.service.MessageService;
 
+import com.ladybird.hkd.util.excel.ReadGradeExcel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -217,8 +220,39 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    @Override
+    public List<GradeExample> selGradesNotTeach(String course, String teacher, String dept,String year) throws Exception {
+        if (course == null || "".equals(course.trim()))
+            throw new ParamException("<查找授课班级>：课程为空！");
+        if (teacher == null || "".equals(teacher.trim()))
+            throw new ParamException("<查找授课班级>：教师为空！");
+        if (dept == null || "".equals(dept.trim()))
+            throw new ParamException("<查找授课班级>：专业为空！");
+        if (year == null || "".equals(year.trim()))
+            throw new ParamException("<查找授课班级>：请选择年级！");
+        String grade = null;
+        try {
+            grade = teacherMapper.selGradesByDeptCourse(teacher, dept, course, year);
+        } catch (NumberFormatException nfe) {
+            throw new ParamException("<查找授课班级>：年级出错");
+        }
+        List<GradeExample> result = gradeMapper.selGradesNotTeach(grade,dept,year);
+        return result;
+    }
 
-
+    @Override
+    public List<GradeExample> addGrades(MultipartFile multipartFile) throws Exception {
+        ReadGradeExcel readGradeExcel = new ReadGradeExcel();
+        List<GradeExample> results = readGradeExcel.getExcelInfo(multipartFile);
+        Integer max = Integer.parseInt(gradeMapper.biggestId());
+        for (int i = 0;i < results.size();i ++) {
+            results.get(i).setG_id(max + i+1 +"");
+        }
+        Integer result = gradeMapper.addGrades(results);
+        if (result < results.size())
+            throw new BusinessException("<添加班级>：添加失败！应添加 "+results.size()+"条，实际添加"+result+"条");
+        return null;
+    }
 
 
 }

@@ -129,29 +129,38 @@ public class TeacherServiceImpl implements TeacherService{
     }
 
     @Override
-    public TeachExample changeGrade(String teach_id, String[] grade) throws Exception {
-        TeachExample result = teacherMapper.checkOutById(teach_id);
-        if (result == null)
-            throw new ParamException("<修改授课班级>：不存在该条授课记录！");
-        Integer count = gradeMapper.selCountGrade(grade);
-        if (count < grade.length)
-            throw new ParamException("<修改授课班级>：参数出错！");
-        String grades = "";
-        for (int i = 0;i < grade.length;i ++) {
-            grades += grade[i];
-            if (i < grade.length - 1)
-                grades += ",";
+    public TeachExample changeGrade(String teach_id, String[] grade,String teacher,String dept,String course) throws Exception {
+        if (teach_id == null || "".equals(teach_id.trim()))
+            throw new ParamException("<修改课程>：参数错误！");
+        TeachExample exist = teacherMapper.checkOutById(teach_id);
+        Teach teach = new Teach();
+        if (exist == null)
+            throw new ParamException("<修改授课>：不存在该条授课记录！");
+        if (teacher != null && "".equals(teacher.trim()))
+            teach.setTeacher(teacher);
+        if (dept != null && "".equals(dept.trim()))
+            teach.setDept(dept);
+        if (course != null && "".equals(course.trim()))
+            teach.setCourse(course);
+        if (grade != null  && grade.length > 0) {
+            Integer count = gradeMapper.selCountGrade(grade);
+            if (count < grade.length)
+                throw new ParamException("<修改授课>：参数出错！");
+            String grades = "";
+            for (int i = 0; i < grade.length; i++) {
+                grades += grade[i];
+                if (i < grade.length - 1)
+                    grades += ",";
+            }
+            teach.setGrade(grades);
         }
-        Integer reset = teacherMapper.changeTeachGrades(teach_id, grades);
+//        Integer reset = teacherMapper.changeTeachGrades(teach_id, grades);
+//        if (reset != 1)
+//            throw new BusinessException("<修改授课班级>：修改失败！");
+        Integer reset = teacherMapper.updateTeach(teach);
         if (reset != 1)
-            throw new BusinessException("<修改授课班级>：修改失败！");
-        result.setGrade(grades);
-        List<GradeExample> gradeExamples = new ArrayList<>();
-        for (String s : result.getGrade().split(",")) {
-            gradeExamples.add(gradeMapper.selGradeById(s));
-        }
-        result.setGrades(gradeExamples);
-        return result;
+            throw new BusinessException("<修改授课>：修改失败！");
+        return teacherMapper.checkOutById(teach_id);
     }
 
     @Override

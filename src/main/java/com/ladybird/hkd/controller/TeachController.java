@@ -10,6 +10,7 @@ import com.ladybird.hkd.model.example.TeachExample;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.Course;
+import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
@@ -91,10 +92,10 @@ public class TeachController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/teachChange")
     //修改被授课的班级
-    public Object changeGrade(String teach_id,String[] grade) throws Exception{
+    public Object changeGrade(String teach_id,String[] grade,String teacher,String dept,String course) throws Exception{
         if (grade == null || grade.length < 1)
             throw new ParamException("修改授课班级：参数为空！");
-        TeachExample result = teacherService.changeGrade(teach_id, grade);
+        TeachExample result = teacherService.changeGrade(teach_id, grade,teacher,dept,course);
         return ResultJson.Success(result);
     }
 

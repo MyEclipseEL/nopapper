@@ -23,7 +23,7 @@ public interface TeacherService {
 
     TeachExample checkInTeach(TeachExample teach) throws Exception;
 
-    TeachExample changeGrade(String teach_id, String[] grade) throws Exception;
+    TeachExample changeGrade(String teach_id, String[] grade,String teacher,String dept,String course) throws Exception;
 
     void delTeach(String teach_id) throws Exception;
 

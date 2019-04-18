@@ -5,10 +5,7 @@ import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.example.TeachExample;
 import com.ladybird.hkd.model.pojo.Course;
-import com.ladybird.hkd.model.pojo.Grade;
-import com.ladybird.hkd.model.pojo.Teach;
 import com.ladybird.hkd.model.pojo.Teacher;
-import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -30,12 +27,11 @@ public class ReadTeachesExcel extends ReadItemExcel{
         String filename = file.getOriginalFilename();   //获取文件名
         List<TeachExample> result = new ArrayList<>();
         if (validateExcel(filename))
-            throw new ExcelImportException("导入授课：文件格式错误！");
+            throw new ExcelImportException("<导入授课>：文件格式错误！");
         boolean isExcel2003 = true;
         if (isExcel2007(filename))
             isExcel2003 = false;
         result = createExcel(file.getInputStream(), isExcel2003);
-
         return result;
     }
 
@@ -77,33 +73,33 @@ public class ReadTeachesExcel extends ReadItemExcel{
                 switch (c) {
                     case 0 :
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
-                            throw new ExcelImportException("导入授课：课程为空！");
+                            throw new ExcelImportException("<导入授课>：课程为空！");
                         Course course = new Course();
                         course.setC_name(cell.getStringCellValue().trim());
                         teach.setCourse(course);
                         break;
                     case 2 :
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
-                            throw new ExcelImportException("导入授课：教师工号为空！");
+                            throw new ExcelImportException("<导入授课>：教师工号为空！");
                         Teacher teacher = new Teacher();
                         teacher.setT_num(cell.getStringCellValue().trim());
                         teach.setTeacher(teacher);
                         break;
                     case 3 :
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
-                            throw new ExcelImportException("导入授课：专业为空！");
+                            throw new ExcelImportException("<导入授课>：专业为空！");
                         DepartmentExample dept = new DepartmentExample();
                         dept.setDept_name(cell.getStringCellValue().trim());
                         teach.setDept(dept);
                         break;
                     case 4 :
                         if (cell.getStringCellValue() == null ||"".equals(cell.getStringCellValue().trim()))
-                            throw new ExcelImportException("导入授课：年级为空！");
+                            throw new ExcelImportException("<导入授课>：年级为空！");
                         year = cell.getStringCellValue().trim();
                         break;
                     case 5 :
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
-                            throw new ExcelImportException("导入授课：班级列为空！");
+                            throw new ExcelImportException("<导入授课>：班级列为空！");
                         clazz = cell.getStringCellValue().trim();
                         break;
                 }

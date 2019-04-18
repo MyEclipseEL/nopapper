@@ -83,6 +83,28 @@
         </foreach>
     </select>
 
+    <select id="selGradesNotTeach" resultMap="gradeMap">
+        SELECT * FROM grade
+        LEFT JOIN department d ON d.dept_num=dept
+        LEFT JOIN faculty f ON d.faculty=f.fac_num
+        WHERE dept=#{dept} AND g_year=#{g_year}
+            <if test="grade != null">
+                AND g_id NOT IN (${grade})
+            </if>
+    </select>
+
+    <insert id="addGrades" parameterType="com.ladybird.hkd.model.example.GradeExample">
+        INSERT INTO grade (g_id,dept,g_year,g_class)VALUES
+                <foreach collection="grades" item="g" separator=",">
+                (#{g.g_id},(SELECT dept_num FROM department WHERE dept_name=#{g.dept.dept_name}),
+                    #{g.g_year},#{g.g_class})
+                </foreach>
+    </insert>
+
+    <select id="biggestId" resultType="String">
+        SELECT g_id FROM  grade ORDER BY g_id+0 DESC LIMIT 1
+    </select>
+
     <!--/*SELECT grade FROM exam e-->
     <!--WHERE e.teacher=${t_num} AND e.course=${course}-->
     <!--AND e.begin_time &gt;  #{begin_date}*/-->

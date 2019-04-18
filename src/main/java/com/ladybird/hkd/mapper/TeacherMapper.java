@@ -19,7 +19,8 @@ public interface TeacherMapper {
 
     List<Teach> checkOutTeaches(@Param("teacher") String t_num) throws Exception;
 
-    String selGradesByDeptCourse(@Param("t_num") String t_num,@Param("dept_num") String dept_num,@Param("c_id") String c_id) throws Exception;
+    //查找某一年级某老师教得某个专业的班级
+    String selGradesByDeptCourse(@Param("t_num") String t_num,@Param("dept_num") String dept_num,@Param("c_id") String c_id,@Param("g_year") String year) throws Exception;
 
     String selGradesByCourse(@Param("t_num") String t_num,@Param("c_id") String c_id) throws Exception;
 
@@ -76,6 +77,14 @@ public interface TeacherMapper {
     Integer changeTeachGrades(@Param("teach_id") String teach_id, @Param("grades") String grades) throws Exception;
 
     /**
+     * 修改授课信息
+     *@param
+     *@return:
+     *Date: 2019/4/17
+     */
+    Integer updateTeach(Teach teach) throws Exception;
+
+    /**
      * 通过id查找是否存在授课记录
      *@param
      *@return:
@@ -98,4 +107,6 @@ public interface TeacherMapper {
      *Date: 2019/4/16
      */
     Integer checkInTeachers(@Param("teachers") List<Teacher> teachers) throws Exception;
+
+
 }

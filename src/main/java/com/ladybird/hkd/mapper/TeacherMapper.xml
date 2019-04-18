@@ -100,13 +100,20 @@
     <update id="changeTeachGrades" >
         UPDATE teach SET grade=#{grades} WHERE teach_id=#{teach_id}
     </update>
+    
+    <update id="updateTeach" parameterType="com.ladybird.hkd.model.pojo.Teach">
+        UPDATE teach SET teacher=#{teacher} , course=#{course} , dept=#{dept} , grade=#{grade}
+        WHERE teach_id=#{teach_id}
+    </update>
 
     <delete id="delTeachById" parameterType="String">
         DELETE FROM teach WHERE teach_id=#{teach_id}
     </delete>
 
     <select id="selGradesByDeptCourse" resultType="String">
-        SELECT grade FROM teach WHERE teacher=${t_num} AND course=${c_id}
+        SELECT grade FROM teach WHERE
+            teacher=${t_num} AND course=${c_id}
+            AND dept=#{dept_num} AND teach_id LIKE CONCAT("%",#{g_year})
     </select>
 
     <select id="selGradesByCourse" resultType="String">
