@@ -8,11 +8,11 @@
         select * from course
     </select>
     <insert id="addCourse" parameterType="com.ladybird.hkd.model.pojo.Course">
-        INSERT INTO course  VALUES( #{c_id},#{c_name},#{tip})
+        INSERT INTO course  VALUES( #{c_id},#{c_name},#{chapter},#{tip})
 
     </insert>
     <update id="updateCourse" parameterType="com.ladybird.hkd.model.pojo.Course">
-        UPDATE course SET c_name = #{c_name} WHERE c_id = #{c_id}
+        UPDATE course SET c_name = #{c_name} ,chapter=#{chapter} ,tip=#{tip} WHERE c_id = #{c_id}
     </update>
 
     <select id="selectCourseByPrimary" parameterType="String" resultType="int">

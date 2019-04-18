@@ -154,14 +154,18 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson addCourse(Course course) throws Exception {
-        if(!StringUtils.isNotBlank(course.getC_id())||!StringUtils.isNotBlank(course.getC_name())){
+        if(!StringUtils.isNotBlank(course.getC_name())){
             return ResultJson.ParameterError();
         }
-        int resultCount = courseMapper.selectCourseByPrimary(course.getC_id());
-        if(resultCount > 0){
-            this.updateCourse(course);
-        }
-        resultCount = courseMapper.addCourse(course);
+        if (course.getChapter() == null || course.getChapter()==0)
+            throw new ParamException("<添加课程>：请填写章节！");
+//        int resultCount = courseMapper.selectCourseByPrimary(course.getC_id());
+//        if(resultCount > 0){
+//            return updateCourse(course);
+//        }
+        if (course.getTip() == null || "".equals(course.getTip().trim()))
+            course.setTip(null);
+        Integer resultCount = courseMapper.addCourse(course);
         if (resultCount > 0){
             return ResultJson.Success("添加成功");
         }
@@ -170,10 +174,17 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson updateCourse(Course course) throws Exception {
-        if(!StringUtils.isNotBlank(course.getC_id())||!StringUtils.isNotBlank(course.getC_name())){
+        if(!StringUtils.isNotBlank(course.getC_id())){
             return ResultJson.ParameterError();
         }
-        int resultCount = courseMapper.updateCourse(course);
+        Course exist = courseMapper.selCourseById(course.getC_id());
+        if (course.getC_name() != null && "".equals(course.getC_name().trim()))
+            exist.setC_name(course.getC_name());
+        if (course.getChapter() != null && course.getChapter() != 0)
+            exist.setChapter(course.getChapter());
+        if(course.getTip() != null && "".equals(course.getTip().trim()))
+            exist.setTip(course.getTip());
+        int resultCount = courseMapper.updateCourse(exist);
         if(resultCount > 0){
             return ResultJson.Success("修改成功");
         }
