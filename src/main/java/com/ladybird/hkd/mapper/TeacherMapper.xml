@@ -122,9 +122,17 @@
         SELECT COUNT(*) FROM teach WHERE teach_id=#{teach_id}
     </select>
 
-    <insert id="checkInTeaches" parameterType="com.ladybird.hkd.model.pojo.Teach">
+    <insert id="checkInTeach" parameterType="com.ladybird.hkd.model.pojo.Teach">
         INSERT INTO teach (teach_id,teacher,course,dept,grade)
         VALUES (#{teach_id},#{teacher},#{course},#{dept},#{grade})
+    </insert>
+
+    <insert id="checkInTeaches" parameterType="com.ladybird.hkd.model.pojo.Teach">
+        INSERT INTO teach (teach_id,teacher,course,dept,grade)
+        VALUES
+            <foreach collection="list" item="teach"  separator=",">
+                ( #{teach.teach_id},#{teach.teacher},#{teach.course},#{teach.dept},#{teach.grade})
+            </foreach>
     </insert>
 
     <update id="changeTeachGrades" >

@@ -11,6 +11,7 @@ import com.ladybird.hkd.model.example.TeachExample;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.*;
 import com.ladybird.hkd.service.TeacherService;
+import com.ladybird.hkd.util.excel.ReadTeachesExcel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,23 +78,23 @@ public class TeacherServiceImpl implements TeacherService{
     public TeachExample checkInTeach(TeachExample teach) throws Exception {
         Teach t = new Teach();
         if (teach.getCourse().getC_id() == null || "".equals(teach.getCourse().getC_id().trim()))
-            throw new ParamException("请选择课程！");
+            throw new ParamException("<添加授课>：请选择课程！");
         Course course = courseMapper.selCourseById(teach.getCourse().getC_id());
         if (course == null)
-            throw new ParamException("课程不存在！");
+            throw new ParamException("<添加授课>：课程不存在！");
         //设置课程
         t.setCourse(course.getC_id());
         if (teach.getTeacher().getT_num() == null || "".equals(teach.getTeacher().getT_num().trim()))
-            throw new ParamException("请选择授课老师！");
+            throw new ParamException("<添加授课>：请选择授课老师！");
         //设置教师
         Teacher teacher = teacherMapper.selTeacherByNum(teach.getTeacher().getT_num());
         if (teacher == null)
-            throw new ParamException("不存在这个工号的教师！");
+            throw new ParamException("<添加授课>：不存在这个工号的教师！");
         t.setTeacher(teacher.getT_num());
         try {
             String[] grade = teach.getGradesIn();
             if (grade.length < 1)
-                throw new ParamException("添加授课：请选择班级！");
+                throw new ParamException("<添加授课>：请选择班级！");
             //判断班级存在
             String grades = "";
             for (int i = 0;i < grade.length;i ++) {
@@ -103,21 +104,21 @@ public class TeacherServiceImpl implements TeacherService{
             }
             Integer count = gradeMapper.selCountGrade(grade);
             if (count < grade.length)
-                throw new ParamException("添加授课：参数有误！");
+                throw new ParamException("<添加授课>：参数有误！");
             //设置班级
             t.setGrade(grades);
 
         } catch (NullPointerException npe) {
-            throw new ParamException("添加授课：请选择班级!");
+            throw new ParamException("<添加授课>：请选择班级!");
         }
         if (teach.getDept().getDept_num() == null || "".equals(teach.getDept().getDept_num()))
-            throw new ParamException("添加授课：请选择专业！");
+            throw new ParamException("<添加授课>：请选择专业！");
         t.setDept(teach.getDept().getDept_num());
         String teach_id = t.getTeacher() + t.getCourse() + t.getDept();
         t.setTeach_id(teach_id);
-        Integer reset = teacherMapper.checkInTeaches(t);
+        Integer reset = teacherMapper.checkInTeach(t);
         if (reset < 1)
-            throw new BusinessException("添加授课：添加失败！");
+            throw new BusinessException("<添加授课>：添加失败！");
         TeachExample result = teacherMapper.checkOutById(teach_id);
         List<GradeExample> gradeExamples = new ArrayList<>();
         for (String s : result.getGrade().split(",")) {
@@ -131,10 +132,10 @@ public class TeacherServiceImpl implements TeacherService{
     public TeachExample changeGrade(String teach_id, String[] grade) throws Exception {
         TeachExample result = teacherMapper.checkOutById(teach_id);
         if (result == null)
-            throw new ParamException("修改授课班级：不存在该条授课记录！");
+            throw new ParamException("<修改授课班级>：不存在该条授课记录！");
         Integer count = gradeMapper.selCountGrade(grade);
         if (count < grade.length)
-            throw new ParamException("修改授课班级：参数出错！");
+            throw new ParamException("<修改授课班级>：参数出错！");
         String grades = "";
         for (int i = 0;i < grade.length;i ++) {
             grades += grade[i];
@@ -143,7 +144,7 @@ public class TeacherServiceImpl implements TeacherService{
         }
         Integer reset = teacherMapper.changeTeachGrades(teach_id, grades);
         if (reset != 1)
-            throw new BusinessException("修改授课班级：修改失败！");
+            throw new BusinessException("<修改授课班级>：修改失败！");
         result.setGrade(grades);
         List<GradeExample> gradeExamples = new ArrayList<>();
         for (String s : result.getGrade().split(",")) {
@@ -157,16 +158,52 @@ public class TeacherServiceImpl implements TeacherService{
     public void delTeach(String teach_id) throws Exception {
         Integer exist = teacherMapper.teachIsExist(teach_id);
         if (exist != 1)
-            throw new ParamException("删除授课：不存在该记录！");
+            throw new ParamException("<删除授课>：不存在该记录！");
         Integer result = teacherMapper.delTeachById(teach_id);
         if (result != 1)
-            throw new BusinessException("删除授课：删除失败！");
+            throw new BusinessException("<删除授课>：删除失败！");
     }
 
     @Override
     //上传授课管理
-    public List<TeachExample> uploadTeaches(MultipartFile multipartFile) {
-        return null;
+    public List<TeachExample> uploadTeaches(MultipartFile multipartFile) throws Exception{
+        //读取excel
+        ReadTeachesExcel readTeachesExcel = new ReadTeachesExcel();
+        List<TeachExample> list = readTeachesExcel.getExcelInfo(multipartFile);
+        List<Teach> teaches = new ArrayList<>();
+        for (TeachExample teachExample : list) {
+            Teach teach = new Teach();
+            teach.setTeacher(teachExample.getTeacher().getT_num());
+            String teach_id = teachExample.getTeacher().getT_num();
+            String dept = deptMapper.findDept(
+                    new Department(null,teachExample.getDept().getDept_name(),null,null))
+                    .getDept_num();
+            teach_id += dept;
+            teach.setDept(dept);
+            String course = courseMapper.findCourse(
+                    new Course(null,teachExample.getCourse().getC_name(),null,null)).getC_id();
+            teach_id += course;
+            teach.setCourse(course);
+            List<GradeExample> gradeExamples = teachExample.getGrades();
+            String grade = "";
+            for (int i = 0;i < gradeExamples.size();i ++) {
+                grade += (gradeMapper.findGrade(
+                        new Grade(null, gradeExamples.get(i).getG_year()
+                                , gradeExamples.get(i).getG_class(), dept))).getG_id();
+                if (i < gradeExamples.size() - 1)
+                    grade += ",";
+            }
+            teach.setGrade(grade);
+            teach_id += gradeExamples.get(0).getG_year();
+            teach.setTeach_id(teach_id);
+            //添加到数据库入参
+            teaches.add(teach);
+        }
+        //调用mapper
+        Integer countIn = teacherMapper.checkInTeaches(teaches);
+        if (countIn < list.size())
+            throw new BusinessException("<导入授课>：导入失败(应导入" + list.size() + "条，实际导入" + countIn + "条)");
+        return list;
     }
 
 

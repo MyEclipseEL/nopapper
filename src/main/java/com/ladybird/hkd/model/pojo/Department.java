@@ -13,6 +13,16 @@ public class Department implements Serializable{
     private String faculty;
     private String tip;
 
+    public Department() {
+    }
+
+    public Department(String dept_num, String dept_name, String faculty, String tip) {
+        this.dept_num = dept_num;
+        this.dept_name = dept_name;
+        this.faculty = faculty;
+        this.tip = tip;
+    }
+
     public String getDept_num() {
         return dept_num;
     }

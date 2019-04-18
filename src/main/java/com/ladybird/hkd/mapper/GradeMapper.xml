@@ -29,6 +29,9 @@
 
                 and g_class = #{g_class}
             </if>
+            <if test="dept != null">
+                AND dept = #{dept}
+            </if>
         </where>
     </select>
 

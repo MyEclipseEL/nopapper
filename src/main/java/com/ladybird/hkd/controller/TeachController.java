@@ -2,8 +2,10 @@ package com.ladybird.hkd.controller;
 
 import com.ladybird.hkd.annotation.CheckGroup;
 import com.ladybird.hkd.annotation.CheckToken;
+import com.ladybird.hkd.exception.AuthorizationException;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
+import com.ladybird.hkd.model.example.AdminExample;
 import com.ladybird.hkd.model.example.TeachExample;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
@@ -16,6 +18,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -55,16 +58,19 @@ public class TeachController extends BaseController {
         //获取登陆教师的信息
         String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
         String adminJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-        List<Course> courses = new ArrayList<>();
-        if (teacherJson != null) {
-            //转为对象
-            TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
+        //转为对象
+        TeacherJsonOut teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
+        if (teacherJsonOut != null && teacherJsonOut.getGroup_id().getGroup_id().equals("2")) {
             try {
                 t_num = teacherJsonOut.getT_num();
             } catch (NullPointerException npe) {
                 throw new BusinessException("token中没有用户信息！");
             }
-//            courses = teacherService.checkOutCourseByNum(t_num);
+        }else if (teacherJsonOut == null){
+            //判断是否为管理员
+            AdminExample adminExample = JsonUtil.jsonToPojo(adminJson,AdminExample.class);
+            if (adminExample == null )
+                throw new AuthorizationException("非法的登陆！");
         }
         List<TeachExample> teachExamples = teacherService.checkOutTeachExms(t_num, course);
         return ResultJson.Success(teachExamples);
@@ -103,7 +109,10 @@ public class TeachController extends BaseController {
         teacherService.delTeach(teach_id);
         return ResultJson.Success();
     }
-
+    @CheckToken
+    @CheckGroup
+    @ResponseBody
+    @RequestMapping(value = "/upload")
     //导入授课表
     public Object importTeaches(HttpServletRequest request) throws Exception{
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -134,6 +143,7 @@ public class TeachController extends BaseController {
         } catch (FileNotFoundException fe) {
             throw new ParamException("请选择上传的文件！");
         }
+        FileUtils.deleteQuietly(file);
         return ResultJson.Success(teacherService.uploadTeaches(multipartFile));
     }
 

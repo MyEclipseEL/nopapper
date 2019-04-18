@@ -16,6 +16,16 @@ public class Grade implements Serializable{
     private Integer g_class;
     private String dept;
 
+    public Grade() {
+    }
+
+    public Grade(String g_id, Integer g_year, Integer g_class, String dept) {
+        this.g_id = g_id;
+        this.g_year = g_year;
+        this.g_class = g_class;
+        this.dept = dept;
+    }
+
     public String getG_id() {
         return g_id;
     }
