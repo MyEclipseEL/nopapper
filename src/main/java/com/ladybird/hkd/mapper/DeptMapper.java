@@ -35,5 +35,8 @@ public interface DeptMapper {
 
     List<DepartmentExample> selByTeacher(@Param("t_num") String t_num) throws Exception;
 
-    String selDeptByName(@Param("dept_name") String dept_name) throws Exception;
+
+
+    List<Department> findDeptByFac(@Param("fac_num") String fac_num) throws Exception;
+
 }

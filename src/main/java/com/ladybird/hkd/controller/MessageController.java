@@ -73,10 +73,10 @@ public class MessageController extends BaseController {
         return messageService.findFaculty(faculty);
     }
 
-    @RequestMapping(value = "/selectAllDept",method = RequestMethod.GET)
+    @RequestMapping(value = "/findDeptByFac",method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson selectAllDept(Faculty faculty) throws Exception{
-        return messageService.selectAllDept(faculty);
+    public ResultJson findDeptByFac(String fac_num) throws Exception{
+        return messageService.findDeptByFac(fac_num);
     }
     @RequestMapping(value = "/addDept",method = RequestMethod.GET)
     @ResponseBody

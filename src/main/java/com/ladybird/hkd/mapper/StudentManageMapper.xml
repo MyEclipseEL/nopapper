@@ -17,31 +17,33 @@
         select
          s.stu_name,
           s.stu_num,
+        f.fac_name,
           d.dept_name,
          g.g_year,
           g.g_class,
          s.stu_ID
         from students s
+        LEFT JOIN faculty f ON s.stu_faculty = f.fac_num
         LEFT JOIN department d ON s.dept = d.dept_num
         LEFT JOIN grade g ON s.grade = g.g_id
         <where>
             <if test="stu_num != null and stu_num != ''">
-                and stu_num = #{stu_num}
+                and s.stu_num = #{stu_num}
             </if>
             <if test="stu_ID != null and stu_ID != ''">
-                and stu_ID = #{stu_ID}
+                and s.stu_ID = #{stu_ID}
             </if>
             <if test="stu_name != null and stu_name != ''">
-                and stu_name = #{stu_name}
+                and s.stu_name = #{stu_name}
             </if>
             <if test="stu_faculty != null and stu_faculty != ''">
-                and stu_faculty = #{stu_faculty}
+                and s.stu_faculty = #{stu_faculty}
             </if>
             <if test="dept != null and dept != ''">
-                and dept = #{dept}
+                and s.dept = #{dept}
             </if>
             <if test="grade != null and grade != ''">
-                and grade = #{grade}
+                and s.grade = #{grade}
             </if>
         </where>
     </select>
@@ -49,27 +51,23 @@
 
 
     <insert id="addStudent" parameterType="com.ladybird.hkd.model.pojo.Student">
-        INSERT INTO `nopaper`.`students` (
-          `stu_num`,
-          `stu_ID`,
-          `stu_name`,
-          `stu_faculty`,
-          `dept`,
-          `gradeExample`,
-          `stu_pwd`,
-          `tip`
+        INSERT INTO students (
+          stu_num,
+          stu_ID,
+          stu_name,
+          stu_faculty,
+          dept,
+          grade
         )
         VALUES
           (
-            'stu_num' = #{stu_num},
-            'stu_ID' = #{stu_ID},
-            'stu_name' = #{stu_name},
-            'stu_faculty' = #{stu_faculty},
-            'dept' = #{dept},
-            'gradeExample' = #{gradeExample},
-            'stu_pwd' = #{stu_pwd},
-            'tip' = #{tip}
-          ) ;
+          #{stu_num},
+            #{stu_ID},
+            #{stu_name},
+           #{stu_faculty},
+            #{dept},
+           #{grade}
+          )
     </insert>
     <delete id="deleteStudent" parameterType="string">
         DELETE
@@ -87,9 +85,7 @@
           stu_name = #{stu_name},
           stu_faculty = #{stu_faculty},
           dept = #{dept},
-          gradeExample = #{gradeExample},
-          stu_pwd = #{stu_pwd},
-          tip = #{tip}
+          grade = #{grade}
         WHERE stu_num = #{stu_num} ;
     </update>
     <select id="findStudent" parameterType="com.ladybird.hkd.model.pojo.Student" resultType="com.ladybird.hkd.model.pojo.Student">

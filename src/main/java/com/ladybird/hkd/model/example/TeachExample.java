@@ -12,6 +12,7 @@ import java.util.List;
  * @create: 2019-04-12
  */
 public class TeachExample implements Serializable {
+
     private String teach_id;                    //标记
     private Teacher teacher;                    //教课老师
     private DepartmentExample dept;             //授课专业
@@ -19,6 +20,7 @@ public class TeachExample implements Serializable {
     private String grade;
     private List<GradeExample> grades;           //教授年级
     private String[] gradesIn;
+
 
     public String getTeach_id() {
         return teach_id;

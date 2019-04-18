@@ -49,15 +49,14 @@
         </where>
     </select>
 
-    <select id="findDeptByNum" parameterType="java.lang.String" resultType="com.ladybird.hkd.model.pojo.Department">
+    <select id="findDeptByNum" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Department">
         SELECT * FROM department where dept_num=#{dept_num}
     </select>
 
-    <select id="selByTeacher" parameterType="String" resultType="com.ladybird.hkd.model.pojo.Department">
+    <select id="selByTeacher" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Department">
         SELECT * FROM department WHERE dept_num IN (SELECT dept FROM teach WHERE teacher=${t_num})
     </select>
-
-    <select id="dept_name" parameterType="String" resultType="String">
-        SELECT dept_num FROM department WHERE dept_name=#{dept_name}
+    <select id="findDeptByFac" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Department">
+        SELECT * FROM department WHERE faculty = #{fac_num}
     </select>
 </mapper>

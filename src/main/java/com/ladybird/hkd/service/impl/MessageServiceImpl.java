@@ -78,7 +78,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findFaculty(Faculty faculty) throws Exception {
-        if(!StringUtils.isNotBlank(faculty.getFac_num())&&!StringUtils.isNotBlank(faculty.getFac_name())){
+        if(!StringUtils.isNotBlank(faculty.getFac_num())||!StringUtils.isNotBlank(faculty.getFac_name())){
             return ResultJson.ParameterError();
         }
         Faculty faculty1 = facultyMapper.findFaculty(faculty);
@@ -87,6 +87,8 @@ public class MessageServiceImpl implements MessageService {
         }
         return ResultJson.Success(faculty1);
     }
+
+
 
 
     public ResultJson selectAllDept(Faculty faculty) throws Exception {
@@ -180,7 +182,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findCourse(Course course) throws Exception {
-        if(!StringUtils.isNotBlank(course.getC_id())&&!StringUtils.isNotBlank(course.getC_name())){
+        if(!StringUtils.isNotBlank(course.getC_id())||!StringUtils.isNotBlank(course.getC_name())){
             return ResultJson.Forbidden("请输入有效查询条件");
         }
         Course course1 = courseMapper.findCourse(course);
@@ -220,6 +222,17 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
+    @Override
+    public ResultJson findDeptByFac(String fac_num) throws Exception {
+        if (!StringUtils.isNotBlank(fac_num)){
+            return ResultJson.Forbidden("请选择学院");
+        }
+        List<Department> departments = deptMapper.findDeptByFac(fac_num);
+        if(departments == null||departments.isEmpty()){
+            return ResultJson.Forbidden("查询失败");
+        }
+        return ResultJson.Success(departments);
+    }
     @Override
     public List<GradeExample> selGradesNotTeach(String course, String teacher, String dept,String year) throws Exception {
         if (course == null || "".equals(course.trim()))

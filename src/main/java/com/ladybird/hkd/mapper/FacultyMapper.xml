@@ -23,7 +23,6 @@
     <select id="findFaculty" parameterType="com.ladybird.hkd.model.pojo.Faculty" resultType="com.ladybird.hkd.model.pojo.Faculty">
         SELECT * FROM faculty
         <where>
-
             <if test="fac_num != null and fac_num != ''">
                 and fac_num = #{fac_num}
             </if>

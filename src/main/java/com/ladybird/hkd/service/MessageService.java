@@ -23,6 +23,8 @@ public interface MessageService {
 
     ResultJson findFaculty(Faculty faculty) throws Exception;
 
+
+
     ResultJson selectAllDept(Faculty faculty) throws Exception;
 
     ResultJson addDept(Department department) throws Exception;
@@ -41,6 +43,11 @@ public interface MessageService {
 
 
     List<GradeExample> gradesNotInExam(String t_num, String course) throws Exception;
+
+
+    ResultJson findDeptByFac(String fac_num) throws Exception;
+
+
 
     List<GradeExample> selGradesNotTeach(String course, String teacher, String dept,String year) throws Exception;
 
