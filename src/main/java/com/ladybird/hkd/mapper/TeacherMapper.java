@@ -104,4 +104,12 @@ public interface TeacherMapper {
     int deleteTeacher(@Param("t_num") String t_num) throws Exception;
 
     List<Teaching> selectTeaching(@Param("t_num") String t_num) throws Exception;
+
+    /**
+     * 批量添加教师信息
+     *@param
+     *@return:
+     *Date: 2019/4/16
+     */
+    Integer checkInTeachers(@Param("teachers") List<Teacher> teachers) throws Exception;
 }

@@ -224,4 +224,11 @@
          LEFT JOIN course c ON t.course = c.c_id
          where teacher = #{t_num}
     </select>
+
+    <insert id="checkInTeachers" parameterType="com.ladybird.hkd.model.pojo.Teacher">
+        INSERT INTO teachers (t_num,t_name,t_faculty) VALUES
+            <foreach collection="teachers" separator="," item="teacher">
+                (#{teacher.t_num},#{teacher.t_name},#{teacher.t_faculty})
+            </foreach>
+    </insert>
 </mapper>

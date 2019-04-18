@@ -7,6 +7,15 @@ public class Faculty implements Serializable{
     private String fac_name;
     private String tip;
 
+    public Faculty() {
+    }
+
+    public Faculty(String fac_num, String fac_name, String tip) {
+        this.fac_num = fac_num;
+        this.fac_name = fac_name;
+        this.tip = tip;
+    }
+
     public String getFac_num() {
         return fac_num;
     }

@@ -2,9 +2,11 @@ package com.ladybird.hkd.controller;
 
 import com.ladybird.hkd.annotation.CheckGroup;
 import com.ladybird.hkd.annotation.CheckToken;
+import com.ladybird.hkd.exception.AuthorizationException;
 import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.manager.TokenManager;
+import com.ladybird.hkd.model.example.AdminExample;
 import com.ladybird.hkd.model.example.ScoreExample;
 import com.ladybird.hkd.model.json.StudentJsonIn;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
@@ -76,25 +78,30 @@ public class StudentController extends BaseController{
     }
 
     //TODO 导出成绩
-    @CheckGroup
+//    @CheckGroup
     @CheckToken
     @ResponseBody
     @RequestMapping(value = "/checkOutScores")
 //    教师导出自己教授的学生的成绩
-    public Object checkOutScores(NativeWebRequest request,String course, String faculty, String dept, String year, String clazz) throws Exception {
+    public Object checkOutScores(NativeWebRequest request,String t_num,String course, String faculty, String dept, String year, String clazz) throws Exception {
         //获取登陆教师的信息
         String teacherJson = (String) request.getAttribute(ConstConfig.CURRENT_OBJECT, RequestAttributes.SCOPE_REQUEST);
-        String t_num = null;
         TeacherJsonOut teacherJsonOut = null;
         if (teacherJson == null) {
-            t_num = null;
+            throw new AuthorizationException("非法登陆！");
         }else {
             //转为对象
             teacherJsonOut = JsonUtil.jsonToPojo(teacherJson, TeacherJsonOut.class);
-            try {
-                t_num = teacherJsonOut.getT_num();
-            } catch (NullPointerException npe) {
-                throw new BusinessException("token用户信息错误！");
+            if (teacherJsonOut != null && teacherJsonOut.getGroup_id().getGroup_id().equals("2")) {
+                try {
+                    t_num = teacherJsonOut.getT_num();
+                } catch (NullPointerException npe) {
+                    throw new BusinessException("token用户信息错误！");
+                }
+            } else if (teacherJsonOut == null) {
+                AdminExample example = JsonUtil.jsonToPojo(teacherJson, AdminExample.class);
+                if (example == null)
+                    throw new AuthorizationException("非法登陆！");
             }
         }
         List<ScoreExample> scoreList = studentService.checkOutScores(t_num,course, faculty, dept, year,clazz);
