@@ -438,7 +438,54 @@ POST  /teach/upload
 }
 ```
 
+##班级管理
+###添加单个班级
+```
+POST  /message/addGrade
+```
+参数
+```
+{
+    "dept"      :   ""  //专业号
+    "year"      :   ""  //年级
+    "clazz"     :   ""  //班级
+}
+```
 
+###批量添加班级
+```
+POST  /message/addGrades
+```
+参数
+```
+{
+    "dept"      :   ""  //专业号
+    "year"      :   ""  //年级
+    "count"     :   ""  //班级数
+}
+```
+
+###导入班级
+```
+POST  /message/uploadGrade
+```
+参数
+```
+{
+    "file"      : file  //文件
+}
+```
+
+###删除文件
+```
+GET  /message/delGrade
+```
+参数
+```
+{
+    "id"       :    //班级号
+}
+```
 
 
 

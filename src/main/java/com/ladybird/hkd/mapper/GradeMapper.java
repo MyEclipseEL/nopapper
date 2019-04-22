@@ -44,6 +44,8 @@ public interface GradeMapper {
 
     Integer addGrades(@Param("grades") List<GradeExample> results) throws Exception;
 
+    Integer addGs(@Param("grades") List<Grade> grades) throws Exception;
+
     String biggestId() throws Exception;
 
     List<Grade> findGradeByDept(@Param("dept") String dept);

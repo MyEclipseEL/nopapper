@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static com.ladybird.hkd.model.json.ResultJson.Success;
 
@@ -108,7 +109,11 @@ public class ItemController extends BaseController{
             throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
         }
 //        List<ItemsOut> outList = itemService.getPaper(examExample.getCourse().getC_id());
-        List<String> url = itemService.getPaperUrl(examExample.getCourse().getC_id());
+        List<String> result = itemService.getPaperUrl(examExample.getCourse().getC_id());
+        Random random = new Random();
+        Integer r = random.nextInt(result.size());
+        List<String> url = new ArrayList<>();
+        url.add(result.get(r));
         return ResultJson.Success(url);
     }
 
@@ -162,8 +167,8 @@ public class ItemController extends BaseController{
             }else {
                 try {
                     File fullFile = new File(fileItem.getName());
-                    file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
-//            file = new File(UrlConf.SERVER_UPLOAD_PATH);
+//                    file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
+                    file = new File(UrlConf.SERVER_UPLOAD_PATH,fullFile.getName());
                     fileItem.write(file);
                 } catch (NullPointerException npe) {
                     throw new ParamException("请选择上传到文件！");

@@ -12,6 +12,7 @@ import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
+import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.service.MessageService;
 
 import com.ladybird.hkd.util.excel.ReadGradeExcel;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -166,10 +168,10 @@ public class MessageServiceImpl implements MessageService {
         if (course.getTip() == null || "".equals(course.getTip().trim()))
             course.setTip(null);
         Integer resultCount = courseMapper.addCourse(course);
-        if (resultCount > 0){
-            return ResultJson.Success("添加成功");
+        if (resultCount != 1){
+            throw new BusinessException("添加失败！");
         }
-        return ResultJson.Forbidden("添加失败");
+        return ResultJson.Success("添加失败");
     }
 
 
@@ -178,17 +180,17 @@ public class MessageServiceImpl implements MessageService {
             return ResultJson.ParameterError();
         }
         Course exist = courseMapper.selCourseById(course.getC_id());
-        if (course.getC_name() != null && "".equals(course.getC_name().trim()))
+        if (course.getC_name() != null && !"".equals(course.getC_name().trim()))
             exist.setC_name(course.getC_name());
         if (course.getChapter() != null && course.getChapter() != 0)
             exist.setChapter(course.getChapter());
-        if(course.getTip() != null && "".equals(course.getTip().trim()))
+        if(course.getTip() != null &&! "".equals(course.getTip().trim()))
             exist.setTip(course.getTip());
         int resultCount = courseMapper.updateCourse(exist);
-        if(resultCount > 0){
-            return ResultJson.Success("修改成功");
+        if(resultCount != 1){
+            throw new BusinessException("修改失败！");
         }
-        return ResultJson.Forbidden("修改失败");
+        return ResultJson.Success("修改成功！");
     }
 
 
@@ -276,6 +278,77 @@ public class MessageServiceImpl implements MessageService {
         if (result < results.size())
             throw new BusinessException("<添加班级>：添加失败！应添加 "+results.size()+"条，实际添加"+result+"条");
         return null;
+    }
+
+    @Override
+    public void addGrade(String dept, String year, String clazz) throws Exception{
+        if(dept == null || "".equals(dept.trim()))
+            throw new ParamException("<添加班级>：请选择专业！");
+        if(year == null || "".equals(year.trim()))
+            throw new ParamException("<添加班级>：请选择年级！");
+        if(clazz == null || "".equals(clazz.trim()))
+            throw new ParamException("<添加班级>：请填写班级！");
+        Department department = deptMapper.findDept(new Department(dept,null,null,null));
+        if(department == null){
+            throw new ParamException("<添加班级>：专业号不存在");
+        }
+        Integer g_year = 0;
+        Integer g_class = 0;
+        try {
+            g_year = Integer.parseInt(year);
+            g_class = Integer.parseInt(clazz);
+        } catch (NumberFormatException e) {
+            throw new ParamException("<添加班级>：年级，班级需为数字");
+        } 
+        Grade grade = new Grade();
+        String id = gradeMapper.biggestId();
+        grade.setG_id(Integer.parseInt(id)+1+"");
+        grade.setDept(dept);
+        grade.setG_class(g_class);
+        grade.setG_year(g_year);
+        Integer result = gradeMapper.addGrade(grade);
+        if(result != 1)
+            throw new BusinessException("<添加班级>：添加失败！");
+        
+    }
+
+    @Override
+    public void addGrades(String dept, String year, String count) throws Exception {
+        if(dept == null || "".equals(dept.trim()))
+            throw new ParamException("<添加班级>：请选择专业！");
+        if(year == null || "".equals(year.trim()))
+            throw new ParamException("<添加班级>：请选择年级！");
+        if(count == null || "".equals(count.trim()))
+            throw new ParamException("<添加班级>：请填写班级数！");
+        Department department = deptMapper.findDept(new Department(dept,null,null,null));
+        if(department == null){
+            throw new ParamException("<添加班级>：专业号不存在");
+        }
+        Integer g_year = 0;
+        try {
+            List<Grade> grades = new ArrayList<>();
+            Integer g_id = Integer.parseInt(gradeMapper.biggestId());
+            g_year = Integer.parseInt(year);
+            for(int i = 0;i < Integer.parseInt(count);i ++){
+                Grade grade = new Grade();
+                grade.setG_id(g_id+1+i+"");
+                grade.setG_year(g_year);
+                grade.setDept(dept);
+                grades.add(grade);
+            }
+            Integer result = gradeMapper.addGs(grades);
+            if(result < grades.size())
+                throw new BusinessException("<添加班级>：添加失败！");
+        } catch (NumberFormatException e) {
+            throw new ParamException("<添加班级>：年级，数量必须是数字！");
+        }
+    }
+
+    @Override
+    public void delGrade(String id) throws Exception {
+        Integer result = gradeMapper.delGrade(id);
+        if (result != 1)
+            throw new BusinessException("<删除班级>：删除失败！");
     }
 
 

@@ -16,10 +16,7 @@ import com.ladybird.hkd.model.pojo.ItemType;
 import com.ladybird.hkd.model.pojo.PaperEdit;
 import com.ladybird.hkd.model.vo.ItemVO;
 import com.ladybird.hkd.service.ItemService;
-import com.ladybird.hkd.util.ConstConfig;
-import com.ladybird.hkd.util.JsonUtil;
-import com.ladybird.hkd.util.TencentCOSFileUtils;
-import com.ladybird.hkd.util.UrlConf;
+import com.ladybird.hkd.util.*;
 import com.ladybird.hkd.util.excel.ReadItemExcel;
 import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import org.apache.commons.io.FileUtils;
@@ -34,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.spring.web.json.Json;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -67,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
             item_type = null;
         PageBean<List<ItemVO>> pageBean = new PageBean<>();
         pageBean.setCurPage(curPage);
-        Integer totalCount = paperlessItemMapper.itemCount(course, item_type);
+        Integer totalCount = paperlessItemMapper.itemCount( item_type,course);
         pageBean.setTotalCount(totalCount);
         pageBean.setPageCount(pageCount);
         pageBean.setTotalPages((int) Math.ceil(totalCount/pageCount));
@@ -180,6 +178,10 @@ public class ItemServiceImpl implements ItemService {
         //得到对象存储地址
 //        if (!synchronizedItems(course))
 //            throw new BusinessException("出错了！");
+        if (!IsThreadOn.threadIsOn()){
+            UploadThread uploadThread = new UploadThread(course);
+            uploadThread.start();
+        }
         return itemVOS;
     }
 
@@ -254,12 +256,11 @@ public class ItemServiceImpl implements ItemService {
         if (result != 1)
             throw new BusinessException("修改失败了！");
         //同步服务器题库
-//        synchronizedItems(item.getCourse().getC_id());
-//        randomPaper(exist.getCourse());
         //TODO 开启上传线程
-//        UploadThread uploadThread = new UploadThread(exist.getCourse());
-//        uploadThread.start();
-//        synchronizedItems(exist.getCourse());
+        if (!IsThreadOn.threadIsOn()) {
+            UploadThread uploadThread = new UploadThread(exist.getCourse());
+            uploadThread.start();
+        }
         return item;
     }
 
@@ -317,8 +318,10 @@ public class ItemServiceImpl implements ItemService {
         if (result != 1)
             throw new BusinessException("添加失败！");
         //同步服务器题库
-//        synchronizedItems(itemVO.getCourse().getC_id());
-        randomPaper("","");
+        if (!IsThreadOn.threadIsOn()) {
+            UploadThread uploadThread = new UploadThread(item.getCourse());
+            uploadThread.start();
+        }
         return itemVO;
     }
 
@@ -334,30 +337,88 @@ public class ItemServiceImpl implements ItemService {
             throw new BusinessException("删除失败！");
         String course = paperlessItemMapper.selItemById(Integer.parseInt(item_id)).getCourse();
         //同步服务器题库
-//        synchronizedItems(course);
-
+        if (!IsThreadOn.threadIsOn()) {
+            UploadThread uploadThread = new UploadThread(course);
+            uploadThread.start();
+        }
         return result;
     }
 
+
+    //闲时组卷线程
     private class UploadThread extends Thread{
         private String course;
         public UploadThread(String course) {
             this.course = course;
         }
-
         @Override
         public void run() {
             try {
+                if (!isFreeTime()) {
+                    Thread.sleep(getRemainSecondsOneDay());
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
                 int result = synchronizedItems(course);
+                IsThreadOn.letThreadOff();
                 if (result < 300)
                     throw new BusinessException("Upload error! Upload again!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        private long getRemainSecondsOneDay() {
+            Date now = new Date();
+            Calendar midnight = Calendar.getInstance();
+            midnight.setTime(now);
+            midnight.add(midnight.DAY_OF_MONTH,1);
+            midnight.set(midnight.HOUR_OF_DAY,0);
+            midnight.set(midnight.MINUTE,0);
+            midnight.set(midnight.SECOND,0);
+            midnight.set(midnight.MILLISECOND,0);
+            long cur = midnight.getTime().getTime() - now.getTime();
+            return cur;
+        }
+        private boolean isFreeTime() {
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+            //初始化
+            Date nowTime = null;
+            Date beginTime = null;
+            Date endTime = null;
+            try {
+                nowTime = df.parse(df.format(new Date()));
+                //定义开始时间
+                beginTime = df.parse("00:00");
+                //定义结束时间
+                endTime = df.parse("06:00");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            boolean flag = belongCalendar(nowTime, beginTime, endTime);
+            return flag;
+        }
+
+        private boolean belongCalendar(Date nowTime, Date beginTime, Date endTime) {
+            //设置当前时间
+            Calendar date = Calendar.getInstance();
+            date.setTime(nowTime);
+            //设置开始时间
+            Calendar begin = Calendar.getInstance();
+            begin.setTime(beginTime);
+            //设置结束时间
+            Calendar end = Calendar.getInstance();
+            end.setTime(endTime);
+            if (date.after(begin) && date.before(end))
+                return true;
+            else
+                return false;
+        }
     }
     //将题目组装并同步到云存储当中
-    public Integer synchronizedItems(String course) throws Exception {
+    private Integer synchronizedItems(String course) throws Exception {
         paperlessItemMapper.delCOSByCourse(course);
         int types = paperlessItemMapper.selTotalType(course);
         if (types < 3)
@@ -365,19 +426,20 @@ public class ItemServiceImpl implements ItemService {
         int index = 1;
         boolean flag = false;
         List<List<ItemListOut>> lists = new ArrayList<>();
-        while (index < 5) {
+        while (index < 10) {
             lists.add(randomPaper(course));
             index++;
         }
-
-        for (List<ItemListOut> result : lists){
+        for (index = 0;index < lists.size();index ++){
+            List<ItemListOut> result = lists.get(index);
             String url = "";
             try {
 //            outputStream = new FileOutputStream(UrlConf.LOCAL_UPLOAD_PATH + "/items.txt");
                 //TODO 放行服务器地址
-//            outputStream = new FileOutputStream(UrlConf.SERVER_UPLOAD_PATH + "/items.txt");
+//            outputStream = new FileOutputStream(UrlConf.SERVER_UPLOAD_PATH + "/item" + "_" + course + "_" + index + ".txt");
                 String in = JsonUtil.objectToJson(result);
-                File file = new File(UrlConf.LOCAL_UPLOAD_PATH + "/item" + "_" + course + "_" + index + ".txt");
+//                File file = new File(UrlConf.LOCAL_UPLOAD_PATH + "/item" + "_" + course + "_" + index + ".txt");
+                File file = new File(UrlConf.SERVER_UPLOAD_PATH + "/item" + "_" + course + "_" + index + ".txt");
                 //将json数据写入文件
                 FileUtils.writeStringToFile(file, in, "UTF-8");
                 //将文件上传到对象存储
@@ -401,7 +463,6 @@ public class ItemServiceImpl implements ItemService {
                 ioe.printStackTrace();
                 flag = false;
             }
-            index++;
         }
         return index;
     }
@@ -426,7 +487,6 @@ public class ItemServiceImpl implements ItemService {
                 checking = itemType;
         }
         String[] chapters = examMapper.checkOutChapter(course).get(0).getNumbers().split("\\|");
-        Set<ItemExample> set = new HashSet<>();
         List<ItemVO> singles = new ArrayList<>();
         List<ItemVO> multiples = new ArrayList<>();
         List<ItemVO> checkings = new ArrayList<>();
@@ -445,7 +505,7 @@ public class ItemServiceImpl implements ItemService {
         outs.add(new ItemListOut(checking, checkings));
 
         System.out.println(outs);
-        System.out.println(randomPaper("", ""));
+//        System.out.println(randomPaper("", ""));
         return outs;
     }
 

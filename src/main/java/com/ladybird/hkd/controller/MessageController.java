@@ -5,6 +5,7 @@ package com.ladybird.hkd.controller;
 import com.ladybird.hkd.annotation.CheckGroup;
 import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.exception.BusinessException;
+import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.Course;
@@ -115,6 +116,37 @@ public class MessageController extends BaseController {
         return messageService.findCourse(course);
     }
 
+
+    //添加单个班级
+    @CheckToken
+    @CheckGroup
+    @ResponseBody
+    @RequestMapping(value = "/addGrade")
+    public Object addGrade(String dept, String year, String clazz) throws Exception {
+        messageService.addGrade(dept,year,clazz);
+        return ResultJson.Success();
+
+    }
+
+    //批量添加班级
+    @CheckToken
+    @CheckGroup
+    @ResponseBody
+    @RequestMapping(value = "/addGrades")
+    public Object addGrades(String dept,String year,String count) throws Exception{
+        messageService.addGrades(dept,year,count);
+        return ResultJson.Success();
+    }
+
+    @CheckToken
+    @CheckGroup
+    @ResponseBody
+    @RequestMapping(value = "/delGrade")
+    public Object delGrade(String id) throws Exception{
+        messageService.delGrade(id);
+        return ResultJson.Success();
+    }
+
     //导入班级信息
     @CheckToken
     @CheckGroup
@@ -135,10 +167,10 @@ public class MessageController extends BaseController {
         for (FileItem item : fileItems) {
             try {
                 File fullFile = new File(item.getName());
-                file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
+                file = new File(UrlConf.SERVER_UPLOAD_PATH, fullFile.getName());
                 item.write(file);
             } catch (NullPointerException npe) {
-                throw new PacketTooBigException("<上传班级信息>：请选择上传文件！");
+                throw new ParamException("<上传班级信息>：请选择上传文件！");
             }
         }
         try {
@@ -146,7 +178,7 @@ public class MessageController extends BaseController {
             multipartFile = new MockMultipartFile(file.getName(), file.getName(),
                     ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
         } catch (FileNotFoundException fe) {
-            throw new PacketTooBigException("<上传班级信息>：请选择上传文件！");
+            throw new ParamException("<上传班级信息>：请选择上传文件！");
         }
         return ResultJson.Success(messageService.addGrades(multipartFile));
     }
