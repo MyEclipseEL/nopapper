@@ -168,7 +168,7 @@ public class ExamController extends BaseController{
         List<ExamExample> examExamples = examService.selectExamByStu(student);
         if (examExamples.size() == 0)
             return ResultJson.BusinessErrorException("暂时没有考试！",null);
-        return examExamples;
+        return ResultJson.Success(examExamples);
     }
 
 }
