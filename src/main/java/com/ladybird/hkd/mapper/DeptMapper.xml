@@ -14,7 +14,7 @@
     </resultMap>
 
 
-    <select id="selectAllDept" parameterType="com.ladybird.hkd.model.pojo.Faculty" resultType="com.ladybird.hkd.model.pojo.Department">
+   <!-- <select id="selectAllDept" parameterType="com.ladybird.hkd.model.pojo.Faculty" resultType="com.ladybird.hkd.model.pojo.Department">
         SELECT
 		  d.dept_num,
 		  d.dept_name,
@@ -24,7 +24,7 @@
 		LEFT JOIN faculty f
 		ON d.faculty = #{fac_num}
     </select>
-
+-->
     <insert id="addDept" parameterType="com.ladybird.hkd.model.pojo.Department">
         INSERT INTO department  VALUES( #{dept_num},#{dept_name},#{faculty},#{tip})
     </insert>
@@ -58,5 +58,17 @@
     </select>
     <select id="findDeptByFac" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Department">
         SELECT * FROM department WHERE faculty = #{fac_num}
+    </select>
+    <select id="selectDept" resultType="com.ladybird.hkd.model.pojo.Department">
+        select *
+        from department
+        <where>
+            <if test="dept_num!=null">
+                and dept_num = #{dept_num}
+            </if>
+            <if test="dept_name!=null">
+                and dept_name like '%${dept_name}%'
+            </if>
+        </where>
     </select>
 </mapper>

@@ -77,9 +77,10 @@
                 and t.t_name = #{teacher.t_name}
             </if>
             <if test="fy != null and fy != ''">
-                and t.t_faculty = (select fac_num from faculty where fac_name = #{fy})
+                and t.t_faculty = (select fac_num from faculty where fac_name like '%${fy}%')
             </if>
         </where>
+        limit #{startNum},#{pageSize}
     </select>
     <select id="validNumPwd" parameterType="com.ladybird.hkd.model.pojo.Teacher" resultMap="queryTeacherJsonOut">
         SELECT * FROM teachers t left JOIN faculty f ON t.t_faculty=f.fac_num
@@ -231,11 +232,13 @@
          LEFT JOIN course c ON t.course = c.c_id
          where teacher = #{t_num}
     </select>
-
     <insert id="checkInTeachers" parameterType="com.ladybird.hkd.model.pojo.Teacher">
         INSERT INTO teachers (t_num,t_name,t_faculty) VALUES
             <foreach collection="teachers" separator="," item="teacher">
                 (#{teacher.t_num},#{teacher.t_name},#{teacher.t_faculty})
             </foreach>
     </insert>
+    <select id="selectTeacherCount" resultType="int">
+        select count(1) from teachers
+    </select>
 </mapper>

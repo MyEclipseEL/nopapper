@@ -74,10 +74,9 @@ public class StudentManageController extends BaseController{
 
     @RequestMapping(value = "/selectStudent", method = RequestMethod.GET)
     @ResponseBody
-    public ResultJson selectStudent(Student student, @RequestParam(value = "pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize") int pageSize) throws Exception{
+    public ResultJson selectStudent(Student student, @RequestParam(value = "pageNum",defaultValue = "1")int pageNum, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize) throws Exception{
         return studentManageService.selectStudent(student,pageNum,pageSize);
     }
-
     @CheckGroup
     @CheckToken
     @RequestMapping(value="/uploadStudent",method=RequestMethod.POST)
@@ -119,25 +118,4 @@ public class StudentManageController extends BaseController{
         return ResultJson.Success(studentManageService.uploadStudent(multipartFile));
     }
 
-   /* @RequestMapping(value = "/selectAllGrade",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultJson selectAllGrade()throws Exception{
-        Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
-        int gradelow;
-        if(month >= 9){
-            gradelow = year-4;
-            return studentManageService.selectAllGrade(gradelow);
-        }else{
-            gradelow = year-5;
-            return studentManageService.selectAllGrade(gradelow);
-        }
-
-    }*/
-   /* @RequestMapping(value = "/selectStudent",method = RequestMethod.GET)
-    @ResponseBody
-    public ResultJson selectStudent(Student student) throws Exception{
-        return studentManageService.selectStudent(student);
-    }*/
 }

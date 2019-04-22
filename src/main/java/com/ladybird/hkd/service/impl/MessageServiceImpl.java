@@ -12,6 +12,7 @@ import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.example.DepartmentExample;
 import com.ladybird.hkd.model.pojo.Faculty;
+import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.service.MessageService;
 
 import com.ladybird.hkd.util.excel.ReadGradeExcel;
@@ -78,7 +79,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findFaculty(Faculty faculty) throws Exception {
-        if(!StringUtils.isNotBlank(faculty.getFac_num())||!StringUtils.isNotBlank(faculty.getFac_name())){
+        if(!StringUtils.isNotBlank(faculty.getFac_num())&&!StringUtils.isNotBlank(faculty.getFac_name())){
             return ResultJson.ParameterError();
         }
         Faculty faculty1 = facultyMapper.findFaculty(faculty);
@@ -91,7 +92,7 @@ public class MessageServiceImpl implements MessageService {
 
 
 
-    public ResultJson selectAllDept(Faculty faculty) throws Exception {
+    /*public ResultJson selectAllDept(Faculty faculty) throws Exception {
         if(faculty == null){
             return ResultJson.ParameterError();
         }
@@ -101,8 +102,18 @@ public class MessageServiceImpl implements MessageService {
             return ResultJson.Forbidden("查询错误");
         }
         return ResultJson.Success(departmentExamples);
+    }*/
+    @Override
+    public ResultJson findDeptByFac(String fac_num) throws Exception {
+        if (!StringUtils.isNotBlank(fac_num)){
+            return ResultJson.Forbidden("请选择学院");
+        }
+        List<Department> departments = deptMapper.findDeptByFac(fac_num);
+        if(departments == null||departments.isEmpty()){
+            return ResultJson.Forbidden("查询失败");
+        }
+        return ResultJson.Success(departments);
     }
-
 
     public ResultJson addDept(Department department) throws Exception {
         if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty())){
@@ -136,11 +147,10 @@ public class MessageServiceImpl implements MessageService {
         if (!StringUtils.isNotBlank(department.getDept_num())&&!StringUtils.isNotBlank(department.getDept_name())){
             return ResultJson.ParameterError();
         }
-        Department departmentExample1 = deptMapper.findDept(department);
-        if(departmentExample1 ==null){
-            return ResultJson.Forbidden("查询失败");
-        }
-        return ResultJson.Success(departmentExample1);
+        List<Department> departments = deptMapper.selectDept(department);
+       if (departments == null || departments.isEmpty())
+           throw new BusinessException("查询失败");
+        return ResultJson.Success(departments);
     }
 
 
@@ -193,7 +203,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findCourse(Course course) throws Exception {
-        if(!StringUtils.isNotBlank(course.getC_id())||!StringUtils.isNotBlank(course.getC_name())){
+        if(!StringUtils.isNotBlank(course.getC_id())&&!StringUtils.isNotBlank(course.getC_name())){
             return ResultJson.Forbidden("请输入有效查询条件");
         }
         Course course1 = courseMapper.findCourse(course);
@@ -233,17 +243,7 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
-    @Override
-    public ResultJson findDeptByFac(String fac_num) throws Exception {
-        if (!StringUtils.isNotBlank(fac_num)){
-            return ResultJson.Forbidden("请选择学院");
-        }
-        List<Department> departments = deptMapper.findDeptByFac(fac_num);
-        if(departments == null||departments.isEmpty()){
-            return ResultJson.Forbidden("查询失败");
-        }
-        return ResultJson.Success(departments);
-    }
+
     @Override
     public List<GradeExample> selGradesNotTeach(String course, String teacher, String dept,String year) throws Exception {
         if (course == null || "".equals(course.trim()))
@@ -276,6 +276,28 @@ public class MessageServiceImpl implements MessageService {
         if (result < results.size())
             throw new BusinessException("<添加班级>：添加失败！应添加 "+results.size()+"条，实际添加"+result+"条");
         return null;
+    }
+
+    @Override
+    public ResultJson addGrade(Grade grade) throws Exception{
+        if(grade.getG_year()==null||grade.getG_class()==null){
+            throw new BusinessException("请输入年级或班级");
+        }
+        grade.setG_id(gradeMapper.biggestId()+1);
+        int resultCount = gradeMapper.addGrade(grade);
+        if (resultCount != 1){
+            throw new BusinessException("添加失败");
+        }
+        return ResultJson.Success("添加成功");
+    }
+
+    @Override
+    public ResultJson deleteGrade(String g_id) throws Exception {
+        int resultCount = gradeMapper.delGrade(g_id);
+        if(resultCount != 1){
+            throw new BusinessException("删除失败");
+        }
+        return ResultJson.Success("删除成功");
     }
 
 

@@ -5,27 +5,33 @@ package com.ladybird.hkd.controller;
 import com.ladybird.hkd.annotation.CheckGroup;
 import com.ladybird.hkd.annotation.CheckToken;
 import com.ladybird.hkd.exception.BusinessException;
+import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
+import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.service.MessageService;
 import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
 import com.ladybird.hkd.util.UrlConf;
-import com.mysql.cj.jdbc.exceptions.PacketTooBigException;
+
+
+import com.mysql.jdbc.PacketTooBigException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.http.entity.ContentType;
+import org.apache.ibatis.annotations.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
@@ -115,6 +121,18 @@ public class MessageController extends BaseController {
         return messageService.findCourse(course);
     }
 
+    @RequestMapping(value = "/addGrade",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultJson addGrade(@RequestParam("dept_num") String dept_num_, Grade grade) throws Exception{
+        grade.setDept(dept_num_);
+        return messageService.addGrade(grade);
+    }
+    @RequestMapping(value = "/deleteGrade",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultJson deleteGrade(String g_id) throws Exception {
+        return messageService.deleteGrade(g_id);
+    }
+
     //导入班级信息
     @CheckToken
     @CheckGroup
@@ -132,21 +150,20 @@ public class MessageController extends BaseController {
         }
         File file = new File("");
         MultipartFile multipartFile = null;
-        for (FileItem item : fileItems) {
+        for (FileItem item : fileItems)
             try {
                 File fullFile = new File(item.getName());
                 file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
                 item.write(file);
             } catch (NullPointerException npe) {
-                throw new PacketTooBigException("<上传班级信息>：请选择上传文件！");
+                throw new ParamException("<上传班级信息>：请选择上传文件！");
             }
-        }
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             multipartFile = new MockMultipartFile(file.getName(), file.getName(),
                     ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
         } catch (FileNotFoundException fe) {
-            throw new PacketTooBigException("<上传班级信息>：请选择上传文件！");
+            throw new ParamException("<上传班级信息>：请选择上传文件！");
         }
         return ResultJson.Success(messageService.addGrades(multipartFile));
     }

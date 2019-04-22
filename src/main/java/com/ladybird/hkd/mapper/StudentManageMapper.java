@@ -11,7 +11,7 @@ import java.util.List;
 public interface StudentManageMapper {
     List<Integer> selectAllGrade(@Param("gradelow") int gradelow) throws Exception;
 
-    List<StudentVo> selectStudent(Student student) throws Exception;
+    List<StudentVo> selectStudent(@Param("student") Student student, @Param("startNum") int startNum, @Param("pageSize") int pageSize) throws Exception;
 
 
     int addStudent(Student student) throws Exception;
@@ -22,5 +22,6 @@ public interface StudentManageMapper {
 
     Student findStudent(Student student) throws Exception;
 
+    int selectCount() throws Exception;
 
 }

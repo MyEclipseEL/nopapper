@@ -104,7 +104,7 @@ public interface TeacherMapper {
 
 
 
-    List<TeacherExample> selectTeacher(@Param("teacher")Teacher teacher,@Param("fy") String faculty) throws Exception;
+    List<TeacherExample> selectTeacher(@Param("teacher") Teacher teacher, @Param("fy") String faculty, @Param("startNum") int startNum, @Param("pageSize") int pageSize) throws Exception;
 
     int addTeacher(Teacher teacher) throws Exception;
 
@@ -121,6 +121,6 @@ public interface TeacherMapper {
      *Date: 2019/4/16
      */
     Integer checkInTeachers(@Param("teachers") List<Teacher> teachers) throws Exception;
-
+    int selectTeacherCount() throws Exception;
 
 }
