@@ -25,7 +25,7 @@ public interface MessageService {
 
 
 
-    ResultJson selectAllDept(Faculty faculty) throws Exception;
+   // ResultJson selectAllDept(Faculty faculty) throws Exception;
 
     ResultJson addDept(Department department) throws Exception;
 
@@ -54,7 +54,7 @@ public interface MessageService {
     List<GradeExample> addGrades(MultipartFile multipartFile) throws Exception;
 
     void addGrade(String dept, String year, String clazz) throws Exception;
-    
+
     void addGrades(String dept,String year,String count) throws Exception;
 
     void delGrade(String id) throws Exception;

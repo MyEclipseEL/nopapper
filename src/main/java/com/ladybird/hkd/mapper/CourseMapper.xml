@@ -28,6 +28,9 @@
             <if test="c_name != null and c_name != ''">
                 and c_name LIKE '%${c_name}%'
             </if>
+            <if test="chapter != null">
+                and chapter=#{chapter}
+            </if>
         </where>
     </select>
 

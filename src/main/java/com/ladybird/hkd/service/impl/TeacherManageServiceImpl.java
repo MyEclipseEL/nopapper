@@ -1,11 +1,11 @@
 package com.ladybird.hkd.service.impl;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ladybird.hkd.exception.ExcelImportException;
 import com.ladybird.hkd.mapper.FacultyMapper;
 import com.ladybird.hkd.mapper.GradeMapper;
 import com.ladybird.hkd.mapper.TeacherMapper;
 import com.ladybird.hkd.model.example.TeacherExample;
+import com.ladybird.hkd.model.json.PageBean;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Faculty;
 import com.ladybird.hkd.model.pojo.Grade;
@@ -29,15 +29,24 @@ public class TeacherManageServiceImpl implements TeacherManageService {
     private GradeMapper gradeMapper;
     @Override
     public ResultJson selectTeacher(Teacher teacher, String faculty, int pageNum, int pageSize) throws Exception{
-        //startPage--start
-        //填充自己的sql查询逻辑
-        //pageHelper--收尾
-        PageHelper.startPage(pageNum,pageSize);
-        List<TeacherExample> teacherExamples = teacherMapper.selectTeacher(teacher,faculty);
+        int startNum = (pageNum-1)*pageSize;
+        List<TeacherExample> teacherExamples = teacherMapper.selectTeacher(teacher,faculty,startNum,pageSize);
         if(teacherExamples == null || teacherExamples.isEmpty()){
             return ResultJson.Forbidden("查询错误");
         }
-        PageInfo pageResult = new PageInfo(teacherExamples);
+        PageBean pageResult = new PageBean();
+        pageResult.setData(teacherExamples);
+        pageResult.setCurPage(pageNum);
+        pageResult.setPageCount(pageSize);
+        int totalCount = teacherMapper.selectTeacherCount();
+        pageResult.setTotalCount(totalCount);
+        int totalPages;
+        if(totalCount%10==0){
+            totalPages = totalCount / pageSize;
+        }else {
+            totalPages = totalCount / pageSize+1;
+        }
+       pageResult.setTotalPages(totalPages);
         return ResultJson.Success(pageResult);
     }
 
@@ -46,10 +55,8 @@ public class TeacherManageServiceImpl implements TeacherManageService {
         if(!StringUtils.isNotBlank(teacher.getT_num())||!StringUtils.isNotBlank(teacher.getT_name())||!StringUtils.isNotBlank(teacher.getT_faculty())||!StringUtils.isNotBlank(teacher.getT_dept())){
             return ResultJson.ParameterError();
         }
-        Teacher t = new Teacher();
-        t.setT_num(teacher.getT_num());
-        List<TeacherExample> teacherExamples = teacherMapper.selectTeacher(t, null);
-        if (teacherExamples != null ||!teacherExamples.isEmpty()){
+        Teacher teacher1 = teacherMapper.selTeacherByNum(teacher.getT_num());
+        if (teacher1 != null){
             return this.updateTeacher(teacher);
 
         }

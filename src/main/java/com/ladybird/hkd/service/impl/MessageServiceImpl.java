@@ -80,7 +80,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findFaculty(Faculty faculty) throws Exception {
-        if(!StringUtils.isNotBlank(faculty.getFac_num())||!StringUtils.isNotBlank(faculty.getFac_name())){
+        if(!StringUtils.isNotBlank(faculty.getFac_num())&&!StringUtils.isNotBlank(faculty.getFac_name())){
             return ResultJson.ParameterError();
         }
         Faculty faculty1 = facultyMapper.findFaculty(faculty);
@@ -89,22 +89,6 @@ public class MessageServiceImpl implements MessageService {
         }
         return ResultJson.Success(faculty1);
     }
-
-
-
-
-    public ResultJson selectAllDept(Faculty faculty) throws Exception {
-        if(faculty == null){
-            return ResultJson.ParameterError();
-        }
-        List<Department> departmentExamples = deptMapper.selectAllDept(faculty);
-        if(departmentExamples == null || departmentExamples.isEmpty()){
-
-            return ResultJson.Forbidden("查询错误");
-        }
-        return ResultJson.Success(departmentExamples);
-    }
-
 
     public ResultJson addDept(Department department) throws Exception {
         if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty())){
@@ -120,6 +104,22 @@ public class MessageServiceImpl implements MessageService {
         }
         return ResultJson.Forbidden("添加专业失败");
     }
+
+
+
+
+    /*public ResultJson selectAllDept(Faculty faculty) throws Exception {
+        if(faculty == null){
+            return ResultJson.ParameterError();
+        }
+        List<Department> departmentExamples = deptMapper.selectAllDept(faculty);
+        if(departmentExamples == null || departmentExamples.isEmpty()){
+
+            return ResultJson.Forbidden("查询错误");
+        }
+        return ResultJson.Success(departmentExamples);
+    }*/
+
 
 
     public ResultJson updateDept(Department department) throws Exception {
@@ -138,11 +138,10 @@ public class MessageServiceImpl implements MessageService {
         if (!StringUtils.isNotBlank(department.getDept_num())&&!StringUtils.isNotBlank(department.getDept_name())){
             return ResultJson.ParameterError();
         }
-        Department departmentExample1 = deptMapper.findDept(department);
-        if(departmentExample1 ==null){
-            return ResultJson.Forbidden("查询失败");
-        }
-        return ResultJson.Success(departmentExample1);
+        List<Department> departments = deptMapper.selectDept(department);
+       if (departments == null || departments.isEmpty())
+           throw new BusinessException("查询失败");
+        return ResultJson.Success(departments);
     }
 
 
@@ -195,7 +194,7 @@ public class MessageServiceImpl implements MessageService {
 
 
     public ResultJson findCourse(Course course) throws Exception {
-        if(!StringUtils.isNotBlank(course.getC_id())||!StringUtils.isNotBlank(course.getC_name())){
+        if(!StringUtils.isNotBlank(course.getC_id())&&!StringUtils.isNotBlank(course.getC_name())){
             return ResultJson.Forbidden("请输入有效查询条件");
         }
         Course course1 = courseMapper.findCourse(course);
@@ -299,7 +298,7 @@ public class MessageServiceImpl implements MessageService {
             g_class = Integer.parseInt(clazz);
         } catch (NumberFormatException e) {
             throw new ParamException("<添加班级>：年级，班级需为数字");
-        } 
+        }
         Grade grade = new Grade();
         String id = gradeMapper.biggestId();
         grade.setG_id(Integer.parseInt(id)+1+"");
@@ -309,7 +308,7 @@ public class MessageServiceImpl implements MessageService {
         Integer result = gradeMapper.addGrade(grade);
         if(result != 1)
             throw new BusinessException("<添加班级>：添加失败！");
-        
+
     }
 
     @Override

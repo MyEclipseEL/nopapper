@@ -11,22 +11,27 @@ import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.Course;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
+import com.ladybird.hkd.model.pojo.Grade;
 import com.ladybird.hkd.service.MessageService;
 import com.ladybird.hkd.service.TeacherService;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
 import com.ladybird.hkd.util.UrlConf;
-import com.mysql.cj.jdbc.exceptions.PacketTooBigException;
+
+
+import com.mysql.jdbc.PacketTooBigException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.http.entity.ContentType;
+import org.apache.ibatis.annotations.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
@@ -164,7 +169,7 @@ public class MessageController extends BaseController {
         }
         File file = new File("");
         MultipartFile multipartFile = null;
-        for (FileItem item : fileItems) {
+        for (FileItem item : fileItems){
             try {
                 File fullFile = new File(item.getName());
                 file = new File(UrlConf.SERVER_UPLOAD_PATH, fullFile.getName());

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ladybird.hkd.mapper.*;
 import com.ladybird.hkd.model.example.StudentExample;
+import com.ladybird.hkd.model.json.PageBean;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.pojo.Department;
 import com.ladybird.hkd.model.pojo.Faculty;
@@ -41,27 +42,24 @@ public class StudentManageServiceImpl implements StudentManageService {
 
 
     public ResultJson selectStudent(Student student, int pageNum, int pageSize) throws Exception {
-        if(StringUtils.isNotBlank(student.getStu_faculty())){
-            Faculty faculty = new Faculty();
-            faculty.setFac_name(student.getStu_faculty());
-            Faculty faculty1 = facultyMapper.findFaculty(faculty);
-            student.setStu_faculty(faculty1.getFac_num());
-        }
-        if(StringUtils.isNotBlank(student.getDept())){
-            Department department = new Department();
-            department.setDept_name(student.getDept());
-            Department dept = deptMapper.findDept(department);
-            student.setDept(dept.getDept_num());
-        }
-       //startPage--start
-        //填充自己的sql查询逻辑
-        //pageHelper--收尾
-        PageHelper.startPage(pageNum,pageSize);
-        List<StudentVo> studentVos = studentManageMapper.selectStudent(student);
+        int startNum = (pageNum-1)*pageSize;
+        List<StudentVo> studentVos = studentManageMapper.selectStudent(student,startNum,pageSize);
         if(studentVos==null||studentVos.isEmpty()){
             return ResultJson.Forbidden("查询失败");
         }
-        PageInfo pageResult = new PageInfo(studentVos);
+        PageBean pageResult = new PageBean();
+        pageResult.setData(studentVos);
+        pageResult.setCurPage(pageNum);
+        pageResult.setPageCount(pageSize);
+        int totalCount = studentManageMapper.selectCount();
+        pageResult.setTotalCount(totalCount);
+        int totalPages;
+        if(totalCount%10==0){
+            totalPages = totalCount / pageSize;
+        }else {
+            totalPages = totalCount / pageSize+1;
+        }
+        pageResult.setTotalPages(totalPages);
         return ResultJson.Success(pageResult);
     }
 
