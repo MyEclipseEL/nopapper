@@ -18,6 +18,7 @@ import com.ladybird.hkd.service.StudentService;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.util.ConstConfig;
 import com.ladybird.hkd.util.JsonUtil;
+import com.ladybird.hkd.util.RedisOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 /**
@@ -42,6 +44,8 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController extends BaseController{
 
+    @Autowired
+    RedisOperator operator;
     @Autowired
     private StudentService studentService;
     @Autowired
@@ -69,11 +73,17 @@ public class StudentController extends BaseController{
         }
         Student student = studentService.login(studentJsonIn);
         student.setStu_pwd(null);
+        String time = operator.get(studentJsonIn.getStu_num());
+        if (time != null) { //已经有过登陆
+
+
+        }
         //创建token
         String accessToken = tokenManager.createToken(student);
 
         //创建refreshToken
         String refreshToken = tokenManager.createReToken(accessToken);
+
         return new TokenJsonOut(accessToken, refreshToken);
     }
 

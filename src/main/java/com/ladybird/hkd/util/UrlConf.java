@@ -15,9 +15,8 @@ public class UrlConf {
      */
 //    public static final String SERVER_UPLOAD_PATH = "D:/programfiles/java/ideaWorkSpace/nopapper/uploads";
 
-    public static final String LOCAL_UPLOAD_PATH = "D:/programfiles/java/ideaWorkSpace/nopapper/uploads";
 
-    public static final String PEI_UPLOAD_PATH = "D:/upload";
+//    public static final String PEI_UPLOAD_PATH = "D:/upload";
 
     /**
      * 本地存储上传线程开启数量路径
