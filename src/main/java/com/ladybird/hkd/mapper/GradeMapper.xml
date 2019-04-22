@@ -4,7 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ladybird.hkd.mapper.GradeMapper" >
 <insert id="addGrade" parameterType="com.ladybird.hkd.model.pojo.Grade" >
-    INSERT INTO grade (g_year, g_class) VALUES (#{g_year}, #{g_class});
+    INSERT INTO grade (g_id,dept,g_year, g_class) VALUES (#{g_id},#{dept},#{g_year}, #{g_class});
+</insert>
+
+<insert id="addGs" parameterType="com.ladybird.hkd.model.pojo.Grade">
+    INSERT INTO grade (g_id,dept,g_year,g_class)
+    VALUES
+    <foreach collection="grades" separator="," item="grade">
+        (#{grade.g_id},#{grade.dept},#{grade.g_year},#{grade.g_class})
+    </foreach>
 </insert>
 
  <delete id="delGrade" parameterType="Integer">
@@ -12,7 +20,7 @@
  </delete>
 
     <update id="updateGrade" parameterType="com.ladybird.hkd.model.pojo.Grade">
-        UPDATE grade SET g_year=#{g_year},g_class=#{g_class} where g_id=#{g_id}
+        UPDATE grade SET g_year=#{g_year},g_class=#{g_class} ,dept=#{dept} where g_id=#{g_id}
 
     </update>
     <select id="findGrade" parameterType="com.ladybird.hkd.model.pojo.Grade" resultType="com.ladybird.hkd.model.pojo.Grade">
@@ -102,7 +110,7 @@
     <insert id="addGrades" parameterType="com.ladybird.hkd.model.example.GradeExample">
         INSERT INTO grade (g_id,dept,g_year,g_class)VALUES
                 <foreach collection="grades" item="g" separator=",">
-                (#{g.g_id},(SELECT dept_num FROM department WHERE dept_name=#{g.dept.dept_name}),
+                (#{g.g_id},(SELECT dept_num FROM department WHERE #{g.dept.dept_name} LIKE CONCAT("%",dept_name,"%")),
                     #{g.g_year},#{g.g_class})
                 </foreach>
     </insert>

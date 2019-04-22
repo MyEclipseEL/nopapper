@@ -121,16 +121,35 @@ public class MessageController extends BaseController {
         return messageService.findCourse(course);
     }
 
-    @RequestMapping(value = "/addGrade",method = RequestMethod.GET)
+
+    //添加单个班级
+    @CheckToken
+    @CheckGroup
     @ResponseBody
-    public ResultJson addGrade(@RequestParam("dept_num") String dept_num_, Grade grade) throws Exception{
-        grade.setDept(dept_num_);
-        return messageService.addGrade(grade);
+    @RequestMapping(value = "/addGrade")
+    public Object addGrade(String dept, String year, String clazz) throws Exception {
+        messageService.addGrade(dept,year,clazz);
+        return ResultJson.Success();
+
     }
-    @RequestMapping(value = "/deleteGrade",method = RequestMethod.GET)
+
+    //批量添加班级
+    @CheckToken
+    @CheckGroup
     @ResponseBody
-    public ResultJson deleteGrade(String g_id) throws Exception {
-        return messageService.deleteGrade(g_id);
+    @RequestMapping(value = "/addGrades")
+    public Object addGrades(String dept,String year,String count) throws Exception{
+        messageService.addGrades(dept,year,count);
+        return ResultJson.Success();
+    }
+
+    @CheckToken
+    @CheckGroup
+    @ResponseBody
+    @RequestMapping(value = "/delGrade")
+    public Object delGrade(String id) throws Exception{
+        messageService.delGrade(id);
+        return ResultJson.Success();
     }
 
     //导入班级信息
@@ -150,14 +169,15 @@ public class MessageController extends BaseController {
         }
         File file = new File("");
         MultipartFile multipartFile = null;
-        for (FileItem item : fileItems)
+        for (FileItem item : fileItems){
             try {
                 File fullFile = new File(item.getName());
-                file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
+                file = new File(UrlConf.SERVER_UPLOAD_PATH, fullFile.getName());
                 item.write(file);
             } catch (NullPointerException npe) {
                 throw new ParamException("<上传班级信息>：请选择上传文件！");
             }
+        }
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             multipartFile = new MockMultipartFile(file.getName(), file.getName(),

@@ -4,6 +4,7 @@ import com.ladybird.hkd.exception.BusinessException;
 import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.exception.TokenException;
 import com.ladybird.hkd.model.json.ResultJson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,11 +13,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * @author Shen
- * @description: baseContoller
+ * @description: baseController
  * @create: 2019-03-13
  */
 @Controller
 public class BaseController {
+
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
@@ -24,7 +26,6 @@ public class BaseController {
     public Object handleException(Exception e) {
 
         if (e.getClass() == ParamException.class) {
-            //TODO 日志记录
             e.printStackTrace();
             return ResultJson.ParameterException(e.getMessage(), null);
         }
@@ -37,7 +38,7 @@ public class BaseController {
             return ResultJson.BusinessErrorException(e.getMessage(),null);
         }
         e.printStackTrace();
-        return ResultJson.ServerException(e.getMessage());
+        return ResultJson.ServerException("出错了，请联系管理员！");
     }
 
 }

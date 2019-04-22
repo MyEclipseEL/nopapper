@@ -1,6 +1,7 @@
 package com.ladybird.hkd.model.example;
 
 import com.ladybird.hkd.model.pojo.Course;
+import com.ladybird.hkd.model.pojo.Teacher;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +16,7 @@ public class ExamExample implements Serializable {
     private Course course;     //考试课程
     private String grade;        //考试班级
     private DepartmentExample dept;    //考试专业
+    private Teacher teacher;
     private Date finish_time;      //预设开始时间
     private Date begin_time;    //考试开始时间
     private Integer duration;   //考试时长  （毫秒）
@@ -82,5 +84,13 @@ public class ExamExample implements Serializable {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
     }
 }

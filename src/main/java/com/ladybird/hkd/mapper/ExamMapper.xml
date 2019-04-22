@@ -27,6 +27,8 @@
         <association property="course" javaType="com.ladybird.hkd.model.pojo.Course">
             <id column="c_id" property="c_id" />
             <result column="c_name" property="c_name" jdbcType="VARCHAR"/>
+            <result column="chapter" property="chapter"/>
+            <result column="tip" property="tip"/>
         </association>
     </resultMap>
 
@@ -42,6 +44,7 @@
         <association property="course" column="course" javaType="com.ladybird.hkd.model.pojo.Course">
             <id property="c_id" column="c_id"/>
             <result property="c_name" column="c_name"/>
+            <result property="chapter" column="chapter"/>
             <result property="tip" column="tip"/>
         </association>
     </resultMap>
