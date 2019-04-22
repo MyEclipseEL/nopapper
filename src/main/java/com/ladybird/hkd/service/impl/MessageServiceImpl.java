@@ -90,33 +90,6 @@ public class MessageServiceImpl implements MessageService {
         return ResultJson.Success(faculty1);
     }
 
-
-
-
-    /*public ResultJson selectAllDept(Faculty faculty) throws Exception {
-        if(faculty == null){
-            return ResultJson.ParameterError();
-        }
-        List<Department> departmentExamples = deptMapper.selectAllDept(faculty);
-        if(departmentExamples == null || departmentExamples.isEmpty()){
-
-            return ResultJson.Forbidden("查询错误");
-        }
-        return ResultJson.Success(departmentExamples);
-    }*/
-    @Override
-    public ResultJson findDeptByFac(String fac_num) throws Exception {
-        if (!StringUtils.isNotBlank(fac_num)){
-            return ResultJson.Forbidden("请选择学院");
-        }
-        List<Department> departments = deptMapper.findDeptByFac(fac_num);
-        if(departments == null||departments.isEmpty()){
-            return ResultJson.Forbidden("查询失败");
-        }
-        return ResultJson.Success(departments);
-    }
-
-
     public ResultJson addDept(Department department) throws Exception {
         if(!StringUtils.isNotBlank(department.getDept_num())||!StringUtils.isNotBlank(department.getDept_name())||!StringUtils.isNotBlank(department.getFaculty())){
             return ResultJson.ParameterError();
@@ -131,6 +104,22 @@ public class MessageServiceImpl implements MessageService {
         }
         return ResultJson.Forbidden("添加专业失败");
     }
+
+
+
+
+    /*public ResultJson selectAllDept(Faculty faculty) throws Exception {
+        if(faculty == null){
+            return ResultJson.ParameterError();
+        }
+        List<Department> departmentExamples = deptMapper.selectAllDept(faculty);
+        if(departmentExamples == null || departmentExamples.isEmpty()){
+
+            return ResultJson.Forbidden("查询错误");
+        }
+        return ResultJson.Success(departmentExamples);
+    }*/
+
 
 
     public ResultJson updateDept(Department department) throws Exception {
