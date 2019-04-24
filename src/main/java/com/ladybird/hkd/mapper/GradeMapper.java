@@ -18,6 +18,8 @@ public interface GradeMapper {
 
     Grade findGrade(Grade grade);
 
+    List<Grade> selGrades(Grade grade) throws Exception;
+
     Grade findGradeByYandC(Grade grade);
 
     List<GradeExample> selGradesNotInExam(@Param("t_num") String t_num, @Param("course") String course,
@@ -39,7 +41,7 @@ public interface GradeMapper {
      *@return:
      *Date: 2019/4/17
      */
-    List<GradeExample> selGradesNotTeach(@Param("grade") String grade,@Param("g_year") String g_year,
+    List<GradeExample> selGradesNotTeach(@Param("grade") String grade,@Param("g_year") Integer g_year,
                                          @Param("dept") String dept) throws Exception;
 
     Integer addGrades(@Param("grades") List<GradeExample> results) throws Exception;

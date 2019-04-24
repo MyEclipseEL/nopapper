@@ -144,13 +144,13 @@ public class ItemVO implements Serializable{
                 for (String s : c)
                     choices.add(s);
                 result.setItem_choice(choices);
-                if (item.getItem_type().equals("B")) {
+//                if (item.getItem_type().equals("B")) {
                     String[] v = item.getItem_valid().split(",");
                     for (int i = 0; i < v.length; i++)
                         v[i] = v[i].trim();
                     result.setItem_valid(v);
-                } else
-                    result.setItem_valid(new String[]{item.getItem_valid()});
+//                } else
+//                    result.setItem_valid(new String[]{item.getItem_valid()});
             }
             results.add(result);
         }

@@ -90,7 +90,7 @@ public class TeacherManageController extends BaseController {
                 File fullFile = new File(item.getName());
              //   file = new File(UrlConf.LOCAL_UPLOAD_PATH,fullFile.getName());
 //                file = new File(UrlConf.SERVER_UPLOAD_PATH);
-                file = new File(UrlConf.PEI_UPLOAD_PATH, fullFile.getName());
+                file = new File(UrlConf.SERVER_UPLOAD_PATH, fullFile.getName());
                 item.write(file);
             } catch (NullPointerException npe) {
                 throw new ParamException("<导入教师信息>：请选择上传的文件");

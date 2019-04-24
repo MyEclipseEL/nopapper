@@ -9,6 +9,7 @@ import com.ladybird.hkd.mapper.PaperlessItemMapper;
 import com.ladybird.hkd.model.example.ChapterEditExm;
 import com.ladybird.hkd.model.example.GradeExample;
 import com.ladybird.hkd.model.example.PaperEditExample;
+import com.ladybird.hkd.model.json.ChapterIn;
 import com.ladybird.hkd.model.json.ExamJsonIn;
 import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.pojo.*;
@@ -62,7 +63,7 @@ public class ExamServiceImpl implements ExamService {
     public ExamExample checkOutExamById(String exam) throws Exception {
         ExamExample examExample = examMapper.checkOutExamById(exam);
         if (examExample == null) {
-            throw new Exception();
+            throw new BusinessException("没有这场考试！");
         }
         return examExample;
     }
@@ -177,26 +178,38 @@ public class ExamServiceImpl implements ExamService {
 
     //配置课程的章节题目数量
     @Override
-    public ChapterEditExm checkInChapter(String course, Integer[][] number, String tip) throws Exception {
+    public ChapterEditExm checkInChapter(ChapterIn chapterIn) throws Exception {
+        if (chapterIn.getCourse() == null || "".equals(chapterIn.getCourse().trim()))
+            throw new ParamException("<配置章节题目数量>：课程出错！");
+        String course = chapterIn.getCourse();
+        List<Integer[]> number = chapterIn.getNumber();
+        Integer[][] num = new Integer[number.size()][3];
         String numbers = "";
-        for (int n = 0;n < number.length; n ++) {
-            Integer[] cur = number[n];
+        for (int n = 0;n < number.size(); n ++) {
+            Integer[] cur = number.get(n);
             for (int i =0 ;i < cur.length;i ++) {
+                if (cur[i]<0)
+                    throw new ParamException("<配置章节题目数量>：题目数不能为负！");
+                num[n][i] = cur[i];
                 numbers += cur[i];
                 if (i < cur.length -1)
                     numbers += ",";
             }
-            if (n < number.length - 1)
-                numbers += "\\|";
+            if (n < number.size() - 1)
+                numbers += "|";
         }
-        if (tip == null || "".equals(tip.trim()))
+        String tip = null;
+        if (chapterIn.getTip()== null || "".equals(chapterIn.getTip().trim()))
             tip = null;
+        else
+            tip = chapterIn.getTip();
         Course exist = courseMapper.selCourseById(course);
         if (exist == null)
             throw new ParamException("课程不存在!");
         examMapper.delChapterByCourse(course);
         examMapper.checkInChapter(course, numbers, tip);
         ChapterEditExm result = examMapper.checkOutChapter(course).get(0);
+        result.setNumber(num);
         return result;
     }
 

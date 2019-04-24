@@ -19,7 +19,6 @@ import com.ladybird.hkd.util.JsonUtil;
 import com.ladybird.hkd.util.UrlConf;
 
 
-import com.mysql.jdbc.PacketTooBigException;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -182,10 +181,13 @@ public class MessageController extends BaseController {
             FileInputStream fileInputStream = new FileInputStream(file);
             multipartFile = new MockMultipartFile(file.getName(), file.getName(),
                     ContentType.APPLICATION_OCTET_STREAM.toString(), fileInputStream);
+            return ResultJson.Success(messageService.addGrades(multipartFile));
         } catch (FileNotFoundException fe) {
             throw new ParamException("<上传班级信息>：请选择上传文件！");
+        }catch(Exception e){
+            throw new BusinessException("请检查您的文件！");
         }
-        return ResultJson.Success(messageService.addGrades(multipartFile));
+       
     }
 
     //通过专业查找未授课班级

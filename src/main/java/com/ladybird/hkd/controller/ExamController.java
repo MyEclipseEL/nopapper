@@ -7,6 +7,7 @@ import com.ladybird.hkd.exception.ParamException;
 import com.ladybird.hkd.model.example.ChapterEditExm;
 import com.ladybird.hkd.model.example.PaperEditExample;
 import com.ladybird.hkd.model.example.ExamExample;
+import com.ladybird.hkd.model.json.ChapterIn;
 import com.ladybird.hkd.model.json.ResultJson;
 import com.ladybird.hkd.model.json.TeacherJsonOut;
 import com.ladybird.hkd.model.pojo.*;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -82,12 +84,10 @@ public class ExamController extends BaseController{
     @CheckGroup
     @ResponseBody
     @RequestMapping(value = "/checkInChapter")
-    public Object checkInChapter(String course, Integer[][] number, String tip) throws Exception{
-        if (course == null || "".equals(course.trim()))
-            throw new ParamException("课程出错！");
-        if (number == null)
-            throw new ParamException("参数错误！");
-        ChapterEditExm chapterEditExm = examService.checkInChapter(course, number, tip);
+    public Object checkInChapter(@RequestBody ChapterIn chapterIn) throws Exception{
+//        if (number == null)
+//            throw new ParamException("参数错误！");
+        ChapterEditExm chapterEditExm = examService.checkInChapter(chapterIn);
         return ResultJson.Success(chapterEditExm);
     }
 

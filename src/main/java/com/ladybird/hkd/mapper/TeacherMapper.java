@@ -24,7 +24,7 @@ public interface TeacherMapper {
     //查找某一年级某老师教得某个专业的班级
     String selGradesByDeptCourse(@Param("t_num") String t_num,@Param("dept_num") String dept_num,@Param("c_id") String c_id,@Param("g_year") String year) throws Exception;
 
-    String selGradesByCourse(@Param("t_num") String t_num,@Param("c_id") String c_id) throws Exception;
+    List<String> selGradesByCourse(@Param("t_num") String t_num,@Param("c_id") String c_id) throws Exception;
 
 
     List<Course> checkOutCourseByNum(@Param("t_num") String t_num) throws Exception;

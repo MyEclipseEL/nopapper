@@ -76,41 +76,41 @@ public class PeopleExcel  extends ReadItemExcel{
                     case 0:
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入学生: 学号为空!");
-                        studentExample.setStu_num(cell.getStringCellValue());
+                        studentExample.setStu_num(cell.getStringCellValue().trim());
                         break;
                     case 1:
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入学生: 姓名为空!");
-                        studentExample.setStu_name(cell.getStringCellValue());
+                        studentExample.setStu_name(cell.getStringCellValue().trim());
                         break;
                     case 2:
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入学生: 身份证为空!");
-                        studentExample.setStu_ID(cell.getStringCellValue());
+                        studentExample.setStu_ID(cell.getStringCellValue().trim());
                         break;
                     case 3:
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入学生: 学院为空!");
                         Faculty faculty = new Faculty();
-                        faculty.setFac_name(cell.getStringCellValue());
+                        faculty.setFac_name(cell.getStringCellValue().trim());
                         studentExample.setFaculty(faculty);
                         break;
                     case 4:
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入学生: 专业为空!");
                         Department department = new Department();
-                        department.setDept_name(cell.getStringCellValue());
+                        department.setDept_name(cell.getStringCellValue().trim());
                         studentExample.setDepartment(department);
                         break;
                     case 5:
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入学生: 年级为空!");
-                        year = cell.getStringCellValue();
+                        year = cell.getStringCellValue().trim();
                         break;
                     case 6:
                         if (cell.getStringCellValue() == null || "".equals(cell.getStringCellValue().trim()))
                             throw new ExcelImportException("导入学生: 班级为空!");
-                        clazz = cell.getStringCellValue();
+                        clazz = cell.getStringCellValue().trim();
                         break;
                 }
             }

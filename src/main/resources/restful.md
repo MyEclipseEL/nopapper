@@ -487,6 +487,11 @@ GET  /message/delGrade
 }
 ```
 
+ssl_certificate /usr/local/nginx/cert/1_nopaper.eiber.cn_bundle.crt;
+        ssl_certificate_key /usr/local/nginx/cert/2_nopaper.eiber.cn.key;
+        ssl_session_timeout 5m;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2; #按照这个协议配置
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;#按照这个套件配置
 
 
 

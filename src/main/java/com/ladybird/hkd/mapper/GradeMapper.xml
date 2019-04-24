@@ -23,8 +23,26 @@
         UPDATE grade SET g_year=#{g_year},g_class=#{g_class} ,dept=#{dept} where g_id=#{g_id}
 
     </update>
+    <select id="selGrades" parameterType="com.ladybird.hkd.model.pojo.Grade" resultType="com.ladybird.hkd.model.pojo.Grade">
+        SELECT * FROM grade
+        <where>
+            <if test="g_id != null">
+                and g_id = #{g_id}
+            </if>
+            <if test="g_year != null">
+                and g_year = #{g_year}
+            </if>
+            <if test="g_class != null">
+                and g_class = #{g_class}
+            </if>
+            <if test="dept != null">
+                AND dept = #{dept}
+            </if>
+        </where>
+    </select>
+
     <select id="findGrade" parameterType="com.ladybird.hkd.model.pojo.Grade" resultType="com.ladybird.hkd.model.pojo.Grade">
-        SELECT * FROM Grade
+        SELECT * FROM grade
         <where>
             <if test="g_id != null">
                 and g_id = #{g_id}
@@ -42,11 +60,11 @@
     </select>
 
     <select id="findGradeByYandC" parameterType="com.ladybird.hkd.model.pojo.Grade" resultType="com.ladybird.hkd.model.pojo.Grade">
-        SELECT * FROM Grade where g_year = #{g_year} and  g_class = #{g_class}
+        SELECT * FROM grade where g_year = #{g_year} and  g_class = #{g_class}
     </select>
 
     <select id="findGradeByDept" parameterType="string" resultType="com.ladybird.hkd.model.pojo.Grade">
-        SELECT * FROM Grade where dept = #{dept}
+        SELECT * FROM grade where dept = #{dept}
     </select>
 
 
@@ -110,11 +128,11 @@
     <insert id="addGrades" parameterType="com.ladybird.hkd.model.example.GradeExample">
         INSERT INTO grade (g_id,dept,g_year,g_class)VALUES
                 <foreach collection="grades" item="g" separator=",">
-                (#{g.g_id},(SELECT dept_num FROM department WHERE #{g.dept.dept_name} LIKE CONCAT("%",dept_name,"%")),
+                (#{g.g_id},(SELECT dept_num FROM department WHERE dept_name=#{g.dept.dept_name}),
                     #{g.g_year},#{g.g_class})
                 </foreach>
     </insert>
-
+<!-- #{g.dept.dept_name} LIKE CONCAT("%",dept_name,"%") -->
     <select id="biggestId" resultType="String">
         SELECT g_id FROM  grade ORDER BY g_id+0 DESC LIMIT 1
     </select>

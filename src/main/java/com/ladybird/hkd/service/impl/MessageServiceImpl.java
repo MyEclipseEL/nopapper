@@ -212,8 +212,14 @@ public class MessageServiceImpl implements MessageService {
         if (exist == null)
             throw new ParamException("课程不存在！course：" + course);
         //教师教授的班级
-        String sgrade = teacherMapper.selGradesByCourse(t_num, course);
-        String[] grades = sgrade.split(",");
+        List<String> sgrade = teacherMapper.selGradesByCourse(t_num, course);
+        String s = "";
+        for(int i = 0;i < sgrade.size(); i ++) {
+            s += sgrade.get(i);
+            if (i < sgrade.size()-1)
+                s += ",";
+        }
+        String[] grades = s.split(",");
         long time= 8 * 7 * 24 * 3600 * 100;
         //八周内参加过该门课程考试的班级
         List<String> gradeList = examMapper.selGradesByTC(t_num, course,new Date(now.getTime()-time));
@@ -261,7 +267,7 @@ public class MessageServiceImpl implements MessageService {
         } catch (NumberFormatException nfe) {
             throw new ParamException("<查找授课班级>：年级出错");
         }
-        List<GradeExample> result = gradeMapper.selGradesNotTeach(grade,dept,year);
+        List<GradeExample> result = gradeMapper.selGradesNotTeach(grade,Integer.parseInt(year),dept);
         return result;
     }
 
@@ -269,7 +275,18 @@ public class MessageServiceImpl implements MessageService {
     public List<GradeExample> addGrades(MultipartFile multipartFile) throws Exception {
         ReadGradeExcel readGradeExcel = new ReadGradeExcel();
         List<GradeExample> results = readGradeExcel.getExcelInfo(multipartFile);
-        Integer max = Integer.parseInt(gradeMapper.biggestId());
+        Integer max = 0;
+        try {
+             max = Integer.parseInt(gradeMapper.biggestId());
+        }catch(NumberFormatException e){
+            e.printStackTrace();
+        }
+        /*for (GradeExample gradeExample : results) {
+            DepartmentExample dept = gradeExample.getDept();
+            dept.setDept_num(deptMapper.findDept(
+                    new Department(null,dept.getDept_name(),null,null)).getDept_num());
+            gradeExample.setDept(dept);
+        }*/
         for (int i = 0;i < results.size();i ++) {
             results.get(i).setG_id(max + i+1 +"");
         }
@@ -323,8 +340,12 @@ public class MessageServiceImpl implements MessageService {
         if(department == null){
             throw new ParamException("<添加班级>：专业号不存在");
         }
+
         Integer g_year = 0;
         try {
+            List<Grade> gradeList = gradeMapper.selGrades(new Grade(null, Integer.parseInt(year), null, dept));
+            if (gradeList.size() != 0)
+                throw new BusinessException("<添加班级>：你不能这么做！");
             List<Grade> grades = new ArrayList<>();
             Integer g_id = Integer.parseInt(gradeMapper.biggestId());
             g_year = Integer.parseInt(year);
@@ -333,6 +354,7 @@ public class MessageServiceImpl implements MessageService {
                 grade.setG_id(g_id+1+i+"");
                 grade.setG_year(g_year);
                 grade.setDept(dept);
+                grade.setG_class(i+1);
                 grades.add(grade);
             }
             Integer result = gradeMapper.addGs(grades);

@@ -123,23 +123,23 @@ public class ReadItemExcel {
                 switch (c) {
                     case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("题目为空！");
-                        item.setItem_desc(cell.getStringCellValue());
+                        item.setItem_desc(cell.getStringCellValue().trim());
                         break;
                     case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项A为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项B为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 4:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项C为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 5:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项D为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 6:
                         char v = cell.getStringCellValue().trim().charAt(0);
@@ -157,7 +157,7 @@ public class ReadItemExcel {
                         break;
                     case 7:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         item.setTip(null);
-                        item.setTip(cell.getStringCellValue());
+                        item.setTip(cell.getStringCellValue().trim());
                         break;
                 }
             }
@@ -199,29 +199,29 @@ public class ReadItemExcel {
                 switch (c) {
                     case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("题目为空！");
-                        item.setItem_desc(cell.getStringCellValue());
+                        item.setItem_desc(cell.getStringCellValue().trim());
                         break;
                     case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项A为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项B为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 4:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项C为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 5:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项D为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
                     case 6:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("选项E为空！");
-                        choice.add(cell.getStringCellValue());
+                        choice.add(cell.getStringCellValue().trim());
                         break;
-                    case 7:String value = cell.getStringCellValue();
+                    case 7:String value = cell.getStringCellValue().trim();
                         if (value == null || value.length() < 1)
                             throw new ExcelImportException("没有正确选项！");
                         String valid = cell.getStringCellValue().replaceAll("\\ ","");
@@ -237,7 +237,7 @@ public class ReadItemExcel {
                     case 8:
                         if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                             item.setTip(null);
-                        item.setTip(cell.getStringCellValue());
+                        item.setTip(cell.getStringCellValue().trim());
                         break;
                 }
 
@@ -280,7 +280,7 @@ public class ReadItemExcel {
                 switch (c) {
                     case 1:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         throw new ExcelImportException("题目为空！");
-                        item.setItem_desc(cell.getStringCellValue());
+                        item.setItem_desc(cell.getStringCellValue().trim());
                         break;
                     case 2:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                             throw new ExcelImportException("答案为空！");
@@ -295,7 +295,7 @@ public class ReadItemExcel {
                         break;
                     case 3:if (cell.getStringCellValue() == null || cell.getStringCellValue().trim().equals(""))
                         item.setTip(null);
-                        item.setTip(cell.getStringCellValue());
+                        item.setTip(cell.getStringCellValue().trim());
                         break;
                 }
             }

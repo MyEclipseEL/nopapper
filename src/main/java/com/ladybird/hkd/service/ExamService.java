@@ -2,6 +2,7 @@ package com.ladybird.hkd.service;
 
 import com.ladybird.hkd.model.example.ChapterEditExm;
 import com.ladybird.hkd.model.example.PaperEditExample;
+import com.ladybird.hkd.model.json.ChapterIn;
 import com.ladybird.hkd.model.json.ExamJsonIn;
 import com.ladybird.hkd.model.example.ExamExample;
 import com.ladybird.hkd.model.pojo.PaperEdit;
@@ -38,5 +39,5 @@ public interface ExamService {
 
     List<ChapterEditExm> checkOutChapter(String course) throws Exception;
 
-    ChapterEditExm checkInChapter(String course, Integer[][] numbers, String tip) throws Exception;
+    ChapterEditExm checkInChapter(ChapterIn chapterIn) throws Exception;
 }

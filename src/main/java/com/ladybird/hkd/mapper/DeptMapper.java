@@ -18,4 +18,6 @@ public interface DeptMapper {
     List<DepartmentExample> selByTeacher(@Param("t_num") String t_num) throws Exception;
     List<Department> findDeptByFac(@Param("fac_num") String fac_num) throws Exception;
     List<Department> selectDept(Department department) throws Exception;
+
+    String selNumDeptByName(@Param("dept_name") String dept_name) throws Exception;
 }

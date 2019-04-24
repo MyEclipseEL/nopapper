@@ -59,6 +59,7 @@
     <select id="checkOutPaperEditExm" resultMap="paperEditMap">
         SELECT * FROM paper_edit p
         LEFT JOIN course c ON c.c_id=p.course
+        WHERE course=#{course}
     </select>
 
     <select id="checkOutPaperEdit" resultType="com.ladybird.hkd.model.pojo.PaperEdit">
@@ -152,9 +153,9 @@
         from paper_edit where id=1
     </select>
 
-    <sql id="selCourseId">
-        SELECT c_id FROM course WHERE c_id = ${course}
-    </sql>
+    <select id="selCourseById" parameterType="String" resultType="String">
+        SELECT course FROM exam WHERE exam_id=#{exam_id}
+    </select>
 
     <sql id="selGradeId">
         SELECT g_id FROM grade WHERE g_id=${grade}

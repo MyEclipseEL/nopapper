@@ -30,8 +30,14 @@ public class BasicServiceImpl  {
         if (exist == null)
             throw new ParamException("课程不存在！course：" + course);
         //教师教授的班级
-        String sgrade = teacherMapper.selGradesByCourse(t_num, course);
-        String[] grades = sgrade.split(",");
+        List<String> sgrade = teacherMapper.selGradesByCourse(t_num, course);
+        String s = "";
+        for(int i = 0;i < sgrade.size(); i ++) {
+            s += sgrade.get(i);
+            if (i < sgrade.size()-1)
+                s += ",";
+        }
+        String[] grades = s.split(",");
         long time= 8 * 7 * 24 * 3600 * 100;
         //八周内参加过该门课程考试的班级
         List<String> gradeList = examMapper.selGradesByTC(t_num, course,new Date(now.getTime()-time));

@@ -105,7 +105,7 @@ public class ItemController extends BaseController{
 //        }
         Date date = new Date();
         System.out.println(date);
-        if (date.getTime() - examExample.getBegin_time().getTime() > 0.5 * 3600 * 1000){
+        if (date.getTime() - examExample.getBegin_time().getTime() > (0.5 * 3600 * 1000)){
             throw new BusinessException("考试已经开始半个小时，禁止考生登录！");
         }
 //        List<ItemsOut> outList = itemService.getPaper(examExample.getCourse().getC_id());
@@ -183,9 +183,13 @@ public class ItemController extends BaseController{
             throw new ParamException("请选择上传的文件！");
         }
         //调用service
-        List<ItemVO> result = itemService.addItems(multipartFile,course,item_type);
-        FileUtils.deleteQuietly(file);
+        try{
+            List<ItemVO> result = itemService.addItems(multipartFile,course,item_type);
+            FileUtils.deleteQuietly(file);
         return ResultJson.Success(result);
+        }catch(Exception e){
+            throw new BusinessException("请检查您的文件！");
+        }
     }
 
     @CheckGroup

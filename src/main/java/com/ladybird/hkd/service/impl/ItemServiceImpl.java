@@ -353,13 +353,13 @@ public class ItemServiceImpl implements ItemService {
         }
         @Override
         public void run() {
-            try {
-                if (!isFreeTime()) {
-                    Thread.sleep(getRemainSecondsOneDay());
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                if (!isFreeTime()) {
+//                    Thread.sleep(getRemainSecondsOneDay());
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             try {
                 int result = synchronizedItems(course);
                 IsThreadOn.letThreadOff();
@@ -426,7 +426,7 @@ public class ItemServiceImpl implements ItemService {
         int index = 1;
         boolean flag = false;
         List<List<ItemListOut>> lists = new ArrayList<>();
-        while (index < 10) {
+        while (index <= 300) {
             lists.add(randomPaper(course));
             index++;
         }

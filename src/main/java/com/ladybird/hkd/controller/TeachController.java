@@ -131,7 +131,7 @@ public class TeachController extends BaseController {
             try {
                 File fullFile = new File(item.getName());
 //                file = new File(UrlConf.LOCAL_UPLOAD_PATH, fullFile.getName());
-            file = new File(UrlConf.SERVER_UPLOAD_PATH);
+            file = new File(UrlConf.SERVER_UPLOAD_PATH,fullFile.getName());
                 item.write(file);
             } catch (NullPointerException npe) {
                 throw new ParamException("请选择上传到文件！");

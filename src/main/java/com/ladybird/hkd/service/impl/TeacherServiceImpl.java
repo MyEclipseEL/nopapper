@@ -184,9 +184,7 @@ public class TeacherServiceImpl implements TeacherService{
             Teach teach = new Teach();
             teach.setTeacher(teachExample.getTeacher().getT_num());
             String teach_id = teachExample.getTeacher().getT_num();
-            String dept = deptMapper.findDept(
-                    new Department(null,teachExample.getDept().getDept_name(),null,null))
-                    .getDept_num();
+            String dept = deptMapper.selNumDeptByName(teachExample.getDept().getDept_name());
             teach_id += dept;
             teach.setDept(dept);
             String course = courseMapper.findCourse(
